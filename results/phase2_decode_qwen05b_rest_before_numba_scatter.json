@@ -1,0 +1,287 @@
+{
+ "B_rest_ll16": {
+  "files": [
+   "bitstreams/qwen05b/B_rest_ll16.wcdc"
+  ],
+  "MB": 178.967709,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0492,
+   "entropy": 9.7923,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0003,
+   "total": 9.8584
+  },
+  "serial_mps": {
+   "io": 0.0266,
+   "entropy": 9.8389,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.055,
+   "total": 9.9394
+  },
+  "pool_startup_s": 1.115,
+  "parallel_cpu": {
+   "io": 0.0373,
+   "entropy": 9.9938,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.0003,
+   "total": 10.061
+  },
+  "parallel_mps": {
+   "io": 0.0486,
+   "entropy": 10.0761,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.1567,
+   "total": 10.3063
+  }
+ },
+ "B_rest_ll16@rans16": {
+  "files": [
+   "bitstreams/qwen05b/r16/B_rest_ll16.wcdc"
+  ],
+  "MB": 179.057823,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.024,
+   "entropy": 4.8306,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0005,
+   "total": 4.872
+  },
+  "serial_mps": {
+   "io": 0.0239,
+   "entropy": 4.8513,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0556,
+   "total": 4.9493
+  },
+  "parallel_cpu": {
+   "io": 0.0241,
+   "entropy": 3.0918,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0005,
+   "total": 3.1313
+  },
+  "parallel_mps": {
+   "io": 0.0243,
+   "entropy": 3.0803,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0585,
+   "total": 3.1809
+  }
+ },
+ "B_rest_ll16@rans16_4k": {
+  "files": [
+   "bitstreams/qwen05b/r16_4096/B_rest_ll16.wcdc"
+  ],
+  "MB": 179.493558,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0251,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.0577,
+   "entropy": 3.1112,
+   "total": 3.2145
+  }
+ },
+ "T_rest_ll16": {
+  "files": [
+   "bitstreams/qwen05b/T_rest_ll16.wcdc"
+  ],
+  "MB": 179.192614,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0237,
+   "entropy": 9.7653,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0003,
+   "total": 9.8049
+  },
+  "serial_mps": {
+   "io": 0.0243,
+   "entropy": 9.824,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0541,
+   "total": 9.9206
+  },
+  "pool_startup_s": 1.141,
+  "parallel_cpu": {
+   "io": 0.057,
+   "entropy": 10.0222,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.0003,
+   "total": 10.1086
+  },
+  "parallel_mps": {
+   "io": 0.059,
+   "entropy": 9.9299,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.0853,
+   "total": 10.1003
+  }
+ },
+ "T_rest_ll16@rans16": {
+  "files": [
+   "bitstreams/qwen05b/r16/T_rest_ll16.wcdc"
+  ],
+  "MB": 179.278775,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0241,
+   "entropy": 4.8071,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0005,
+   "total": 4.8481
+  },
+  "serial_mps": {
+   "io": 0.0241,
+   "entropy": 4.8292,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0577,
+   "total": 4.9302
+  },
+  "parallel_cpu": {
+   "io": 0.0244,
+   "entropy": 3.0646,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0005,
+   "total": 3.1049
+  },
+  "parallel_mps": {
+   "io": 0.0235,
+   "entropy": 3.0622,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.057,
+   "total": 3.1599
+  }
+ },
+ "T_rest_ll16@rans16_4k": {
+  "files": [
+   "bitstreams/qwen05b/r16_4096/T_rest_ll16.wcdc"
+  ],
+  "MB": 179.71896,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0249,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.0609,
+   "entropy": 3.1117,
+   "total": 3.2187
+  }
+ },
+ "T_rest_xor_base": {
+  "files": [
+   "bitstreams/qwen05b/T_rest_xor_base.wcdc"
+  ],
+  "MB": 143.407434,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.019,
+   "entropy": 8.4196,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0002,
+   "total": 8.4563
+  },
+  "serial_mps": {
+   "io": 0.0194,
+   "entropy": 8.4829,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0539,
+   "total": 8.5746
+  },
+  "pool_startup_s": 1.117,
+  "parallel_cpu": {
+   "io": 0.0189,
+   "entropy": 8.6752,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.0003,
+   "total": 8.7167
+  },
+  "parallel_mps": {
+   "io": 0.0193,
+   "entropy": 8.9001,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.2647,
+   "total": 9.2078
+  }
+ },
+ "T_rest_xor_base@rans16": {
+  "files": [
+   "bitstreams/qwen05b/r16/T_rest_xor_base.wcdc"
+  ],
+  "MB": 143.622023,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0194,
+   "entropy": 3.5486,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0003,
+   "total": 3.5869
+  },
+  "serial_mps": {
+   "io": 0.0189,
+   "entropy": 3.5479,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0563,
+   "total": 3.6415
+  },
+  "parallel_cpu": {
+   "io": 0.0183,
+   "entropy": 1.6658,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0003,
+   "total": 1.7003
+  },
+  "parallel_mps": {
+   "io": 0.0186,
+   "entropy": 1.6847,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0563,
+   "total": 1.7764
+  }
+ },
+ "T_rest_xor_base@rans16_4k": {
+  "files": [
+   "bitstreams/qwen05b/r16_4096/T_rest_xor_base.wcdc"
+  ],
+  "MB": 144.058244,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0198,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.0566,
+   "entropy": 1.721,
+   "total": 1.8175
+  }
+ }
+}

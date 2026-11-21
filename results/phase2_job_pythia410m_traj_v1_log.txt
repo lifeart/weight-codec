@@ -1,0 +1,25 @@
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+
+[notice] A new release of pip is available: 24.0 -> 26.3
+[notice] To update, run: pip install --upgrade pip
+ans laplace  n= 3000001 bytes= 1143060 bits/sym=3.0482 order0+table=3.0482
+ans const    n=    1000 bytes=      26 bits/sym=0.2080 order0+table=0.0320
+ans wide     n=   50000 bytes=   83924 bits/sym=13.4278 order0+table=16.3024
+ans empty    n=       0 bytes=      24 bits/sym=192.0000 order0+table=0.0000
+ans single   n=       1 bytes=      25 bits/sym=200.0000 order0+table=32.0000
+record sizes: {'ll': 222939, 'llx': 186132, 'raw': 262144, 'q': 59077, 'qp': 16532, 'qn': 26142, 'qd': 34904, 'gp': 68096, 'ga': 62162, 'lr': 24576}
+g128 packed bpw = 4.1562 (theory 4 + 20/128 = 4.1562)
+ALL TESTS PASSED on cpu
+
+
+
+01:23:40 late step136000 (153s): lossless lin 13.534 bpp | c0.35: I=3.580 P=3.580 K4=3.580 c0.7: I=2.602 P=2.602 K4=2.602
+01:28:12 late step137000 (272s): lossless lin 9.308 bpp | c0.35: I=3.580 P=0.341 K4=0.341 c0.7: I=2.602 P=0.196 K4=0.196
+01:31:48 late step138000 (215s): lossless lin 9.303 bpp | c0.35: I=3.580 P=0.339 K4=0.339 c0.7: I=2.602 P=0.195 K4=0.195
+01:36:37 late step139000 (289s): lossless lin 9.297 bpp | c0.35: I=3.580 P=0.338 K4=0.338 c0.7: I=2.602 P=0.195 K4=0.195
+01:40:16 late step140000 (218s): lossless lin 9.310 bpp | c0.35: I=3.580 P=0.339 K4=3.580 c0.7: I=2.602 P=0.196 K4=2.602
+01:43:34 late step141000 (197s): lossless lin 9.309 bpp | c0.35: I=3.580 P=0.339 K4=0.341 c0.7: I=2.602 P=0.195 K4=0.196
+01:46:30 late step142000 (175s): lossless lin 9.315 bpp | c0.35: I=3.580 P=0.339 K4=0.341 c0.7: I=2.602 P=0.195 K4=0.197
+01:49:03 late step143000 (152s): lossless lin 9.309 bpp | c0.35: I=3.580 P=0.337 K4=0.340 c0.7: I=2.602 P=0.195 K4=0.196
+03:11:01 late 0.35 {'orig': 15.578, 'I_c0.35': 23.651, 'IPPP_end_c0.35': 23.523} 175.494 s chain decode

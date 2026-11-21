@@ -1,0 +1,14 @@
+{
+ "0.25": {
+  "max_abs_symbol": 183,
+  "frac_over_int8": 3.0741150125915754e-08
+ },
+ "0.35": {
+  "max_abs_symbol": 131,
+  "frac_over_int8": 2.7946500114468864e-09
+ },
+ "0.7": {
+  "max_abs_symbol": 65,
+  "frac_over_int8": 0.0
+ }
+}

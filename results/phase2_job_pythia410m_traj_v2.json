@@ -1,0 +1,17 @@
+{
+ "run": "pythia410m_traj_v2",
+ "where": "run on HF Jobs",
+ "script": "phase2/trajectory_codec.py",
+ "args": [
+  "--repo",
+  "EleutherAI/pythia-410m",
+  "--tag",
+  "pythia410m",
+  "--windows",
+  "late,mid",
+  "--dtype",
+  "fp32",
+  "--no_ppl"
+ ],
+ "timeout": "4h"
+}

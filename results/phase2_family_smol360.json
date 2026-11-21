@@ -1,0 +1,636 @@
+{
+ "B_rest_raw16": {
+  "file": "bitstreams/smol360/B_rest_raw16.wcdc",
+  "bytes": 94497270,
+  "MB": 94.49727,
+  "n_params": 47248320,
+  "bpp": 16.000106670459395,
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.008,
+   "total": 0.008
+  },
+  "lossless_verified": true,
+  "file_deleted": true
+ },
+ "B_rest_ll16": {
+  "file": "bitstreams/smol360/B_rest_ll16.wcdc",
+  "bytes": 62096834,
+  "MB": 62.096834,
+  "n_params": 47248320,
+  "bpp": 10.514123507460159,
+  "decode_s_first": {
+   "entropy": 3.071,
+   "reconstruct": 0.0,
+   "total": 3.077
+  },
+  "lossless_verified": true
+ },
+ "B_fp16": {
+  "file": "bitstreams/smol360/B_fp16.wcdc",
+  "bytes": 629147661,
+  "MB": 629.147661,
+  "real_bpw": 16.00005241394043,
+  "n_weights": 314572800,
+  "proxy_bpw": 16.0,
+  "side_bpw": 16.0,
+  "encode_s": 0.2,
+  "bytes_header": 2061,
+  "bytes_by_section": {
+   "d": 629145600
+  },
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.167,
+   "total": 0.169
+  },
+  "ppl": 11.472673212508376,
+  "nll": 2.4399679652341866,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.7,
+  "kl": 0.0,
+  "top1": 1.0,
+  "kl_tokens": 32752,
+  "file_deleted": true
+ },
+ "B_gptq4_packed": {
+  "file": "bitstreams/smol360/B_gptq4_packed.wcdc",
+  "bytes": 169578908,
+  "MB": 169.578908,
+  "real_bpw": 4.312614644368489,
+  "n_weights": 314572800,
+  "proxy_bpw": 4.3125,
+  "side_bpw": 4.3125,
+  "encode_s": 38.2,
+  "bytes_header": 4508,
+  "bytes_by_section": {
+   "scale": 9830400,
+   "zero": 2457600,
+   "packed": 157286400
+  },
+  "decode_s_first": {
+   "entropy": 0.142,
+   "reconstruct": 0.427,
+   "total": 0.572
+  },
+  "ppl": 12.508429668093354,
+  "nll": 2.526402790468129,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.7,
+  "kl": 0.08564827857974919,
+  "top1": 0.8582376648754274,
+  "kl_tokens": 32752
+ },
+ "B_gptq4_ans": {
+  "file": "bitstreams/smol360/B_gptq4_ans.wcdc",
+  "bytes": 159350078,
+  "MB": 159.350078,
+  "real_bpw": 4.052482045491536,
+  "n_weights": 314572800,
+  "proxy_bpw": 4.052212818425835,
+  "side_bpw": 0.3125,
+  "encode_s": 38.2,
+  "bytes_header": 5858,
+  "bytes_by_section": {
+   "scale": 9830400,
+   "zero": 2457600,
+   "sym": 147056220
+  },
+  "decode_s_first": {
+   "entropy": 5.546,
+   "reconstruct": 0.527,
+   "total": 6.078
+  },
+  "identical_to": "B_gptq4_packed",
+  "ppl": 12.508429668093354,
+  "nll": 2.526402790468129,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.7,
+  "kl": 0.08564827857974919,
+  "top1": 0.8582376648754274,
+  "kl_tokens": 32752
+ },
+ "B_ecsq_c0.35": {
+  "file": "bitstreams/smol360/B_ecsq_c0.35.wcdc",
+  "bytes": 140866062,
+  "MB": 140.866062,
+  "real_bpw": 3.582409210205078,
+  "n_weights": 314572800,
+  "proxy_bpw": 3.582677264774037,
+  "side_bpw": 0.0140625,
+  "encode_s": 41.7,
+  "bytes_header": 4441,
+  "bytes_by_section": {
+   "sym": 140308661,
+   "step": 552960
+  },
+  "decode_s_first": {
+   "entropy": 7.585,
+   "reconstruct": 0.506,
+   "total": 8.1
+  },
+  "ppl": 12.658014241059714,
+  "nll": 2.5382905514164493,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.7,
+  "kl": 0.09056841063394626,
+  "top1": 0.8530471421592575,
+  "kl_tokens": 32752
+ },
+ "B_ecsq_c0.5": {
+  "file": "bitstreams/smol360/B_ecsq_c0.5.wcdc",
+  "bytes": 121048876,
+  "MB": 121.048876,
+  "real_bpw": 3.078432108561198,
+  "n_weights": 314572800,
+  "proxy_bpw": 3.0785568677639574,
+  "side_bpw": 0.0140625,
+  "encode_s": 41.6,
+  "bytes_header": 4432,
+  "bytes_by_section": {
+   "sym": 120491484,
+   "step": 552960
+  },
+  "decode_s_first": {
+   "entropy": 7.106,
+   "reconstruct": 0.475,
+   "total": 7.59
+  },
+  "ppl": 14.177177124729027,
+  "nll": 2.6516334268663653,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.5,
+  "kl": 0.20304894482268318,
+  "top1": 0.784471177332682,
+  "kl_tokens": 32752
+ },
+ "T_rest_raw16": {
+  "file": "bitstreams/smol360/T_rest_raw16.wcdc",
+  "bytes": 94497270,
+  "MB": 94.49727,
+  "n_params": 47248320,
+  "bpp": 16.000106670459395,
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.008,
+   "total": 0.008
+  },
+  "lossless_verified": true,
+  "file_deleted": true
+ },
+ "T_rest_ll16": {
+  "file": "bitstreams/smol360/T_rest_ll16.wcdc",
+  "bytes": 62090497,
+  "MB": 62.090497,
+  "n_params": 47248320,
+  "bpp": 10.513050538093207,
+  "decode_s_first": {
+   "entropy": 2.672,
+   "reconstruct": 0.0,
+   "total": 2.678
+  },
+  "lossless_verified": true
+ },
+ "T_rest_xor_base": {
+  "file": "bitstreams/smol360/T_rest_xor_base.wcdc",
+  "bytes": 50772162,
+  "MB": 50.772162,
+  "n_params": 47248320,
+  "bpp": 8.596650547575026,
+  "decode_s_first": {
+   "entropy": 2.731,
+   "reconstruct": 0.0,
+   "total": 2.737
+  },
+  "lossless_verified": true
+ },
+ "probe_c1_lite": {
+  "rel_delta_global": 0.07552506442319247,
+  "rel_delta_median": 0.07231424855511154,
+  "pass_small_lt_0.30": true
+ },
+ "T_fp16": {
+  "file": "bitstreams/smol360/T_fp16.wcdc",
+  "bytes": 629147661,
+  "MB": 629.147661,
+  "real_bpw": 16.00005241394043,
+  "n_weights": 314572800,
+  "proxy_bpw": 16.0,
+  "side_bpw": 16.0,
+  "encode_s": 0.2,
+  "bytes_header": 2061,
+  "bytes_by_section": {
+   "d": 629145600
+  },
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.157,
+   "total": 0.16
+  },
+  "ppl": 12.740812903077824,
+  "nll": 2.5448104552573936,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 118.3,
+  "kl": 0.0,
+  "top1": 1.0,
+  "kl_tokens": 32752,
+  "chat_nll": 0.36240050938232626,
+  "chat_tokens": 4505,
+  "chat_kl": 0.0,
+  "chat_top1": 1.0,
+  "file_deleted": true
+ },
+ "T_gptq4_packed": {
+  "file": "bitstreams/smol360/T_gptq4_packed.wcdc",
+  "bytes": 169578908,
+  "MB": 169.578908,
+  "real_bpw": 4.312614644368489,
+  "n_weights": 314572800,
+  "proxy_bpw": 4.3125,
+  "side_bpw": 4.3125,
+  "encode_s": 39.2,
+  "bytes_header": 4508,
+  "bytes_by_section": {
+   "scale": 9830400,
+   "zero": 2457600,
+   "packed": 157286400
+  },
+  "decode_s_first": {
+   "entropy": 0.145,
+   "reconstruct": 0.42,
+   "total": 0.568
+  },
+  "ppl": 13.89615242849946,
+  "nll": 2.6316119981143546,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.8,
+  "kl": 0.09743999479803506,
+  "top1": 0.8493221787982413,
+  "kl_tokens": 32752,
+  "chat_nll": 0.480885175065645,
+  "chat_tokens": 4505,
+  "chat_kl": 0.11837501488832734,
+  "chat_top1": 0.8736958934517203
+ },
+ "T_gptq4_ans": {
+  "file": "bitstreams/smol360/T_gptq4_ans.wcdc",
+  "bytes": 159352717,
+  "MB": 159.352717,
+  "real_bpw": 4.052549158732097,
+  "n_weights": 314572800,
+  "proxy_bpw": 4.052280507856578,
+  "side_bpw": 0.3125,
+  "encode_s": 39.2,
+  "bytes_header": 5841,
+  "bytes_by_section": {
+   "scale": 9830400,
+   "zero": 2457600,
+   "sym": 147058876
+  },
+  "decode_s_first": {
+   "entropy": 5.715,
+   "reconstruct": 0.565,
+   "total": 6.306
+  },
+  "identical_to": "T_gptq4_packed",
+  "ppl": 13.89615242849946,
+  "nll": 2.6316119981143546,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.8,
+  "kl": 0.09743999479803506,
+  "top1": 0.8493221787982413,
+  "kl_tokens": 32752,
+  "chat_nll": 0.480885175065645,
+  "chat_tokens": 4505,
+  "chat_kl": 0.11837501488832734,
+  "chat_top1": 0.8736958934517203
+ },
+ "T_ecsq_c0.35": {
+  "file": "bitstreams/smol360/T_ecsq_c0.35.wcdc",
+  "bytes": 140864236,
+  "MB": 140.864236,
+  "real_bpw": 3.5823627726236977,
+  "n_weights": 314572800,
+  "proxy_bpw": 3.582630964904813,
+  "side_bpw": 0.0140625,
+  "encode_s": 41.7,
+  "bytes_header": 4448,
+  "bytes_by_section": {
+   "sym": 140306828,
+   "step": 552960
+  },
+  "decode_s_first": {
+   "entropy": 7.638,
+   "reconstruct": 0.503,
+   "total": 8.152
+  },
+  "ppl": 14.084088838896184,
+  "nll": 2.6450457090616215,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.9,
+  "kl": 0.10798928606026803,
+  "top1": 0.841566927210552,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5041378853191414,
+  "chat_tokens": 4505,
+  "chat_kl": 0.13754880150467919,
+  "chat_top1": 0.8672586015538291
+ },
+ "T_ecsq_c0.5": {
+  "file": "bitstreams/smol360/T_ecsq_c0.5.wcdc",
+  "bytes": 121043454,
+  "MB": 121.043454,
+  "real_bpw": 3.078294219970703,
+  "n_weights": 314572800,
+  "proxy_bpw": 3.0784183424556626,
+  "side_bpw": 0.0140625,
+  "encode_s": 42.1,
+  "bytes_header": 4424,
+  "bytes_by_section": {
+   "sym": 120486070,
+   "step": 552960
+  },
+  "decode_s_first": {
+   "entropy": 7.256,
+   "reconstruct": 0.6,
+   "total": 7.864
+  },
+  "ppl": 15.815672293292659,
+  "nll": 2.7610013657050367,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.8,
+  "kl": 0.23427349634734257,
+  "top1": 0.7704567659990229,
+  "kl_tokens": 32752,
+  "chat_nll": 0.6957480679341611,
+  "chat_tokens": 4505,
+  "chat_kl": 0.3029194578875712,
+  "chat_top1": 0.7971143174250832
+ },
+ "T_pframe_c0.35": {
+  "file": "bitstreams/smol360/T_pframe_c0.35.wcdc",
+  "bytes": 41539196,
+  "MB": 41.539196,
+  "real_bpw": 1.0563963826497396,
+  "n_weights": 314572800,
+  "proxy_bpw": 1.0562095176897508,
+  "side_bpw": 0.0,
+  "encode_s": 49.9,
+  "bytes_header": 3129,
+  "bytes_by_section": {
+   "sym": 41536067
+  },
+  "decode_s_first": {
+   "entropy": 5.143,
+   "reconstruct": 1.31,
+   "total": 6.549
+  },
+  "ppl": 14.037688513917123,
+  "nll": 2.641745749282822,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 119.4,
+  "kl": 0.10708721684547652,
+  "top1": 0.8394601856375183,
+  "kl_tokens": 32752,
+  "chat_nll": 0.48864025418686946,
+  "chat_tokens": 4505,
+  "chat_kl": 0.13789984192885252,
+  "chat_top1": 0.8710321864594894,
+  "base_file": "bitstreams/smol360/B_ecsq_c0.35.wcdc"
+ },
+ "T_pframe_c0.5": {
+  "file": "bitstreams/smol360/T_pframe_c0.5.wcdc",
+  "bytes": 36266693,
+  "MB": 36.266693,
+  "real_bpw": 0.9223096974690755,
+  "n_weights": 314572800,
+  "proxy_bpw": 0.9221181953747242,
+  "side_bpw": 0.0,
+  "encode_s": 52.6,
+  "bytes_header": 3116,
+  "bytes_by_section": {
+   "sym": 36263577
+  },
+  "decode_s_first": {
+   "entropy": 5.123,
+   "reconstruct": 1.153,
+   "total": 6.378
+  },
+  "ppl": 15.772239765817833,
+  "nll": 2.7582514178918323,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 118.7,
+  "kl": 0.22867718800487435,
+  "top1": 0.7739680019540791,
+  "kl_tokens": 32752,
+  "chat_nll": 0.6923484992769264,
+  "chat_tokens": 4505,
+  "chat_kl": 0.30176275689382265,
+  "chat_top1": 0.7911209766925639,
+  "base_file": "bitstreams/smol360/B_ecsq_c0.5.wcdc"
+ },
+ "T_delta_c0.06": {
+  "file": "bitstreams/smol360/T_delta_c0.06.wcdc",
+  "bytes": 97604106,
+  "MB": 97.604106,
+  "real_bpw": 2.4822007751464845,
+  "n_weights": 314572800,
+  "proxy_bpw": 2.4821525593990272,
+  "side_bpw": 0.0140625,
+  "encode_s": 42.9,
+  "bytes_header": 4537,
+  "bytes_by_section": {
+   "sym": 97046609,
+   "step": 552960
+  },
+  "decode_s_first": {
+   "entropy": 6.361,
+   "reconstruct": 0.691,
+   "total": 7.085
+  },
+  "ppl": 12.752166781900502,
+  "nll": 2.545701200844115,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 118.1,
+  "kl": 0.0029480513612934016,
+  "top1": 0.9721543722520762,
+  "kl_tokens": 32752,
+  "chat_nll": 0.36944377578455917,
+  "chat_tokens": 4505,
+  "chat_kl": 0.003510413318872452,
+  "chat_top1": 0.976914539400666
+ },
+ "T_delta_c0.12": {
+  "file": "bitstreams/smol360/T_delta_c0.12.wcdc",
+  "bytes": 63008205,
+  "MB": 63.008205,
+  "real_bpw": 1.6023815155029297,
+  "n_weights": 314572800,
+  "proxy_bpw": 1.6021956884521906,
+  "side_bpw": 0.0140625,
+  "encode_s": 54.2,
+  "bytes_header": 4485,
+  "bytes_by_section": {
+   "sym": 62450760,
+   "step": 552960
+  },
+  "decode_s_first": {
+   "entropy": 5.557,
+   "reconstruct": 0.662,
+   "total": 6.241
+  },
+  "ppl": 12.766912500890017,
+  "nll": 2.546856863277485,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.9,
+  "kl": 0.009723529576323471,
+  "top1": 0.9479115779189057,
+  "kl_tokens": 32752,
+  "chat_nll": 0.3859681440643412,
+  "chat_tokens": 4505,
+  "chat_kl": 0.013408862621617503,
+  "chat_top1": 0.9551609322974473
+ },
+ "T_delta_c0.25": {
+  "file": "bitstreams/smol360/T_delta_c0.25.wcdc",
+  "bytes": 30559229,
+  "MB": 30.559229,
+  "real_bpw": 0.777161382039388,
+  "n_weights": 314572800,
+  "proxy_bpw": 0.776906144393762,
+  "side_bpw": 0.0140625,
+  "encode_s": 46.8,
+  "bytes_header": 4408,
+  "bytes_by_section": {
+   "sym": 30001861,
+   "step": 552960
+  },
+  "decode_s_first": {
+   "entropy": 4.789,
+   "reconstruct": 0.639,
+   "total": 5.444
+  },
+  "ppl": 12.633855940269935,
+  "nll": 2.5363801898683564,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.9,
+  "kl": 0.027432016267622747,
+  "top1": 0.9153028822667318,
+  "kl_tokens": 32752,
+  "chat_nll": 0.42816451429394586,
+  "chat_tokens": 4505,
+  "chat_kl": 0.06805477719195807,
+  "chat_top1": 0.9098779134295227
+ },
+ "T_lowrank_r32": {
+  "file": "bitstreams/smol360/T_lowrank_r32.wcdc",
+  "bytes": 34737288,
+  "MB": 34.737288,
+  "real_bpw": 0.8834149169921875,
+  "n_weights": 314572800,
+  "proxy_bpw": 0.8833333333333333,
+  "side_bpw": 0.8833333333333333,
+  "encode_s": 19.4,
+  "bytes_header": 3208,
+  "bytes_by_section": {
+   "A": 17694720,
+   "B": 17039360
+  },
+  "decode_s_first": {
+   "entropy": 0.001,
+   "reconstruct": 0.452,
+   "total": 0.456
+  },
+  "ppl": 12.342566290346687,
+  "nll": 2.5130539620375463,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.7,
+  "kl": 0.09149447114047156,
+  "top1": 0.8478260869565217,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5710271365369993,
+  "chat_tokens": 4505,
+  "chat_kl": 0.1874060793272266,
+  "chat_top1": 0.8406215316315205
+ },
+ "T_lowrank_r64": {
+  "file": "bitstreams/smol360/T_lowrank_r64.wcdc",
+  "bytes": 69471411,
+  "MB": 69.471411,
+  "real_bpw": 1.7667493438720703,
+  "n_weights": 314572800,
+  "proxy_bpw": 1.7666666666666666,
+  "side_bpw": 1.7666666666666666,
+  "encode_s": 19.8,
+  "bytes_header": 3251,
+  "bytes_by_section": {
+   "A": 35389440,
+   "B": 34078720
+  },
+  "decode_s_first": {
+   "entropy": 0.001,
+   "reconstruct": 0.548,
+   "total": 0.553
+  },
+  "ppl": 12.332191437105413,
+  "nll": 2.5122130335091075,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 117.8,
+  "kl": 0.07513119531481453,
+  "top1": 0.8602222765021983,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5223906981693653,
+  "chat_tokens": 4505,
+  "chat_kl": 0.14478082498091044,
+  "chat_top1": 0.8586015538290788
+ },
+ "T_lowrank_r128": {
+  "file": "bitstreams/smol360/T_lowrank_r128.wcdc",
+  "bytes": 138939668,
+  "MB": 138.939668,
+  "real_bpw": 3.533418477376302,
+  "n_weights": 314572800,
+  "proxy_bpw": 3.533333333333333,
+  "side_bpw": 3.533333333333333,
+  "encode_s": 19.7,
+  "bytes_header": 3348,
+  "bytes_by_section": {
+   "A": 70778880,
+   "B": 68157440
+  },
+  "decode_s_first": {
+   "entropy": 0.001,
+   "reconstruct": 0.499,
+   "total": 0.503
+  },
+  "ppl": 12.36695110934786,
+  "nll": 2.515027681436658,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 118.0,
+  "kl": 0.05406092025037504,
+  "top1": 0.8786638983878847,
+  "kl_tokens": 32752,
+  "chat_nll": 0.4651191213948613,
+  "chat_tokens": 4505,
+  "chat_kl": 0.08851619473308094,
+  "chat_top1": 0.890788013318535
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "run": "smol360_delta3",
+ "where": "run on HF Jobs",
+ "script": "phase2/family_codec.py",
+ "args": [
+  "--base",
+  "HuggingFaceTB/SmolLM2-360M",
+  "--target",
+  "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "--tag",
+  "smol360",
+  "--tok_tag",
+  "smollm2",
+  "--ref_base",
+  "smol360",
+  "--ref_target",
+  "smol360_instruct",
+  "--group",
+  "64",
+  "--dtype",
+  "fp32",
+  "--max_windows",
+  "40",
+  "--stages",
+  "target",
+  "--cs",
+  "",
+  "--skip",
+  "T_fp16,T_gptq4_packed"
+ ],
+ "timeout": "5h"
+}

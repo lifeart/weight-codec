@@ -1,0 +1,1397 @@
+{
+ "intro_md": "# weight-codec \u2014 real ANS bitstreams for LLM families\nPhase 2 of a falsification-first study (*compress weights like JPEG, families/checkpoints like video*). Everything here is **measured on real files** (bytes on disk incl. all side info) and on models **decoded from those files**. Code: `wcodec` (WCDC container, constriction rANS, own numba/Metal rANS).",
+ "sections": [
+  {
+   "title": "Delivering Qwen2.5-0.5B-Instruct: bytes on the wire + decode",
+   "md": "MB = real files; decode = measured (Apple Silicon laptop, rans16 on 8 cores); download = MB / bandwidth (modelled).",
+   "table": {
+    "headers": [
+     "what the client fetches",
+     "MB",
+     "decode s",
+     "total s @50 Mbit/s",
+     "@200 Mbit/s",
+     "@1 Gbit/s",
+     "Instruct chat-KL"
+    ],
+    "rows": [
+     [
+      "fp16 safetensors",
+      988.1,
+      0.13,
+      158.2,
+      39.7,
+      8.0,
+      0.0
+     ],
+     [
+      "standard GPTQ-int4 g128 file + fp16 rest",
+      458.3,
+      0.53,
+      73.9,
+      18.9,
+      4.2,
+      0.1482
+     ],
+     [
+      "GPTQ-ECSQ c=0.35 + rANS + lossless rest",
+      339.2,
+      2.03,
+      56.3,
+      15.6,
+      4.7,
+      0.1173
+     ],
+     [
+      "P-frame + XOR rest (base cached)",
+      192.7,
+      2.19,
+      33.0,
+      9.9,
+      3.7,
+      0.1279
+     ],
+     [
+      "full-rank \u0394 c=0.12 + XOR rest (fp16 base cached)",
+      218.8,
+      2.28,
+      37.3,
+      11.0,
+      4.0,
+      0.0105
+     ]
+    ]
+   }
+  },
+  {
+   "title": "Qwen2.5-0.5B \u2192 Instruct: fine-tune linears \u2014 real MB, decode ms, quality",
+   "md": "Real file bytes of the block linears of the fine-tune (P-frame/\u0394 rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame) on an Apple Silicon laptop.",
+   "table": {
+    "headers": [
+     "format",
+     "MB",
+     "real bpw",
+     "phase-1 entropy estimate bpw",
+     "chat-KL",
+     "wiki-KL",
+     "PPL",
+     "decode ms CPU (constriction, 1 thread)",
+     "decode ms CPU (rans16, parallel)",
+     "decode ms GPU (Metal rANS)"
+    ],
+    "rows": [
+     [
+      "fp16 (raw)",
+      715.7,
+      16.0,
+      16.0,
+      0.0,
+      0.0,
+      14.2,
+      null,
+      null,
+      null
+     ],
+     [
+      "GPTQ-int4 g128 fixed-rate (packed nibbles)",
+      185.9,
+      4.1563,
+      4.1562,
+      0.1482,
+      0.0799,
+      15.3,
+      583.9,
+      532.7,
+      548.3
+     ],
+     [
+      "GPTQ-int4 g128 + rANS",
+      168.1,
+      3.7573,
+      3.7571,
+      0.1482,
+      0.0799,
+      15.3,
+      6847.5,
+      1052.1,
+      692.8
+     ],
+     [
+      "GPTQ-ECSQ c=0.35 + rANS",
+      160.1,
+      3.5783,
+      3.5785,
+      0.1173,
+      0.0645,
+      15.1,
+      9161.1,
+      1132.6,
+      618.1
+     ],
+     [
+      "LoRA-style \u0394 rank 128 (fp16 factors)",
+      140.8,
+      3.1473,
+      3.1473,
+      0.0522,
+      0.0608,
+      13.7,
+      447.6,
+      445.5,
+      289.1
+     ],
+     [
+      "GPTQ-ECSQ c=0.5 + rANS",
+      137.5,
+      3.0749,
+      3.075,
+      0.2562,
+      0.1254,
+      16.1,
+      null,
+      null,
+      null
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.06 + rANS",
+      114.9,
+      2.5685,
+      2.5685,
+      0.0031,
+      0.0018,
+      14.3,
+      null,
+      null,
+      null
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.12 + rANS",
+      75.4,
+      1.6866,
+      1.6865,
+      0.0105,
+      0.0058,
+      14.3,
+      7164.7,
+      1201.5,
+      607.6
+     ],
+     [
+      "LoRA-style \u0394 rank 64 (fp16 factors)",
+      70.4,
+      1.5737,
+      1.5736,
+      0.0706,
+      0.0773,
+      13.6,
+      null,
+      null,
+      null
+     ],
+     [
+      "P-frame on base I-frame lattice (c=0.35)",
+      49.2,
+      1.1009,
+      1.1008,
+      0.1279,
+      0.0657,
+      15.1,
+      15353.0,
+      2344.7,
+      956.5
+     ],
+     [
+      "P-frame on base lattice (c=0.5)",
+      43.3,
+      0.967,
+      0.9669,
+      0.2558,
+      0.132,
+      16.0,
+      null,
+      null,
+      null
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.25 + rANS",
+      37.7,
+      0.8427,
+      0.8425,
+      0.0375,
+      0.0205,
+      14.2,
+      6246.2,
+      1171.5,
+      578.6
+     ],
+     [
+      "LoRA-style \u0394 rank 32 (fp16 factors)",
+      35.2,
+      0.7869,
+      0.7868,
+      0.0874,
+      0.088,
+      13.6,
+      378.2,
+      383.2,
+      221.3
+     ]
+    ]
+   },
+   "images": [
+    "p2_qwen05b_mb_dec_quality.png"
+   ]
+  },
+  {
+   "title": "Qwen2.5-0.5B \u2192 Instruct: storing the PAIR {base, fine-tune} \u2014 every tensor",
+   "md": "Total MB on disk for both models (linears + embeddings/norms; rest coded losslessly).",
+   "table": {
+    "headers": [
+     "scenario",
+     "pair MB",
+     "base PPL",
+     "fine-tune chat-KL",
+     "fine-tune wiki-KL"
+    ],
+    "rows": [
+     [
+      "both fp16 (raw)",
+      1976.1,
+      13.1,
+      0.0,
+      0.0
+     ],
+     [
+      "both GPTQ-int4 fixed-rate (standard int4 files), rest fp16",
+      916.6,
+      14.0,
+      0.1482,
+      0.0799
+     ],
+     [
+      "both GPTQ-int4 + rANS, rest lossless",
+      694.3,
+      14.0,
+      0.1482,
+      0.0799
+     ],
+     [
+      "both independent GPTQ-ECSQ c=0.35, rest lossless",
+      678.3,
+      13.8,
+      0.1173,
+      0.0645
+     ],
+     [
+      "FAMILY: base I-frame + fine-tune P-frame (c=0.35), rest lossless (+XOR P)",
+      531.7,
+      13.8,
+      0.1279,
+      0.0657
+     ],
+     [
+      "FAMILY: base I-frame + P-frame (c=0.5)",
+      503.2,
+      14.7,
+      0.2558,
+      0.132
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.06",
+      1152.9,
+      13.1,
+      0.0031,
+      0.0018
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.12",
+      1113.5,
+      13.1,
+      0.0105,
+      0.0058
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.25",
+      1075.7,
+      13.1,
+      0.0375,
+      0.0205
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=32",
+      1073.2,
+      13.1,
+      0.0874,
+      0.088
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=64",
+      1108.4,
+      13.1,
+      0.0706,
+      0.0773
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=128",
+      1178.8,
+      13.1,
+      0.0522,
+      0.0608
+     ]
+    ]
+   },
+   "images": [
+    "p2_qwen05b_pair_mb.png"
+   ]
+  },
+  {
+   "title": "SmolLM2-360M \u2192 Instruct: fine-tune linears \u2014 real MB, decode ms, quality",
+   "md": "Real file bytes of the block linears of the fine-tune (P-frame/\u0394 rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame) on an Apple Silicon laptop.",
+   "table": {
+    "headers": [
+     "format",
+     "MB",
+     "real bpw",
+     "phase-1 entropy estimate bpw",
+     "chat-KL",
+     "wiki-KL",
+     "PPL",
+     "decode ms CPU (constriction, 1 thread)",
+     "decode ms CPU (rans16, parallel)",
+     "decode ms GPU (Metal rANS)"
+    ],
+    "rows": [
+     [
+      "fp16 (raw)",
+      629.1,
+      16.0,
+      16.0,
+      0.0,
+      0.0,
+      12.7,
+      null,
+      null,
+      null
+     ],
+     [
+      "GPTQ-int4 g64 fixed-rate (packed nibbles)",
+      169.6,
+      4.3126,
+      4.3125,
+      0.1184,
+      0.0974,
+      13.9,
+      416.9,
+      421.2,
+      557.9
+     ],
+     [
+      "GPTQ-int4 g64 + rANS",
+      159.4,
+      4.0525,
+      4.0523,
+      0.1184,
+      0.0974,
+      13.9,
+      5910.8,
+      896.7,
+      585.1
+     ],
+     [
+      "GPTQ-ECSQ c=0.35 + rANS",
+      140.9,
+      3.5824,
+      3.5826,
+      0.1375,
+      0.108,
+      14.1,
+      7782.7,
+      904.0,
+      508.0
+     ],
+     [
+      "LoRA-style \u0394 rank 128 (fp16 factors)",
+      138.9,
+      3.5334,
+      3.5333,
+      0.0885,
+      0.0541,
+      12.4,
+      null,
+      null,
+      null
+     ],
+     [
+      "GPTQ-ECSQ c=0.5 + rANS",
+      121.0,
+      3.0783,
+      3.0784,
+      0.3029,
+      0.2343,
+      15.8,
+      null,
+      null,
+      null
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.06 + rANS",
+      97.6,
+      2.4822,
+      2.4822,
+      0.0035,
+      0.0029,
+      12.8,
+      null,
+      null,
+      null
+     ],
+     [
+      "LoRA-style \u0394 rank 64 (fp16 factors)",
+      69.5,
+      1.7667,
+      1.7667,
+      0.1448,
+      0.0751,
+      12.3,
+      null,
+      null,
+      null
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.12 + rANS",
+      63.0,
+      1.6024,
+      1.6022,
+      0.0134,
+      0.0097,
+      12.8,
+      5971.5,
+      1054.8,
+      497.6
+     ],
+     [
+      "P-frame on base I-frame lattice (c=0.35)",
+      41.5,
+      1.0564,
+      1.0562,
+      0.1379,
+      0.1071,
+      14.0,
+      13151.9,
+      1863.9,
+      929.5
+     ],
+     [
+      "P-frame on base lattice (c=0.5)",
+      36.3,
+      0.9223,
+      0.9221,
+      0.3018,
+      0.2287,
+      15.8,
+      null,
+      null,
+      null
+     ],
+     [
+      "LoRA-style \u0394 rank 32 (fp16 factors)",
+      34.7,
+      0.8834,
+      0.8833,
+      0.1874,
+      0.0915,
+      12.3,
+      326.9,
+      311.1,
+      253.8
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.25 + rANS",
+      30.6,
+      0.7772,
+      0.7769,
+      0.0681,
+      0.0274,
+      12.6,
+      null,
+      null,
+      null
+     ]
+    ]
+   },
+   "images": [
+    "p2_smol360_mb_dec_quality.png"
+   ]
+  },
+  {
+   "title": "SmolLM2-360M \u2192 Instruct: storing the PAIR {base, fine-tune} \u2014 every tensor",
+   "md": "Total MB on disk for both models (linears + embeddings/norms; rest coded losslessly).",
+   "table": {
+    "headers": [
+     "scenario",
+     "pair MB",
+     "base PPL",
+     "fine-tune chat-KL",
+     "fine-tune wiki-KL"
+    ],
+    "rows": [
+     [
+      "both fp16 (raw)",
+      1447.3,
+      11.5,
+      0.0,
+      0.0
+     ],
+     [
+      "both GPTQ-int4 fixed-rate (standard int4 files), rest fp16",
+      528.2,
+      12.5,
+      0.1184,
+      0.0974
+     ],
+     [
+      "both GPTQ-int4 + rANS, rest lossless",
+      442.9,
+      12.5,
+      0.1184,
+      0.0974
+     ],
+     [
+      "both independent GPTQ-ECSQ c=0.35, rest lossless",
+      405.9,
+      12.7,
+      0.1375,
+      0.108
+     ],
+     [
+      "FAMILY: base I-frame + fine-tune P-frame (c=0.35), rest lossless (+XOR P)",
+      295.3,
+      12.7,
+      0.1379,
+      0.1071
+     ],
+     [
+      "FAMILY: base I-frame + P-frame (c=0.5)",
+      270.2,
+      14.2,
+      0.3018,
+      0.2287
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.06",
+      839.6,
+      11.5,
+      0.0035,
+      0.0029
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.12",
+      805.0,
+      11.5,
+      0.0134,
+      0.0097
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.25",
+      772.6,
+      11.5,
+      0.0681,
+      0.0274
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=32",
+      776.8,
+      11.5,
+      0.1874,
+      0.0915
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=64",
+      811.5,
+      11.5,
+      0.1448,
+      0.0751
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=128",
+      881.0,
+      11.5,
+      0.0885,
+      0.0541
+     ]
+    ]
+   },
+   "images": [
+    "p2_smol360_pair_mb.png"
+   ]
+  },
+  {
+   "title": "SmolLM2-135M \u2192 Instruct: fine-tune linears \u2014 real MB, decode ms, quality",
+   "md": "Real file bytes of the block linears of the fine-tune (P-frame/\u0394 rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame) on an Apple Silicon laptop.",
+   "table": {
+    "headers": [
+     "format",
+     "MB",
+     "real bpw",
+     "phase-1 entropy estimate bpw",
+     "chat-KL",
+     "wiki-KL",
+     "PPL",
+     "decode ms CPU (constriction, 1 thread)",
+     "decode ms CPU (rans16, parallel)",
+     "decode ms GPU (Metal rANS)"
+    ],
+    "rows": [
+     [
+      "fp16 (raw)",
+      212.3,
+      16.0,
+      16.0,
+      0.0,
+      0.0,
+      17.4,
+      null,
+      null,
+      null
+     ],
+     [
+      "LoRA-style \u0394 rank 128 (fp16 factors)",
+      78.2,
+      5.8891,
+      5.8889,
+      0.0707,
+      0.0418,
+      17.1,
+      234.1,
+      234.2,
+      251.4
+     ],
+     [
+      "GPTQ-int4 g64 fixed-rate (packed nibbles)",
+      57.2,
+      4.3129,
+      4.3125,
+      0.4,
+      0.2882,
+      23.4,
+      227.8,
+      248.2,
+      313.3
+     ],
+     [
+      "GPTQ-int4 g64 + rANS",
+      53.8,
+      4.051,
+      4.0504,
+      0.4,
+      0.2882,
+      23.4,
+      2128.4,
+      439.7,
+      390.7
+     ],
+     [
+      "GPTQ-ECSQ c=0.35 + rANS",
+      47.7,
+      3.5937,
+      3.5943,
+      0.5049,
+      0.3567,
+      24.8,
+      2671.3,
+      402.3,
+      296.9
+     ],
+     [
+      "GPTQ-ECSQ c=0.5 + rANS",
+      41.0,
+      3.0896,
+      3.0898,
+      1.0362,
+      0.6413,
+      32.7,
+      2553.4,
+      418.4,
+      293.4
+     ],
+     [
+      "LoRA-style \u0394 rank 64 (fp16 factors)",
+      39.1,
+      2.9447,
+      2.9444,
+      0.1443,
+      0.0706,
+      17.1,
+      234.8,
+      233.9,
+      213.8
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.06 + rANS",
+      34.5,
+      2.5962,
+      2.5962,
+      0.0101,
+      0.0069,
+      17.4,
+      2395.4,
+      487.9,
+      307.3
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.12 + rANS",
+      22.6,
+      1.7065,
+      1.7061,
+      0.0299,
+      0.0181,
+      17.6,
+      2165.6,
+      477.1,
+      298.1
+     ],
+     [
+      "LoRA-style \u0394 rank 32 (fp16 factors)",
+      19.5,
+      1.4725,
+      1.4722,
+      0.2204,
+      0.0965,
+      17.1,
+      214.1,
+      218.4,
+      207.4
+     ],
+     [
+      "P-frame on base I-frame lattice (c=0.35)",
+      14.6,
+      1.098,
+      1.0976,
+      0.5378,
+      0.3232,
+      24.1,
+      4504.1,
+      757.3,
+      484.2
+     ],
+     [
+      "P-frame on base lattice (c=0.5)",
+      12.7,
+      0.9562,
+      0.9558,
+      1.0116,
+      0.6854,
+      34.1,
+      4420.5,
+      739.1,
+      479.4
+     ],
+     [
+      "full-rank \u0394 vs fp16 base, GPTQ c=0.25 + rANS",
+      11.5,
+      0.8702,
+      0.8697,
+      0.1018,
+      0.0427,
+      17.6,
+      1942.5,
+      488.8,
+      291.9
+     ]
+    ]
+   },
+   "images": [
+    "p2_smol135_mb_dec_quality.png"
+   ]
+  },
+  {
+   "title": "SmolLM2-135M \u2192 Instruct: storing the PAIR {base, fine-tune} \u2014 every tensor",
+   "md": "Total MB on disk for both models (linears + embeddings/norms; rest coded losslessly).",
+   "table": {
+    "headers": [
+     "scenario",
+     "pair MB",
+     "base PPL",
+     "fine-tune chat-KL",
+     "fine-tune wiki-KL"
+    ],
+    "rows": [
+     [
+      "both fp16 (raw)",
+      538.1,
+      15.4,
+      0.0,
+      0.0
+     ],
+     [
+      "both GPTQ-int4 fixed-rate (standard int4 files), rest fp16",
+      227.9,
+      20.7,
+      0.4,
+      0.2882
+     ],
+     [
+      "both GPTQ-int4 + rANS, rest lossless",
+      182.6,
+      20.7,
+      0.4,
+      0.2882
+     ],
+     [
+      "both independent GPTQ-ECSQ c=0.35, rest lossless",
+      170.5,
+      20.9,
+      0.5049,
+      0.3567
+     ],
+     [
+      "FAMILY: base I-frame + fine-tune P-frame (c=0.35), rest lossless (+XOR P)",
+      130.5,
+      20.9,
+      0.5378,
+      0.3232
+     ],
+     [
+      "FAMILY: base I-frame + P-frame (c=0.5)",
+      122.0,
+      29.5,
+      1.0116,
+      0.6854
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.06",
+      315.1,
+      15.4,
+      0.0101,
+      0.0069
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.12",
+      303.3,
+      15.4,
+      0.0299,
+      0.0181
+     ],
+     [
+      "lossless fp16 base + full-rank \u0394 c=0.25",
+      292.2,
+      15.4,
+      0.1018,
+      0.0427
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=32",
+      300.2,
+      15.4,
+      0.2204,
+      0.0965
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=64",
+      319.7,
+      15.4,
+      0.1443,
+      0.0706
+     ],
+     [
+      "lossless fp16 base + LoRA-style \u0394 r=128",
+      358.8,
+      15.4,
+      0.0707,
+      0.0418
+     ]
+    ]
+   },
+   "images": [
+    "p2_smol135_pair_mb.png"
+   ]
+  },
+  {
+   "title": "Pythia-410M training trajectory (late window, 8 checkpoints) \u2014 real bytes",
+   "md": "steps 136000\u2026143000; encoded on hf-job; original last-frame PPL 15.8 (MPS fp16, 40 windows); x86-encoded chain decodes bit-exactly on the Mac: True.",
+   "table": {
+    "headers": [
+     "scheme",
+     "GOP MB (linears)",
+     "mean bpw (I or P)",
+     "last-frame PPL (decoded)"
+    ],
+    "rows": [
+     [
+      "c=0.35 all-I",
+      1081.2,
+      3.5802,
+      23.3
+     ],
+     [
+      "c=0.35 I + P-frames (IPPP)",
+      224.7,
+      0.3388,
+      23.1
+     ],
+     [
+      "c=0.7 all-I",
+      785.7,
+      2.6018,
+      66.2
+     ],
+     [
+      "c=0.7 I + P-frames (IPPP)",
+      149.8,
+      0.1953,
+      67.6
+     ]
+    ]
+   },
+   "images": [
+    "p2_pythia_frames_real.png"
+   ]
+  },
+  {
+   "title": "Pythia-410M training trajectory (mid window, 6 checkpoints) \u2014 real bytes",
+   "md": "steps 32000\u202637000; encoded on hf-job; original last-frame PPL 18.0 (MPS fp16, 40 windows); x86-encoded chain decodes bit-exactly on the Mac: True.",
+   "table": {
+    "headers": [
+     "scheme",
+     "GOP MB (linears)",
+     "mean bpw (I or P)",
+     "last-frame PPL (decoded)"
+    ],
+    "rows": [
+     [
+      "c=0.35 all-I",
+      811.0,
+      3.5808,
+      19.2
+     ],
+     [
+      "c=0.35 I + P-frames (IPPP)",
+      357.0,
+      1.1755,
+      19.2
+     ],
+     [
+      "c=0.7 all-I",
+      589.4,
+      2.6023,
+      24.0
+     ],
+     [
+      "c=0.7 I + P-frames (IPPP)",
+      239.1,
+      0.7464,
+      24.0
+     ]
+    ]
+   },
+   "images": [
+    "p2_pythia_frames_real.png"
+   ]
+  },
+  {
+   "title": "Progressive (SVC) stream, Qwen2.5-0.5B, step ratio 3 \u2014 real bytes per layer",
+   "md": "Cumulative layers decode bit-identically to the single-shot quantizer at the same step.",
+   "table": {
+    "headers": [
+     "layers",
+     "cum MB",
+     "cum bpw",
+     "single-shot bpw",
+     "tax bpw",
+     "PPL"
+    ],
+    "rows": [
+     [
+      "L0..0",
+      74.9,
+      1.6752,
+      1.6752,
+      -0.0,
+      18489.2
+     ],
+     [
+      "L0..1",
+      141.8,
+      3.1701,
+      3.1654,
+      0.0047,
+      18.6
+     ],
+     [
+      "L0..2",
+      212.8,
+      4.7582,
+      4.739,
+      0.0192,
+      13.4
+     ]
+    ]
+   },
+   "images": [
+    "p2_svc_tax_real.png"
+   ]
+  },
+  {
+   "title": "Progressive (SVC) stream, Qwen2.5-0.5B, step ratio 2 \u2014 real bytes per layer",
+   "md": "Cumulative layers decode bit-identically to the single-shot quantizer at the same step.",
+   "table": {
+    "headers": [
+     "layers",
+     "cum MB",
+     "cum bpw",
+     "single-shot bpw",
+     "tax bpw",
+     "PPL"
+    ],
+    "rows": [
+     [
+      "L0..0",
+      74.9,
+      1.6752,
+      1.6752,
+      -0.0,
+      null
+     ],
+     [
+      "L0..1",
+      137.9,
+      3.0823,
+      2.5966,
+      0.4857,
+      null
+     ],
+     [
+      "L0..2",
+      193.8,
+      4.3338,
+      3.5747,
+      0.7591,
+      null
+     ]
+    ]
+   },
+   "images": []
+  },
+  {
+   "title": "Generic coder reference (smol135): zstd-19 / gzip-9 on the same symbols vs rANS",
+   "md": "Each tensor's symbols as int8 (int16 only if needed), one stream; decode = single-thread zstd.",
+   "table": {
+    "headers": [
+     "file",
+     "rANS sym MB",
+     "zstd-19 MB",
+     "zstd vs rANS %",
+     "gzip-9 vs rANS %",
+     "zstd decode ms"
+    ],
+    "rows": [
+     [
+      "B_ecsq_c0.35",
+      47.4,
+      47.8,
+      0.8296,
+      15.2,
+      64.1
+     ],
+     [
+      "B_ecsq_c0.5",
+      40.7,
+      41.6,
+      2.1576,
+      16.5,
+      64.7
+     ],
+     [
+      "B_gptq4_ans",
+      49.6,
+      50.1,
+      0.9997,
+      14.2,
+      62.2
+     ],
+     [
+      "T_delta_c0.06",
+      34.1,
+      36.2,
+      6.0284,
+      18.4,
+      92.8
+     ],
+     [
+      "T_delta_c0.12",
+      22.3,
+      24.5,
+      9.9251,
+      22.4,
+      79.7
+     ],
+     [
+      "T_delta_c0.25",
+      11.2,
+      13.4,
+      19.6,
+      30.5,
+      59.6
+     ],
+     [
+      "T_ecsq_c0.35",
+      47.4,
+      47.8,
+      0.8286,
+      15.2,
+      63.5
+     ],
+     [
+      "T_ecsq_c0.5",
+      40.7,
+      41.6,
+      2.1592,
+      16.5,
+      63.4
+     ],
+     [
+      "T_gptq4_ans",
+      49.6,
+      50.1,
+      0.951,
+      14.2,
+      61.9
+     ],
+     [
+      "T_pframe_c0.35",
+      14.6,
+      16.7,
+      14.9,
+      28.2,
+      68.0
+     ],
+     [
+      "T_pframe_c0.5",
+      12.7,
+      14.9,
+      17.1,
+      30.5,
+      61.0
+     ]
+    ]
+   }
+  },
+  {
+   "title": "Generic coder reference (qwen05b): zstd-19 / gzip-9 on the same symbols vs rANS",
+   "md": "Each tensor's symbols as int8 (int16 only if needed), one stream; decode = single-thread zstd.",
+   "table": {
+    "headers": [
+     "file",
+     "rANS sym MB",
+     "zstd-19 MB",
+     "zstd vs rANS %",
+     "gzip-9 vs rANS %",
+     "zstd decode ms"
+    ],
+    "rows": [
+     [
+      "B_ecsq_c0.35",
+      159.4,
+      161.6,
+      1.3854,
+      15.5,
+      233.2
+     ],
+     [
+      "B_ecsq_c0.5",
+      136.9,
+      140.0,
+      2.2586,
+      16.6,
+      221.9
+     ],
+     [
+      "B_gptq4_ans",
+      161.1,
+      165.6,
+      2.8303,
+      14.6,
+      319.3
+     ],
+     [
+      "T_delta_c0.06",
+      114.3,
+      121.2,
+      6.0417,
+      18.2,
+      323.8
+     ],
+     [
+      "T_delta_c0.12",
+      74.8,
+      82.3,
+      9.9614,
+      22.2,
+      285.2
+     ],
+     [
+      "T_delta_c0.25",
+      37.1,
+      45.4,
+      22.5,
+      null,
+      213.5
+     ],
+     [
+      "T_ecsq_c0.35",
+      159.4,
+      161.7,
+      1.3948,
+      null,
+      249.1
+     ],
+     [
+      "T_gptq4_ans",
+      161.1,
+      165.0,
+      2.4427,
+      null,
+      323.9
+     ],
+     [
+      "T_pframe_c0.35",
+      49.2,
+      57.3,
+      16.3,
+      null,
+      241.6
+     ],
+     [
+      "T_pframe_c0.5",
+      43.3,
+      50.6,
+      17.1,
+      null,
+      216.3
+     ]
+    ]
+   }
+  }
+ ],
+ "demo": {
+  "dir": "bitstreams/smol135",
+  "target": "HuggingFaceTB/SmolLM2-135M-Instruct",
+  "base": "HuggingFaceTB/SmolLM2-135M",
+  "fp16_MB": 269.1,
+  "md": "Pair **SmolLM2-135M \u2192 SmolLM2-135M-Instruct** (\u2016\u0394\u2016/\u2016W\u2016 = 0.08). Only our WCDC bitstreams live in this Space; model config + tokenizer come from the public Hub repo and **no fine-tune weights are downloaded** (the first option also fetches the *public base* in fp16, the 'hub keeps the base, ships deltas' case). Honest note: this 135M model is fragile \u2014 every int4-class format (\u22483.6\u20134.3 bpw) degrades it badly (chat-KL 0.4\u20130.54, see table); the full-rank \u0394 over an fp16 base keeps it close to the original.",
+  "formats": {
+   "Hub fp16 base + instruct full-rank \u0394 (GPTQ c=0.12, rANS) + lossless XOR rest": {
+    "chain": [
+     [
+      "@hub_base",
+      null
+     ],
+     [
+      "T_rest_xor_base",
+      "@hub_base"
+     ],
+     [
+      "T_delta_c0.12",
+      "@hub_base"
+     ]
+    ],
+    "model_files": [
+     "T_rest_xor_base",
+     "T_delta_c0.12"
+    ],
+    "quality": "chat-KL 0.030, wiki-KL 0.018",
+    "what": "instruct stream only, given the public base"
+   },
+   "FAMILY int4-class: base I-frame + instruct P-frame (constriction rANS)": {
+    "chain": [
+     [
+      "B_rest_ll16",
+      null
+     ],
+     [
+      "B_ecsq_c0.35",
+      null
+     ],
+     [
+      "T_rest_xor_base",
+      "B_rest_ll16"
+     ],
+     [
+      "T_pframe_c0.35",
+      "B_ecsq_c0.35"
+     ]
+    ],
+    "model_files": [
+     "T_rest_xor_base",
+     "T_pframe_c0.35"
+    ],
+    "quality": "chat-KL 0.538, wiki-KL 0.323",
+    "what": "BOTH models: base + instruct"
+   },
+   "FAMILY int4-class, same streams re-encoded with wcodec rans16 (fast decoder)": {
+    "subdir": "r16",
+    "coder": "rans16",
+    "chain": [
+     [
+      "B_rest_ll16",
+      null
+     ],
+     [
+      "B_ecsq_c0.35",
+      null
+     ],
+     [
+      "T_rest_xor_base",
+      "B_rest_ll16"
+     ],
+     [
+      "T_pframe_c0.35",
+      "B_ecsq_c0.35"
+     ]
+    ],
+    "model_files": [
+     "T_rest_xor_base",
+     "T_pframe_c0.35"
+    ],
+    "quality": "chat-KL 0.538, wiki-KL 0.323 (bit-identical decode)",
+    "what": "BOTH models: base + instruct"
+   },
+   "Independent instruct: GPTQ-int4 g64 fixed-rate + lossless rest": {
+    "chain": [
+     [
+      "T_rest_ll16",
+      null
+     ],
+     [
+      "T_gptq4_packed",
+      null
+     ]
+    ],
+    "model_files": [
+     "T_rest_ll16",
+     "T_gptq4_packed"
+    ],
+    "quality": "chat-KL 0.400, wiki-KL 0.288",
+    "what": "instruct only"
+   },
+   "Independent instruct: GPTQ-ECSQ c=0.35 + rANS + lossless rest": {
+    "chain": [
+     [
+      "T_rest_ll16",
+      null
+     ],
+     [
+      "T_ecsq_c0.35",
+      null
+     ]
+    ],
+    "model_files": [
+     "T_rest_ll16",
+     "T_ecsq_c0.35"
+    ],
+    "quality": "chat-KL 0.505, wiki-KL 0.357",
+    "what": "instruct only"
+   }
+  }
+ }
+}

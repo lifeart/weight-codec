@@ -1,0 +1,1310 @@
+{
+ "safetensors_fp16_target": {
+  "MB": 723.674912,
+  "host": "Darwin-arm64-8cpu",
+  "serial_cpu": {
+   "total": 0.1092
+  },
+  "serial_mps": {
+   "total": 0.2201
+  }
+ },
+ "B_ecsq_c0.35@zstd19": {
+  "MB": 142.109127,
+  "sym_MB_zstd19": 141.551726,
+  "sym_MB_ans": 140.308661,
+  "serial_cpu": {
+   "entropy": 0.2049
+  },
+  "host": "Darwin-arm64-8cpu",
+  "note": "symbol decode only (single-thread zstd); reconstruction cost is the same as the ANS file"
+ },
+ "B_gptq4_ans@zstd19": {
+  "MB": 161.113828,
+  "sym_MB_zstd19": 148.81997,
+  "sym_MB_ans": 147.05622,
+  "serial_cpu": {
+   "entropy": 0.2133
+  },
+  "host": "Darwin-arm64-8cpu",
+  "note": "symbol decode only (single-thread zstd); reconstruction cost is the same as the ANS file"
+ },
+ "T_delta_c0.12@zstd19": {
+  "MB": 69.713664,
+  "sym_MB_zstd19": 69.156219,
+  "sym_MB_ans": 62.45076,
+  "serial_cpu": {
+   "entropy": 0.2539
+  },
+  "host": "Darwin-arm64-8cpu",
+  "note": "symbol decode only (single-thread zstd); reconstruction cost is the same as the ANS file"
+ },
+ "T_ecsq_c0.35@zstd19": {
+  "MB": 142.098051,
+  "sym_MB_zstd19": 141.540643,
+  "sym_MB_ans": 140.306828,
+  "serial_cpu": {
+   "entropy": 0.2004
+  },
+  "host": "Darwin-arm64-8cpu",
+  "note": "symbol decode only (single-thread zstd); reconstruction cost is the same as the ANS file"
+ },
+ "T_gptq4_ans@zstd19": {
+  "MB": 160.833763,
+  "sym_MB_zstd19": 148.539922,
+  "sym_MB_ans": 147.058876,
+  "serial_cpu": {
+   "entropy": 0.1972
+  },
+  "host": "Darwin-arm64-8cpu",
+  "note": "symbol decode only (single-thread zstd); reconstruction cost is the same as the ANS file"
+ },
+ "T_pframe_c0.35@zstd19": {
+  "MB": 47.955752,
+  "sym_MB_zstd19": 47.952623,
+  "sym_MB_ans": 41.536067,
+  "serial_cpu": {
+   "entropy": 0.2024
+  },
+  "host": "Darwin-arm64-8cpu",
+  "note": "symbol decode only (single-thread zstd); reconstruction cost is the same as the ANS file"
+ },
+ "B_ecsq_c0.35": {
+  "files": [
+   "bitstreams/smol360/B_ecsq_c0.35.wcdc"
+  ],
+  "MB": 140.866062,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0205,
+   "entropy": 7.6165,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2298,
+   "total": 7.9266
+  },
+  "serial_mps": {
+   "io": 0.0194,
+   "entropy": 7.8624,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4138,
+   "total": 8.3226
+  },
+  "pool_startup_s": 1.228,
+  "parallel_cpu": {
+   "io": 0.0196,
+   "entropy": 0.0899,
+   "entropy_parallel": 1.1293,
+   "reconstruct": 0.2159,
+   "total": 1.5409
+  },
+  "parallel_mps": {
+   "io": 0.02,
+   "entropy": 0.0909,
+   "entropy_parallel": 1.1376,
+   "reconstruct": 0.2819,
+   "total": 1.5524
+  }
+ },
+ "B_ecsq_c0.35@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/B_ecsq_c0.35.wcdc"
+  ],
+  "MB": 140.977592,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0207,
+   "entropy": 2.6404,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2165,
+   "total": 2.9397
+  },
+  "serial_mps": {
+   "io": 0.0199,
+   "entropy": 2.6186,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3836,
+   "total": 3.0414
+  },
+  "parallel_cpu": {
+   "io": 0.02,
+   "entropy": 0.664,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2118,
+   "total": 0.9523
+  },
+  "parallel_mps": {
+   "io": 0.0198,
+   "entropy": 0.72,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3632,
+   "total": 1.1477
+  }
+ },
+ "B_ecsq_c0.35@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/B_ecsq_c0.35.wcdc"
+  ],
+  "MB": 141.480885,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.02,
+   "entropy_gpu": 0.2859,
+   "reconstruct": 0.1829,
+   "entropy": 0.0001,
+   "total": 0.4927
+  }
+ },
+ "B_gptq4_ans": {
+  "files": [
+   "bitstreams/smol360/B_gptq4_ans.wcdc"
+  ],
+  "MB": 159.350078,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0238,
+   "entropy": 5.621,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2502,
+   "total": 5.9763
+  },
+  "serial_mps": {
+   "io": 0.0212,
+   "entropy": 5.5839,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4861,
+   "total": 6.1677
+  },
+  "pool_startup_s": 1.127,
+  "parallel_cpu": {
+   "io": 0.0223,
+   "entropy": 0.0779,
+   "entropy_parallel": 0.8489,
+   "reconstruct": 0.2444,
+   "total": 1.2891
+  },
+  "parallel_mps": {
+   "io": 0.0221,
+   "entropy": 0.0772,
+   "entropy_parallel": 0.8262,
+   "reconstruct": 0.3396,
+   "total": 1.2876
+  }
+ },
+ "B_gptq4_ans@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/B_gptq4_ans.wcdc"
+  ],
+  "MB": 159.425418,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0228,
+   "entropy": 2.5282,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2426,
+   "total": 2.8731
+  },
+  "serial_mps": {
+   "io": 0.0217,
+   "entropy": 2.5863,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4922,
+   "total": 3.1579
+  },
+  "parallel_cpu": {
+   "io": 0.0246,
+   "entropy": 0.6101,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2396,
+   "total": 0.9597
+  },
+  "parallel_mps": {
+   "io": 0.0217,
+   "entropy": 0.6774,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4822,
+   "total": 1.2629
+  }
+ },
+ "B_gptq4_ans@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/B_gptq4_ans.wcdc"
+  ],
+  "MB": 159.928449,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0222,
+   "entropy_gpu": 0.2867,
+   "reconstruct": 0.2623,
+   "entropy": 0.0036,
+   "total": 0.5942
+  }
+ },
+ "B_gptq4_packed": {
+  "files": [
+   "bitstreams/smol360/B_gptq4_packed.wcdc"
+  ],
+  "MB": 169.578908,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0234,
+   "entropy": 0.142,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2418,
+   "total": 0.4807
+  },
+  "serial_mps": {
+   "io": 0.0228,
+   "entropy": 0.1362,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3512,
+   "total": 0.6
+  },
+  "pool_startup_s": 0.91,
+  "parallel_cpu": {
+   "io": 0.0232,
+   "entropy": 0.1526,
+   "entropy_parallel": 0.0001,
+   "reconstruct": 0.2481,
+   "total": 0.5211
+  },
+  "parallel_mps": {
+   "io": 0.0229,
+   "entropy": 0.1431,
+   "entropy_parallel": 0.0001,
+   "reconstruct": 0.3466,
+   "total": 0.5931
+  }
+ },
+ "B_gptq4_packed@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/B_gptq4_packed.wcdc"
+  ],
+  "MB": 169.578921,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0229,
+   "entropy": 0.1403,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2352,
+   "total": 0.4754
+  },
+  "serial_mps": {
+   "io": 0.0225,
+   "entropy": 0.1374,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3379,
+   "total": 0.5806
+  },
+  "parallel_cpu": {
+   "io": 0.0234,
+   "entropy": 0.1383,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2353,
+   "total": 0.4726
+  },
+  "parallel_mps": {
+   "io": 0.0223,
+   "entropy": 0.1379,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3461,
+   "total": 0.5908
+  }
+ },
+ "B_gptq4_packed@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/B_gptq4_packed.wcdc"
+  ],
+  "MB": 169.578929,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0239,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.3456,
+   "entropy": 0.1415,
+   "total": 0.5989
+  }
+ },
+ "T_delta_c0.12": {
+  "files": [
+   "bitstreams/smol360/T_delta_c0.12.wcdc"
+  ],
+  "MB": 63.008205,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "delta given fp16 base in RAM",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0089,
+   "entropy": 5.5661,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3436,
+   "total": 5.9715
+  },
+  "serial_mps": {
+   "io": 0.0098,
+   "entropy": 5.7114,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.5097,
+   "total": 6.2837
+  },
+  "pool_startup_s": 0.875,
+  "parallel_cpu": {
+   "io": 0.0086,
+   "entropy": 0.0887,
+   "entropy_parallel": 0.8462,
+   "reconstruct": 0.3523,
+   "total": 1.3673
+  },
+  "parallel_mps": {
+   "io": 0.01,
+   "entropy": 0.0848,
+   "entropy_parallel": 0.8352,
+   "reconstruct": 0.3229,
+   "total": 1.2817
+  }
+ },
+ "T_delta_c0.12@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/T_delta_c0.12.wcdc"
+  ],
+  "MB": 63.07197,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "delta given fp16 base in RAM",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0107,
+   "entropy": 2.5608,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3343,
+   "total": 2.96
+  },
+  "serial_mps": {
+   "io": 0.0094,
+   "entropy": 2.5925,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4579,
+   "total": 3.1144
+  },
+  "parallel_cpu": {
+   "io": 0.0093,
+   "entropy": 0.6438,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3408,
+   "total": 1.0548
+  },
+  "parallel_mps": {
+   "io": 0.0092,
+   "entropy": 0.6625,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4251,
+   "total": 1.1578
+  }
+ },
+ "T_delta_c0.12@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/T_delta_c0.12.wcdc"
+  ],
+  "MB": 63.575593,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "delta given fp16 base in RAM",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0085,
+   "entropy_gpu": 0.2609,
+   "reconstruct": 0.225,
+   "entropy": 0.0001,
+   "total": 0.4976
+  }
+ },
+ "T_ecsq_c0.35": {
+  "files": [
+   "bitstreams/smol360/T_ecsq_c0.35.wcdc"
+  ],
+  "MB": 140.864236,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0192,
+   "entropy": 7.5324,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.1841,
+   "total": 7.7827
+  },
+  "serial_mps": {
+   "io": 0.0202,
+   "entropy": 7.6654,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.42,
+   "total": 8.1534
+  },
+  "pool_startup_s": 1.11,
+  "parallel_cpu": {
+   "io": 0.0203,
+   "entropy": 0.0916,
+   "entropy_parallel": 1.1312,
+   "reconstruct": 0.1969,
+   "total": 1.509
+  },
+  "parallel_mps": {
+   "io": 0.0193,
+   "entropy": 0.0829,
+   "entropy_parallel": 1.1293,
+   "reconstruct": 0.2829,
+   "total": 1.5329
+  }
+ },
+ "T_ecsq_c0.35@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/T_ecsq_c0.35.wcdc"
+  ],
+  "MB": 140.976036,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0194,
+   "entropy": 2.6294,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.1838,
+   "total": 2.8751
+  },
+  "serial_mps": {
+   "io": 0.02,
+   "entropy": 2.6052,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3813,
+   "total": 3.0562
+  },
+  "parallel_cpu": {
+   "io": 0.0216,
+   "entropy": 0.6546,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.1729,
+   "total": 0.904
+  },
+  "parallel_mps": {
+   "io": 0.0201,
+   "entropy": 0.6697,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3656,
+   "total": 1.0967
+  }
+ },
+ "T_ecsq_c0.35@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/T_ecsq_c0.35.wcdc"
+  ],
+  "MB": 141.479014,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0188,
+   "entropy_gpu": 0.2986,
+   "reconstruct": 0.1867,
+   "entropy": 0.0001,
+   "total": 0.508
+  }
+ },
+ "T_gptq4_ans": {
+  "files": [
+   "bitstreams/smol360/T_gptq4_ans.wcdc"
+  ],
+  "MB": 159.352717,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.024,
+   "entropy": 5.5989,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.225,
+   "total": 5.9108
+  },
+  "serial_mps": {
+   "io": 0.0215,
+   "entropy": 5.6164,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4853,
+   "total": 6.144
+  },
+  "pool_startup_s": 1.106,
+  "parallel_cpu": {
+   "io": 0.0241,
+   "entropy": 0.1104,
+   "entropy_parallel": 0.841,
+   "reconstruct": 0.247,
+   "total": 1.2968
+  },
+  "parallel_mps": {
+   "io": 0.0218,
+   "entropy": 0.0734,
+   "entropy_parallel": 0.8453,
+   "reconstruct": 0.3297,
+   "total": 1.3304
+  }
+ },
+ "T_gptq4_ans@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/T_gptq4_ans.wcdc"
+  ],
+  "MB": 159.427904,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0231,
+   "entropy": 2.5347,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2084,
+   "total": 2.8297
+  },
+  "serial_mps": {
+   "io": 0.0215,
+   "entropy": 2.5167,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4601,
+   "total": 3.0993
+  },
+  "parallel_cpu": {
+   "io": 0.0234,
+   "entropy": 0.5966,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2038,
+   "total": 0.8967
+  },
+  "parallel_mps": {
+   "io": 0.0224,
+   "entropy": 0.6212,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4288,
+   "total": 1.1607
+  }
+ },
+ "T_gptq4_ans@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/T_gptq4_ans.wcdc"
+  ],
+  "MB": 159.931228,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0213,
+   "entropy_gpu": 0.2946,
+   "reconstruct": 0.2614,
+   "entropy": 0.0036,
+   "total": 0.5851
+  }
+ },
+ "T_gptq4_packed": {
+  "files": [
+   "bitstreams/smol360/T_gptq4_packed.wcdc"
+  ],
+  "MB": 169.578908,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0244,
+   "entropy": 0.1342,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.1935,
+   "total": 0.4169
+  },
+  "serial_mps": {
+   "io": 0.023,
+   "entropy": 0.1367,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3382,
+   "total": 0.5694
+  },
+  "pool_startup_s": 0.993,
+  "parallel_cpu": {
+   "io": 0.023,
+   "entropy": 0.1407,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.2088,
+   "total": 0.449
+  },
+  "parallel_mps": {
+   "io": 0.0256,
+   "entropy": 0.142,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.34,
+   "total": 0.5652
+  }
+ },
+ "T_gptq4_packed@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/T_gptq4_packed.wcdc"
+  ],
+  "MB": 169.578921,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0252,
+   "entropy": 0.1379,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2005,
+   "total": 0.423
+  },
+  "serial_mps": {
+   "io": 0.0229,
+   "entropy": 0.1297,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3371,
+   "total": 0.5604
+  },
+  "parallel_cpu": {
+   "io": 0.0249,
+   "entropy": 0.136,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2027,
+   "total": 0.4212
+  },
+  "parallel_mps": {
+   "io": 0.0223,
+   "entropy": 0.129,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3397,
+   "total": 0.5638
+  }
+ },
+ "T_gptq4_packed@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/T_gptq4_packed.wcdc"
+  ],
+  "MB": 169.578929,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "independent",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0219,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.3339,
+   "entropy": 0.1287,
+   "total": 0.5579
+  }
+ },
+ "T_lowrank_r32": {
+  "files": [
+   "bitstreams/smol360/T_lowrank_r32.wcdc"
+  ],
+  "MB": 34.737288,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "delta given fp16 base in RAM",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.006,
+   "entropy": 0.0009,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2874,
+   "total": 0.3269
+  },
+  "serial_mps": {
+   "io": 0.0054,
+   "entropy": 0.0005,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2474,
+   "total": 0.2553
+  },
+  "pool_startup_s": 0.935,
+  "parallel_cpu": {
+   "io": 0.0046,
+   "entropy": 0.001,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.2988,
+   "total": 0.3355
+  },
+  "parallel_mps": {
+   "io": 0.0046,
+   "entropy": 0.0005,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.2469,
+   "total": 0.2543
+  }
+ },
+ "T_lowrank_r32@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/T_lowrank_r32.wcdc"
+  ],
+  "MB": 34.737298,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "delta given fp16 base in RAM",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0054,
+   "entropy": 0.0009,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2819,
+   "total": 0.3139
+  },
+  "serial_mps": {
+   "io": 0.0049,
+   "entropy": 0.0005,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2427,
+   "total": 0.25
+  },
+  "parallel_cpu": {
+   "io": 0.0047,
+   "entropy": 0.0009,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.278,
+   "total": 0.3111
+  },
+  "parallel_mps": {
+   "io": 0.0051,
+   "entropy": 0.0004,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2461,
+   "total": 0.2536
+  }
+ },
+ "T_lowrank_r32@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/T_lowrank_r32.wcdc"
+  ],
+  "MB": 34.737308,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "delta given fp16 base in RAM",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0049,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.2459,
+   "entropy": 0.0004,
+   "total": 0.2538
+  }
+ },
+ "T_pframe_c0.35+base": {
+  "files": [
+   "bitstreams/smol360/B_ecsq_c0.35.wcdc",
+   "bitstreams/smol360/T_pframe_c0.35.wcdc"
+  ],
+  "MB": 182.405258,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "base I-frame + P-frame",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0308,
+   "entropy": 12.509,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.508,
+   "total": 13.1519
+  },
+  "serial_mps": {
+   "io": 0.0275,
+   "entropy": 12.5954,
+   "entropy_parallel": 0.0,
+   "reconstruct": 1.0156,
+   "total": 13.6664
+  },
+  "pool_startup_s": 2.865,
+  "parallel_cpu": {
+   "io": 0.0259,
+   "entropy": 0.3373,
+   "entropy_parallel": 2.0022,
+   "reconstruct": 0.8894,
+   "total": 3.4347
+  },
+  "parallel_mps": {
+   "io": 0.0261,
+   "entropy": 0.1775,
+   "entropy_parallel": 1.9558,
+   "reconstruct": 0.5978,
+   "total": 2.7946
+  }
+ },
+ "T_pframe_c0.35+base@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/B_ecsq_c0.35.wcdc",
+   "bitstreams/smol360/r16/T_pframe_c0.35.wcdc"
+  ],
+  "MB": 182.571365,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "base I-frame + P-frame",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0262,
+   "entropy": 5.0425,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.5175,
+   "total": 5.6806
+  },
+  "serial_mps": {
+   "io": 0.0256,
+   "entropy": 5.0935,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.8314,
+   "total": 6.0254
+  },
+  "parallel_cpu": {
+   "io": 0.0257,
+   "entropy": 1.2262,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.5168,
+   "total": 1.8639
+  },
+  "parallel_mps": {
+   "io": 0.0251,
+   "entropy": 1.28,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.7137,
+   "total": 2.0869
+  }
+ },
+ "T_pframe_c0.35+base@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/B_ecsq_c0.35.wcdc",
+   "bitstreams/smol360/r16_4096/T_pframe_c0.35.wcdc"
+  ],
+  "MB": 183.577696,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "base I-frame + P-frame",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0279,
+   "entropy_gpu": 0.5491,
+   "reconstruct": 0.3433,
+   "entropy": 0.0001,
+   "total": 0.9295
+  }
+ },
+ "T_pframe_c0.35_only": {
+  "files": [
+   "bitstreams/smol360/T_pframe_c0.35.wcdc"
+  ],
+  "MB": 41.539196,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "P-frame given decoded base in RAM",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0075,
+   "entropy": 5.1029,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2402,
+   "total": 5.4026
+  },
+  "serial_mps": {
+   "io": 0.0082,
+   "entropy": 5.0524,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.4245,
+   "total": 5.4928
+  },
+  "pool_startup_s": 1.264,
+  "parallel_cpu": {
+   "io": 0.0067,
+   "entropy": 0.088,
+   "entropy_parallel": 0.7923,
+   "reconstruct": 0.2552,
+   "total": 1.2396
+  },
+  "parallel_mps": {
+   "io": 0.0068,
+   "entropy": 0.0843,
+   "entropy_parallel": 0.7856,
+   "reconstruct": 0.2405,
+   "total": 1.1355
+  }
+ },
+ "T_pframe_c0.35_only@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/T_pframe_c0.35.wcdc"
+  ],
+  "MB": 41.593773,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "P-frame given decoded base in RAM",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0064,
+   "entropy": 2.4267,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2366,
+   "total": 2.7294
+  },
+  "serial_mps": {
+   "io": 0.0063,
+   "entropy": 2.3775,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.365,
+   "total": 2.7653
+  },
+  "parallel_cpu": {
+   "io": 0.0058,
+   "entropy": 0.6046,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.2321,
+   "total": 0.9032
+  },
+  "parallel_mps": {
+   "io": 0.0072,
+   "entropy": 0.7015,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.3475,
+   "total": 1.0804
+  }
+ },
+ "T_pframe_c0.35_only@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/T_pframe_c0.35.wcdc"
+  ],
+  "MB": 42.096811,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "P-frame given decoded base in RAM",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0091,
+   "entropy_gpu": 0.2555,
+   "reconstruct": 0.1596,
+   "entropy": 0.0001,
+   "total": 0.4277
+  }
+ },
+ "B_rest_ll16": {
+  "files": [
+   "bitstreams/smol360/B_rest_ll16.wcdc"
+  ],
+  "MB": 62.096834,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0078,
+   "entropy": 2.6171,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0002,
+   "total": 2.6304
+  },
+  "serial_mps": {
+   "io": 0.0076,
+   "entropy": 2.5977,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0363,
+   "total": 2.6483
+  },
+  "pool_startup_s": 1.077,
+  "parallel_cpu": {
+   "io": 0.0085,
+   "entropy": 2.6934,
+   "entropy_parallel": 0.0001,
+   "reconstruct": 0.0002,
+   "total": 2.708
+  },
+  "parallel_mps": {
+   "io": 0.0077,
+   "entropy": 2.6223,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.0374,
+   "total": 2.674
+  }
+ },
+ "B_rest_ll16@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/B_rest_ll16.wcdc"
+  ],
+  "MB": 62.12568,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0079,
+   "entropy": 0.8875,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0003,
+   "total": 0.9005
+  },
+  "serial_mps": {
+   "io": 0.0083,
+   "entropy": 0.8884,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0221,
+   "total": 0.9243
+  },
+  "parallel_cpu": {
+   "io": 0.0074,
+   "entropy": 0.3,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0003,
+   "total": 0.3121
+  },
+  "parallel_mps": {
+   "io": 0.0083,
+   "entropy": 0.308,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.022,
+   "total": 0.3439
+  }
+ },
+ "B_rest_ll16@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/B_rest_ll16.wcdc"
+  ],
+  "MB": 62.278133,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0081,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.0216,
+   "entropy": 0.304,
+   "total": 0.3396
+  }
+ },
+ "T_rest_ll16": {
+  "files": [
+   "bitstreams/smol360/T_rest_ll16.wcdc"
+  ],
+  "MB": 62.090497,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0076,
+   "entropy": 2.5995,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0002,
+   "total": 2.6119
+  },
+  "serial_mps": {
+   "io": 0.0081,
+   "entropy": 2.6098,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0341,
+   "total": 2.6584
+  },
+  "pool_startup_s": 1.121,
+  "parallel_cpu": {
+   "io": 0.008,
+   "entropy": 2.6182,
+   "entropy_parallel": 0.0001,
+   "reconstruct": 0.0002,
+   "total": 2.6316
+  },
+  "parallel_mps": {
+   "io": 0.008,
+   "entropy": 2.6152,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.0361,
+   "total": 2.6662
+  }
+ },
+ "T_rest_ll16@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/T_rest_ll16.wcdc"
+  ],
+  "MB": 62.119336,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0079,
+   "entropy": 0.8803,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0003,
+   "total": 0.8935
+  },
+  "serial_mps": {
+   "io": 0.0084,
+   "entropy": 0.8872,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0217,
+   "total": 0.923
+  },
+  "parallel_cpu": {
+   "io": 0.0083,
+   "entropy": 0.2969,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0003,
+   "total": 0.3098
+  },
+  "parallel_mps": {
+   "io": 0.0081,
+   "entropy": 0.3067,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0226,
+   "total": 0.3424
+  }
+ },
+ "T_rest_ll16@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/T_rest_ll16.wcdc"
+  ],
+  "MB": 62.272049,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0089,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.0217,
+   "entropy": 0.3003,
+   "total": 0.337
+  }
+ },
+ "T_rest_xor_base": {
+  "files": [
+   "bitstreams/smol360/T_rest_xor_base.wcdc"
+  ],
+  "MB": 50.772162,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "constriction",
+  "serial_cpu": {
+   "io": 0.0064,
+   "entropy": 2.68,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0001,
+   "total": 2.6912
+  },
+  "serial_mps": {
+   "io": 0.0065,
+   "entropy": 2.6786,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0379,
+   "total": 2.7295
+  },
+  "pool_startup_s": 1.14,
+  "parallel_cpu": {
+   "io": 0.0062,
+   "entropy": 2.7012,
+   "entropy_parallel": 0.0002,
+   "reconstruct": 0.0001,
+   "total": 2.7137
+  },
+  "parallel_mps": {
+   "io": 0.0065,
+   "entropy": 2.7108,
+   "entropy_parallel": 0.0001,
+   "reconstruct": 0.0383,
+   "total": 2.7627
+  }
+ },
+ "T_rest_xor_base@rans16": {
+  "files": [
+   "bitstreams/smol360/r16/T_rest_xor_base.wcdc"
+  ],
+  "MB": 50.828054,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16",
+  "numba_threads_parallel": 8,
+  "serial_cpu": {
+   "io": 0.0067,
+   "entropy": 1.008,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0002,
+   "total": 1.0198
+  },
+  "serial_mps": {
+   "io": 0.0067,
+   "entropy": 1.0029,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0221,
+   "total": 1.0375
+  },
+  "parallel_cpu": {
+   "io": 0.0064,
+   "entropy": 0.3736,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0002,
+   "total": 0.3834
+  },
+  "parallel_mps": {
+   "io": 0.0071,
+   "entropy": 0.3757,
+   "entropy_parallel": 0.0,
+   "reconstruct": 0.0224,
+   "total": 0.4091
+  }
+ },
+ "T_rest_xor_base@rans16_4k": {
+  "files": [
+   "bitstreams/smol360/r16_4096/T_rest_xor_base.wcdc"
+  ],
+  "MB": 50.979307,
+  "host": "Darwin-arm64-8cpu",
+  "workers": 8,
+  "what": "rest (lossless)",
+  "coder": "rans16_4k",
+  "gpu_mps": {
+   "io": 0.0072,
+   "entropy_gpu": 0.0,
+   "reconstruct": 0.0225,
+   "entropy": 0.3835,
+   "total": 0.4181
+  }
+ }
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>weight-codec — base once + entropy-coded delta → Instruct model, in your browser</title>
+<meta name="description" content="SmolLM2-135M → SmolLM2-135M-Instruct rebuilt in the browser from a cached base and a small entropy-coded delta: rANS decode in JavaScript, SHA-256 check against the Python decoder, live generation with the rebuilt weights.">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+</head>
+<body>
+<div class="viz-root">
+<header class="hero">
+  <p class="eyebrow">weight-codec · live demo · <a href="https://github.com/lifeart/weight-codec">code &amp; report</a></p>
+  <h1>Download the base once. Send a small entropy-coded delta.<br>Rebuild the Instruct model — in this tab.</h1>
+  <p class="lede"><b>SmolLM2-135M → SmolLM2-135M-Instruct.</b> The page downloads our compressed <code>.wcdc</code> files,
+    entropy-decodes them (rANS, plain JavaScript), rebuilds the fp16 weights, checks their <b>SHA-256 against the Python
+    decoder</b>, and then generates text <b>with the rebuilt weights</b>. No server, no GPU, no official weight file is downloaded.</p>
+  <p id="data-note" class="note" hidden></p>
+</header>
+
+<main>
+<section id="pick" aria-labelledby="pick-h">
+  <h2 id="pick-h">1 · Pick a configuration</h2>
+  <div id="chains" class="cards" role="radiogroup" aria-label="configuration"></div>
+</section>
+
+<section id="counter" aria-labelledby="counter-h">
+  <h2 id="counter-h">2 · Download + decode + verify</h2>
+  <div class="tiles">
+    <div class="tile"><div class="t-label">Base model <span class="muted">· downloaded once, then cached</span></div>
+      <div class="t-value" id="t-base">—</div><div class="t-sub" id="t-base-sub"></div></div>
+    <div class="op">+</div>
+    <div class="tile accent"><div class="t-label">Instruct delta</div>
+      <div class="t-value" id="t-delta">—</div><div class="t-sub" id="t-delta-sub"></div></div>
+    <div class="op">→</div>
+    <div class="tile"><div class="t-label">Rebuilt Instruct model</div>
+      <div class="t-value" id="t-out">134.5 M weights</div><div class="t-sub" id="t-out-sub">fp16, every tensor</div></div>
+  </div>
+  <p class="refline" id="refline"></p>
+  <p class="actions">
+    <button id="go" class="primary" disabled>Download + decode + verify</button>
+    <button id="clear" class="ghost" disabled>Forget cached files</button>
+    <span id="session" class="muted"></span>
+  </p>
+  <p class="muted small">Needs roughly 1 GB of free memory (compressed files + two rebuilt fp16 models); a desktop browser is recommended.
+    Files are kept in this site's Cache Storage, so the base is downloaded only once.</p>
+  <div id="progress" class="progress" aria-live="polite"></div>
+  <p id="demo-log" class="log" aria-live="polite"></p>
+</section>
+
+<section id="verify" aria-labelledby="verify-h" hidden>
+  <h2 id="verify-h">3 · What was verified (in your browser)</h2>
+  <ul id="checks" class="checks"></ul>
+  <div class="tw"><table id="filetable"><thead><tr><th>file</th><th>role</th><th>MB</th><th>source</th><th>download ms</th>
+    <th>entropy-decode ms</th><th>rebuild ms</th><th>SHA-256 ms</th><th>symbols = Python</th><th>fp16 weights = Python</th><th>vs original</th></tr></thead>
+    <tbody></tbody></table></div>
+  <p class="muted small" id="timing-note"></p>
+</section>
+
+<section id="gen" aria-labelledby="gen-h">
+  <h2 id="gen-h">4 · Generate text with the rebuilt weights</h2>
+  <p class="banner" id="gen-banner">Live generation runs on the weights rebuilt in step 2 — the same buffers whose SHA-256 was just
+    checked — through this page's own small JavaScript Llama forward pass (fp32 math, one CPU thread in a Web Worker, greedy decoding).
+    It is <b>not</b> transformers.js / ONNX and <b>not</b> the official weights. Offline test (<code>phase2/test_demo.mjs</code>): this
+    forward pass reproduces PyTorch's greedy tokens on the same rebuilt weights for every test prompt (logits within 4·10⁻⁵).</p>
+  <div class="genbox">
+    <div class="row">
+      <label><input type="radio" name="which" value="instruct" checked> rebuilt <b>Instruct</b></label>
+      <label><input type="radio" name="which" value="base"> rebuilt <b>base</b> (same chat-formatted input)</label>
+      <label class="mx">max new tokens <input id="maxnew" type="number" min="1" max="200" value="64"></label>
+    </div>
+    <div class="row" id="presets"></div>
+    <textarea id="prompt" rows="2" aria-label="prompt">Why is the sky blue?</textarea>
+    <div class="row"><button id="gen-go" class="primary" disabled>Generate</button> <button id="gen-stop" class="ghost" disabled>Stop</button>
+      <span id="gen-stat" class="muted"></span></div>
+    <pre id="gen-out" class="out" aria-live="polite">Decode a configuration in step 2 first.</pre>
+    <p id="gen-cmp" class="small"></p>
+  </div>
+</section>
+
+<section id="examples" aria-labelledby="ex-h">
+  <h2 id="ex-h">Precomputed answers (offline, for comparison)</h2>
+  <p class="muted" id="ex-how"></p>
+  <div class="tw"><table id="extable" class="ex"><thead></thead><tbody></tbody></table></div>
+</section>
+
+<section id="numbers" aria-labelledby="num-h">
+  <h2 id="num-h">The numbers behind it (measured offline, REPORT §14.3)</h2>
+  <div id="numbers-body"></div>
+</section>
+
+<section id="all" aria-labelledby="all-h">
+  <h2 id="all-h">All phase-2 results</h2>
+  <details><summary>Show every phase-2 table (Qwen2.5-0.5B, SmolLM2-360M/135M families, Pythia trajectory, SVC, zstd reference)</summary>
+    <div id="results"></div></details>
+</section>
+</main>
+
+<footer>
+  <p>weight-codec — a falsification-first study of “compress weights like JPEG, families and checkpoints like video”.
+    Full report with every caveat: <a href="https://github.com/lifeart/weight-codec/blob/main/REPORT.md">REPORT.md</a> (§14 = these files).
+    Models: <a href="https://huggingface.co/HuggingFaceTB/SmolLM2-135M">HuggingFaceTB/SmolLM2-135M</a> and
+    <a href="https://huggingface.co/HuggingFaceTB/SmolLM2-135M-Instruct">-Instruct</a> (Apache-2.0), re-encoded by us.
+    Code: MIT.</p>
+</footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

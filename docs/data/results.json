@@ -1,0 +1,484 @@
+{
+ "source": "results/phase2_summary.json, results/phase2_family_smol135.json (REPORT \u00a714.3)",
+ "pairs": [
+  {
+   "scenario": "both fp16 (raw)",
+   "files": [
+    "B_fp16",
+    "B_rest_raw16",
+    "T_fp16",
+    "T_rest_raw16"
+   ],
+   "pair_MB": 538.065576,
+   "base_ppl": 15.432003842378936,
+   "ft_chat_kl": 0.0,
+   "ft_wiki_kl": 0.0,
+   "note": ""
+  },
+  {
+   "scenario": "both GPTQ-int4 fixed-rate (standard int4 files), rest fp16",
+   "files": [
+    "B_gptq4_packed",
+    "B_rest_raw16",
+    "T_gptq4_packed",
+    "T_rest_raw16"
+   ],
+   "pair_MB": 227.86040199999997,
+   "base_ppl": 20.689068674025172,
+   "ft_chat_kl": 0.39995986170353903,
+   "ft_wiki_kl": 0.2881556815150661,
+   "note": ""
+  },
+  {
+   "scenario": "both GPTQ-int4 + rANS, rest lossless",
+   "files": [
+    "B_gptq4_ans",
+    "B_rest_ll16",
+    "T_gptq4_ans",
+    "T_rest_ll16"
+   ],
+   "pair_MB": 182.60899899999998,
+   "base_ppl": 20.689068674025172,
+   "ft_chat_kl": 0.39995986170353903,
+   "ft_wiki_kl": 0.2881556815150661,
+   "note": ""
+  },
+  {
+   "scenario": "both independent GPTQ-ECSQ c=0.35, rest lossless",
+   "files": [
+    "B_ecsq_c0.35",
+    "B_rest_ll16",
+    "T_ecsq_c0.35",
+    "T_rest_ll16"
+   ],
+   "pair_MB": 170.47473000000002,
+   "base_ppl": 20.928552460384978,
+   "ft_chat_kl": 0.5048905781337193,
+   "ft_wiki_kl": 0.3566822784379103,
+   "note": ""
+  },
+  {
+   "scenario": "FAMILY: base I-frame + fine-tune P-frame (c=0.35), rest lossless (+XOR P)",
+   "files": [
+    "B_ecsq_c0.35",
+    "B_rest_ll16",
+    "T_pframe_c0.35",
+    "T_rest_xor_base"
+   ],
+   "pair_MB": 130.548558,
+   "base_ppl": 20.928552460384978,
+   "ft_chat_kl": 0.5378367891399832,
+   "ft_wiki_kl": 0.3231820361347506,
+   "note": ""
+  },
+  {
+   "scenario": "FAMILY: base I-frame + P-frame (c=0.5)",
+   "files": [
+    "B_ecsq_c0.5",
+    "B_rest_ll16",
+    "T_pframe_c0.5",
+    "T_rest_xor_base"
+   ],
+   "pair_MB": 121.97765899999999,
+   "base_ppl": 29.51364622417403,
+   "ft_chat_kl": 1.0116058010541171,
+   "ft_wiki_kl": 0.6854312516563278,
+   "note": ""
+  },
+  {
+   "scenario": "lossless fp16 base + full-rank \u0394 c=0.06",
+   "files": [
+    "B_fp16",
+    "B_rest_ll16",
+    "T_delta_c0.06",
+    "T_rest_xor_base"
+   ],
+   "pair_MB": 315.07550299999997,
+   "base_ppl": 15.432003842378936,
+   "ft_chat_kl": 0.01011752991726723,
+   "ft_wiki_kl": 0.006887473024038437,
+   "note": "base linears raw fp16 (lossless); a lossless rANS of them would be ~4/5 of that"
+  },
+  {
+   "scenario": "lossless fp16 base + full-rank \u0394 c=0.12",
+   "files": [
+    "B_fp16",
+    "B_rest_ll16",
+    "T_delta_c0.12",
+    "T_rest_xor_base"
+   ],
+   "pair_MB": 303.26893,
+   "base_ppl": 15.432003842378936,
+   "ft_chat_kl": 0.029880677164444543,
+   "ft_wiki_kl": 0.018061486755747532,
+   "note": "base linears raw fp16 (lossless); a lossless rANS of them would be ~4/5 of that"
+  },
+  {
+   "scenario": "lossless fp16 base + full-rank \u0394 c=0.25",
+   "files": [
+    "B_fp16",
+    "B_rest_ll16",
+    "T_delta_c0.25",
+    "T_rest_xor_base"
+   ],
+   "pair_MB": 292.170377,
+   "base_ppl": 15.432003842378936,
+   "ft_chat_kl": 0.1018092735777893,
+   "ft_wiki_kl": 0.04266766105329461,
+   "note": "base linears raw fp16 (lossless); a lossless rANS of them would be ~4/5 of that"
+  },
+  {
+   "scenario": "lossless fp16 base + LoRA-style \u0394 r=32",
+   "files": [
+    "B_fp16",
+    "B_rest_ll16",
+    "T_lowrank_r32",
+    "T_rest_xor_base"
+   ],
+   "pair_MB": 300.16251,
+   "base_ppl": 15.432003842378936,
+   "ft_chat_kl": 0.2204130450427071,
+   "ft_wiki_kl": 0.09646843792347426,
+   "note": ""
+  },
+  {
+   "scenario": "lossless fp16 base + LoRA-style \u0394 r=64",
+   "files": [
+    "B_fp16",
+    "B_rest_ll16",
+    "T_lowrank_r64",
+    "T_rest_xor_base"
+   ],
+   "pair_MB": 319.700534,
+   "base_ppl": 15.432003842378936,
+   "ft_chat_kl": 0.14432431527141537,
+   "ft_wiki_kl": 0.07055573447133834,
+   "note": ""
+  },
+  {
+   "scenario": "lossless fp16 base + LoRA-style \u0394 r=128",
+   "files": [
+    "B_fp16",
+    "B_rest_ll16",
+    "T_lowrank_r128",
+    "T_rest_xor_base"
+   ],
+   "pair_MB": 358.77643,
+   "base_ppl": 15.432003842378936,
+   "ft_chat_kl": 0.07069646518035617,
+   "ft_wiki_kl": 0.04184120500384742,
+   "note": ""
+  }
+ ],
+ "finetune_formats": [
+  {
+   "format": "fp16 (raw)",
+   "MB": 212.338775,
+   "real_bpw": 16.00016087661555,
+   "chat_kl": 0.0,
+   "kl": 0.0,
+   "ppl": 17.364722529463663,
+   "dec_cpu_constriction_1t_ms": null,
+   "dec_cpu_rans16_par_ms": null,
+   "dec_gpu_ms": null
+  },
+  {
+   "format": "GPTQ-int4 g64 fixed-rate (packed nibbles)",
+   "MB": 57.236188,
+   "real_bpw": 4.312863799672068,
+   "chat_kl": 0.39995986170353903,
+   "kl": 0.2881556815150661,
+   "ppl": 23.397940990685605,
+   "dec_cpu_constriction_1t_ms": 227.8,
+   "dec_cpu_rans16_par_ms": 248.20000000000002,
+   "dec_gpu_ms": 313.3
+  },
+  {
+   "format": "GPTQ-int4 g64 + rANS",
+   "MB": 53.760725,
+   "real_bpw": 4.050980556158372,
+   "chat_kl": 0.39995986170353903,
+   "kl": 0.2881556815150661,
+   "ppl": 23.397940990685605,
+   "dec_cpu_constriction_1t_ms": 2128.4,
+   "dec_cpu_rans16_par_ms": 439.7,
+   "dec_gpu_ms": 390.7
+  },
+  {
+   "format": "GPTQ-ECSQ c=0.35 + rANS",
+   "MB": 47.69278,
+   "real_bpw": 3.593748492959105,
+   "chat_kl": 0.5048905781337193,
+   "kl": 0.3566822784379103,
+   "ppl": 24.843568323171187,
+   "dec_cpu_constriction_1t_ms": 2671.3,
+   "dec_cpu_rans16_par_ms": 402.3,
+   "dec_gpu_ms": 296.9
+  },
+  {
+   "format": "GPTQ-ECSQ c=0.5 + rANS",
+   "MB": 41.001736,
+   "real_bpw": 3.0895646460262345,
+   "chat_kl": 1.0362402301708422,
+   "kl": 0.6413402780999657,
+   "ppl": 32.745155865388654,
+   "dec_cpu_constriction_1t_ms": 2553.4,
+   "dec_cpu_rans16_par_ms": 418.4,
+   "dec_gpu_ms": 293.4
+  },
+  {
+   "format": "P-frame on base I-frame lattice (c=0.35)",
+   "MB": 14.571799,
+   "real_bpw": 1.09801485038098,
+   "chat_kl": 0.5378367891399832,
+   "kl": 0.3231820361347506,
+   "ppl": 24.094009810782048,
+   "dec_cpu_constriction_1t_ms": 4504.1,
+   "dec_cpu_rans16_par_ms": 757.3,
+   "dec_gpu_ms": 484.20000000000005
+  },
+  {
+   "format": "P-frame on base lattice (c=0.5)",
+   "MB": 12.689213,
+   "real_bpw": 0.956158145857446,
+   "chat_kl": 1.0116058010541171,
+   "kl": 0.6854312516563278,
+   "ppl": 34.064311549393274,
+   "dec_cpu_constriction_1t_ms": 4420.5,
+   "dec_cpu_rans16_par_ms": 739.1,
+   "dec_gpu_ms": 479.4
+  },
+  {
+   "format": "full-rank \u0394 vs fp16 base, GPTQ c=0.06 + rANS",
+   "MB": 34.454101,
+   "real_bpw": 2.5961869604793595,
+   "chat_kl": 0.01011752991726723,
+   "kl": 0.006887473024038437,
+   "ppl": 17.44635688448134,
+   "dec_cpu_constriction_1t_ms": 2395.4,
+   "dec_cpu_rans16_par_ms": 487.9,
+   "dec_gpu_ms": 307.3
+  },
+  {
+   "format": "full-rank \u0394 vs fp16 base, GPTQ c=0.12 + rANS",
+   "MB": 22.647528,
+   "real_bpw": 1.7065375434027779,
+   "chat_kl": 0.029880677164444543,
+   "kl": 0.018061486755747532,
+   "ppl": 17.58195425571569,
+   "dec_cpu_constriction_1t_ms": 2165.6,
+   "dec_cpu_rans16_par_ms": 477.1,
+   "dec_gpu_ms": 298.09999999999997
+  },
+  {
+   "format": "full-rank \u0394 vs fp16 base, GPTQ c=0.25 + rANS",
+   "MB": 11.548975,
+   "real_bpw": 0.8702388810522762,
+   "chat_kl": 0.1018092735777893,
+   "kl": 0.04266766105329461,
+   "ppl": 17.588977138603266,
+   "dec_cpu_constriction_1t_ms": 1942.5,
+   "dec_cpu_rans16_par_ms": 488.8,
+   "dec_gpu_ms": 291.9
+  },
+  {
+   "format": "LoRA-style \u0394 rank 32 (fp16 factors)",
+   "MB": 19.541108,
+   "real_bpw": 1.4724624445408951,
+   "chat_kl": 0.2204130450427071,
+   "kl": 0.09646843792347426,
+   "ppl": 17.103049182554106,
+   "dec_cpu_constriction_1t_ms": 214.10000000000002,
+   "dec_cpu_rans16_par_ms": 218.4,
+   "dec_gpu_ms": 207.4
+  },
+  {
+   "format": "LoRA-style \u0394 rank 64 (fp16 factors)",
+   "MB": 39.079132,
+   "real_bpw": 2.9446925033757716,
+   "chat_kl": 0.14432431527141537,
+   "kl": 0.07055573447133834,
+   "ppl": 17.08937156361111,
+   "dec_cpu_constriction_1t_ms": 234.8,
+   "dec_cpu_rans16_par_ms": 233.9,
+   "dec_gpu_ms": 213.79999999999998
+  },
+  {
+   "format": "LoRA-style \u0394 rank 128 (fp16 factors)",
+   "MB": 78.155028,
+   "real_bpw": 5.8891411675347225,
+   "chat_kl": 0.07069646518035617,
+   "kl": 0.04184120500384742,
+   "ppl": 17.100308738024854,
+   "dec_cpu_constriction_1t_ms": 234.1,
+   "dec_cpu_rans16_par_ms": 234.2,
+   "dec_gpu_ms": 251.4
+  }
+ ],
+ "files": {
+  "B_rest_raw16": {
+   "MB": 56.694013
+  },
+  "B_rest_ll16": {
+   "MB": 37.549831
+  },
+  "B_fp16": {
+   "MB": 212.338775,
+   "real_bpw": 16.00016087661555,
+   "kl": 0.0,
+   "ppl": 15.432003842378936
+  },
+  "B_gptq4_packed": {
+   "MB": 57.236188,
+   "real_bpw": 4.312863799672068,
+   "kl": 0.2812611328780971,
+   "ppl": 20.689068674025172
+  },
+  "B_gptq4_ans": {
+   "MB": 53.760456,
+   "real_bpw": 4.050960286458333,
+   "kl": 0.2812611328780971,
+   "ppl": 20.689068674025172
+  },
+  "B_ecsq_c0.35": {
+   "MB": 47.694132,
+   "real_bpw": 3.593850368923611,
+   "kl": 0.2833101708654898,
+   "ppl": 20.928552460384978
+  },
+  "B_ecsq_c0.5": {
+   "MB": 41.005819,
+   "real_bpw": 3.0898723084249613,
+   "kl": 0.6096047893872655,
+   "ppl": 29.51364622417403
+  },
+  "T_rest_raw16": {
+   "MB": 56.694013
+  },
+  "T_rest_ll16": {
+   "MB": 37.537987
+  },
+  "T_rest_xor_base": {
+   "MB": 30.732796
+  },
+  "T_fp16": {
+   "MB": 212.338775,
+   "real_bpw": 16.00016087661555,
+   "chat_kl": 0.0,
+   "chat_top1": 1.0,
+   "kl": 0.0,
+   "ppl": 17.364722529463663
+  },
+  "T_gptq4_packed": {
+   "MB": 57.236188,
+   "real_bpw": 4.312863799672068,
+   "chat_kl": 0.39995986170353903,
+   "chat_top1": 0.7507076806944707,
+   "kl": 0.2881556815150661,
+   "ppl": 23.397940990685605
+  },
+  "T_gptq4_ans": {
+   "MB": 53.760725,
+   "real_bpw": 4.050980556158372,
+   "chat_kl": 0.39995986170353903,
+   "chat_top1": 0.7507076806944707,
+   "kl": 0.2881556815150661,
+   "ppl": 23.397940990685605
+  },
+  "T_ecsq_c0.35": {
+   "MB": 47.69278,
+   "real_bpw": 3.593748492959105,
+   "chat_kl": 0.5048905781337193,
+   "chat_top1": 0.7290054727307039,
+   "kl": 0.3566822784379103,
+   "ppl": 24.843568323171187
+  },
+  "T_ecsq_c0.5": {
+   "MB": 41.001736,
+   "real_bpw": 3.0895646460262345,
+   "chat_kl": 1.0362402301708422,
+   "chat_top1": 0.6203057180600113,
+   "kl": 0.6413402780999657,
+   "ppl": 32.745155865388654
+  },
+  "T_pframe_c0.35": {
+   "MB": 14.571799,
+   "real_bpw": 1.09801485038098,
+   "chat_kl": 0.5378367891399832,
+   "chat_top1": 0.7214568786563502,
+   "kl": 0.3231820361347506,
+   "ppl": 24.094009810782048
+  },
+  "T_pframe_c0.5": {
+   "MB": 12.689213,
+   "real_bpw": 0.956158145857446,
+   "chat_kl": 1.0116058010541171,
+   "chat_top1": 0.6180411398377053,
+   "kl": 0.6854312516563278,
+   "ppl": 34.064311549393274
+  },
+  "T_delta_c0.06": {
+   "MB": 34.454101,
+   "real_bpw": 2.5961869604793595,
+   "chat_kl": 0.01011752991726723,
+   "chat_top1": 0.9618795999245141,
+   "kl": 0.006887473024038437,
+   "ppl": 17.44635688448134
+  },
+  "T_delta_c0.12": {
+   "MB": 22.647528,
+   "real_bpw": 1.7065375434027779,
+   "chat_kl": 0.029880677164444543,
+   "chat_top1": 0.9362143800717116,
+   "kl": 0.018061486755747532,
+   "ppl": 17.58195425571569
+  },
+  "T_delta_c0.25": {
+   "MB": 11.548975,
+   "real_bpw": 0.8702388810522762,
+   "chat_kl": 0.1018092735777893,
+   "chat_top1": 0.8790337799584828,
+   "kl": 0.04266766105329461,
+   "ppl": 17.588977138603266
+  },
+  "T_lowrank_r32": {
+   "MB": 19.541108,
+   "real_bpw": 1.4724624445408951,
+   "chat_kl": 0.2204130450427071,
+   "chat_top1": 0.8101528590300057,
+   "kl": 0.09646843792347426,
+   "ppl": 17.103049182554106
+  },
+  "T_lowrank_r64": {
+   "MB": 39.079132,
+   "real_bpw": 2.9446925033757716,
+   "chat_kl": 0.14432431527141537,
+   "chat_top1": 0.8482732591054916,
+   "kl": 0.07055573447133834,
+   "ppl": 17.08937156361111
+  },
+  "T_lowrank_r128": {
+   "MB": 78.155028,
+   "real_bpw": 5.8891411675347225,
+   "chat_kl": 0.07069646518035617,
+   "chat_top1": 0.8965842611813549,
+   "kl": 0.04184120500384742,
+   "ppl": 17.100308738024854
+  }
+ },
+ "chat_set": "48 fixed prompts; chat-KL = KL(original fp16 Instruct || candidate) on the original's greedy answers",
+ "delta_vs_lora": [
+  [
+   "T_delta_c0.25",
+   "T_lowrank_r32"
+  ],
+  [
+   "T_delta_c0.06",
+   "T_lowrank_r64"
+  ],
+  [
+   "T_delta_c0.06",
+   "T_lowrank_r128"
+  ]
+ ]
+}

@@ -1,0 +1,144 @@
+{
+ "spine_matched": {
+  "RTN g128 fixed-rate": {
+   "PPL=GPTQ-int4 (14.03)": null,
+   "PPL=RTN-int4 (15.54)": 4.156,
+   "PPL=GPTQ-int3 (19.57)": 3.963,
+   "PPL=14.5": null,
+   "KL=0.05": null
+  },
+  "RTN g128 + entropy (A2)": {
+   "PPL=GPTQ-int4 (14.03)": null,
+   "PPL=RTN-int4 (15.54)": 3.756,
+   "PPL=GPTQ-int3 (19.57)": 3.555,
+   "PPL=14.5": null,
+   "KL=0.05": null
+  },
+  "GPTQ g128 fixed-rate": {
+   "PPL=GPTQ-int4 (14.03)": 4.156,
+   "PPL=RTN-int4 (15.54)": 3.847,
+   "PPL=GPTQ-int3 (19.57)": 3.148,
+   "PPL=14.5": 4.057,
+   "KL=0.05": null
+  },
+  "GPTQ g128 + entropy (A2)": {
+   "PPL=GPTQ-int4 (14.03)": 3.757,
+   "PPL=RTN-int4 (15.54)": 3.436,
+   "PPL=GPTQ-int3 (19.57)": 2.712,
+   "PPL=14.5": 3.654,
+   "KL=0.05": null
+  },
+  "ECSQ row-step": {
+   "PPL=GPTQ-int4 (14.03)": null,
+   "PPL=RTN-int4 (15.54)": 3.526,
+   "PPL=GPTQ-int3 (19.57)": 3.03,
+   "PPL=14.5": 3.865,
+   "KL=0.05": null
+  },
+  "GPTQ-ECSQ row-step": {
+   "PPL=GPTQ-int4 (14.03)": 3.467,
+   "PPL=RTN-int4 (15.54)": 2.899,
+   "PPL=GPTQ-int3 (19.57)": 2.448,
+   "PPL=14.5": 3.206,
+   "KL=0.05": null
+  },
+  "A3 Fisher-step ECSQ (gamma=1.0)": {
+   "PPL=GPTQ-int4 (14.03)": 3.44,
+   "PPL=RTN-int4 (15.54)": 2.844,
+   "PPL=GPTQ-int3 (19.57)": null,
+   "PPL=14.5": 3.195,
+   "KL=0.05": 3.656
+  },
+  "A3 Fisher-step GPTQ-ECSQ (gamma=1.0)": {
+   "PPL=GPTQ-int4 (14.03)": 3.193,
+   "PPL=RTN-int4 (15.54)": null,
+   "PPL=GPTQ-int3 (19.57)": null,
+   "PPL=14.5": 2.956,
+   "KL=0.05": null
+  },
+  "A3 Fisher-step ECSQ (gamma=0.5)": {
+   "PPL=GPTQ-int4 (14.03)": 3.378,
+   "PPL=RTN-int4 (15.54)": 2.794,
+   "PPL=GPTQ-int3 (19.57)": null,
+   "PPL=14.5": 3.093,
+   "KL=0.05": 3.602
+  },
+  "A3 Fisher-step GPTQ-ECSQ (gamma=0.5)": {
+   "PPL=GPTQ-int4 (14.03)": 3.052,
+   "PPL=RTN-int4 (15.54)": null,
+   "PPL=GPTQ-int3 (19.57)": null,
+   "PPL=14.5": 2.822,
+   "KL=0.05": 3.221
+  },
+  "E SVC (rtn layers), one stream": {
+   "PPL=GPTQ-int4 (14.03)": 5.69,
+   "PPL=RTN-int4 (15.54)": 4.628,
+   "PPL=GPTQ-int3 (19.57)": 4.147,
+   "PPL=14.5": 5.282,
+   "KL=0.05": 5.851
+  },
+  "E SVC (gptq layers), one stream": {
+   "PPL=GPTQ-int4 (14.03)": 5.004,
+   "PPL=RTN-int4 (15.54)": 4.145,
+   "PPL=GPTQ-int3 (19.57)": 3.33,
+   "PPL=14.5": 4.729,
+   "KL=0.05": 5.352
+  }
+ },
+ "c2_matched": {
+  "independent RTN g128+H": {
+   "chatKL=indepGPTQ4 (0.1482)": null,
+   "KL=indepGPTQ4 (0.0799)": null,
+   "chatKL=0.01": null,
+   "chatKL=0.05": null
+  },
+  "independent GPTQ g128+H": {
+   "chatKL=indepGPTQ4 (0.1482)": 3.757,
+   "KL=indepGPTQ4 (0.0799)": 3.757,
+   "chatKL=0.01": null,
+   "chatKL=0.05": null
+  },
+  "independent GPTQ-ECSQ": {
+   "chatKL=indepGPTQ4 (0.1482)": 3.428,
+   "KL=indepGPTQ4 (0.0799)": 3.416,
+   "chatKL=0.01": null,
+   "chatKL=0.05": null
+  },
+  "P-frame shared grid (RTN)": {
+   "chatKL=indepGPTQ4 (0.1482)": 0.882,
+   "KL=indepGPTQ4 (0.0799)": null,
+   "chatKL=0.01": null,
+   "chatKL=0.05": null
+  },
+  "P-frame RTN base + GPTQ residual": {
+   "chatKL=indepGPTQ4 (0.1482)": 1.02,
+   "KL=indepGPTQ4 (0.0799)": 1.011,
+   "chatKL=0.01": null,
+   "chatKL=0.05": null
+  },
+  "P-frame GPTQ base + GPTQ residual": {
+   "chatKL=indepGPTQ4 (0.1482)": 1.085,
+   "KL=indepGPTQ4 (0.0799)": 1.076,
+   "chatKL=0.01": null,
+   "chatKL=0.05": null
+  },
+  "fp16 base + ECSQ(delta)": {
+   "chatKL=indepGPTQ4 (0.1482)": 0.364,
+   "KL=indepGPTQ4 (0.0799)": 1.197,
+   "chatKL=0.01": 1.956,
+   "chatKL=0.05": 0.985
+  },
+  "fp16 base + GPTQ(delta)": {
+   "chatKL=indepGPTQ4 (0.1482)": null,
+   "KL=indepGPTQ4 (0.0799)": null,
+   "chatKL=0.01": 1.72,
+   "chatKL=0.05": 0.647
+  },
+  "fp16 base + low-rank delta": {
+   "chatKL=indepGPTQ4 (0.1482)": null,
+   "KL=indepGPTQ4 (0.0799)": 1.402,
+   "chatKL=0.01": null,
+   "chatKL=0.05": null
+  }
+ }
+}

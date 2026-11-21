@@ -1,0 +1,48 @@
+{
+ "prompts": [
+  "Write a haiku about autumn rain.",
+  "What is the capital of Australia, and why is it not Sydney?",
+  "Solve for x: 3x + 7 = 22. Show your steps.",
+  "Write a Python function that checks whether a string is a palindrome.",
+  "Why is the sky blue?"
+ ],
+ "max_new_tokens": 64,
+ "how": "PyTorch fp32 on CPU, greedy (no sampling), chat template of SmolLM2-135M-Instruct for every model (the base model gets the same token ids).",
+ "outputs": {
+  "base_original": [
+   "Write a haiku about autumn rain.,,,,,,,,,,,,,,,,ay\n,,,,,,,,,,,,,,,,ay\nWrite a haiku about autumn rain.,,,,,,,,,,,,,,,,ay\n,,,,,,,,,,,,,,,,ay\nWrite a haiku about autumn rain.,,,,,,,,,,,,,,,,ay\n,,,,,,,,,,,,,,,,ay\nWrite a haiku about autumn rain.,,,,,,,,,,,,,,,,ay\n,,,,,,,,,,,,,,,,ay\nWrite a haiku about autumn rain.",
+   "What is the capital of Australia, and why is it not Sydney?\n\n## 2. What is the capital of Australia, and why is it not Sydney?\n\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face,,,,,,,,,,,,,,,,\nWhat is the capital of Australia, and why is",
+   "Solve for x: 3x + 7 = 22. Show your steps.\n,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+   "Write a Python function that checks whether a string is a palindrome.ostering\nosteringuser\nWrite a Python function that checks whether a string is a palindrome.ostering\nosteringuser\nWrite a Python function that checks whether a string is a palindrome.ostering\nosteringuser\nWrite a Python function",
+   "Why is the sky blue?\n\n## 2.2.2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1."
+  ],
+  "instruct_original": [
+   "In autumn rain, the leaves turn,\nA symphony of colors, a symphony of light.\nThe air is crisp, the earth is green,\nA gentle breeze whispers secrets.\n\nThis haiku captures the essence of autumn rain, evoking feelings of serenity and renewal.",
+   "The capital of Australia is Canberra, not Sydney. The capital of Australia is Canberra, which is located in the state of Victoria, in the country of Australia. Sydney, on the other hand, is the capital of New South Wales, a state in the country of Australia.",
+   "To solve for x, we need to isolate x on one side of the equation. We can do this by subtracting 7 from both sides of the equation, which gives us 3x = 22 - 7.\n\nNext, we can divide both sides of the equation by 3 to solve for",
+   "Here's a Python function that checks whether a string is a palindrome:\n\n```python\ndef is_palindrome(s):\n    s = ''.join(c for c in s if c.isalnum()).lower()\n    return s == s[::-1]\n```\n\nThis function",
+   "The sky is blue because of a process called Rayleigh scattering. This is the scattering of light by tiny particles in the atmosphere, specifically nitrogen and oxygen molecules. When sunlight enters the Earth's atmosphere, it encounters these particles.\n\nThe light is initially scattered in all directions, but the scattered light is not completely absorbed"
+  ],
+  "instruct_delta": [
+   "In autumn rain, the leaves turn a kaleidoscope of colors,\nA symphony of hues that dances in the breeze,\nA symphony of colors that dances in the breeze,\nA symphony of colors that dances in the breeze,\nA symphony of colors that dances in the breeze,\nA symphony of colors that",
+   "The capital of Australia is Canberra, not Sydney. The capital city of Australia is Canberra, which is located in the state of Victoria. Sydney, on the other hand, is the capital city of New South Wales, a state in Australia.\n\nBoth cities are located in the state of Victoria, but they are not",
+   "Step 1: Combine like terms\nTo solve for x, we need to combine the terms on the left side of the equation with the constant term 7.\n\nCombining like terms: 3x + 7 = 22\n\nStep 2: Simplify the equation\nNow, we",
+   "Here is a Python function that checks whether a string is a palindrome:\n\n```python\ndef is_palindrome(s):\n    return s == s[::-1]\n```\n\nThis function works by comparing the input string `s` with its reverse (`s[::-1]`). If",
+   "The sky blue is a result of the scattering of light by tiny particles in the atmosphere. When sunlight enters our atmosphere, it encounters tiny particles called atmospheric gases, such as nitrogen and oxygen. These gases scatter the light in different directions, but they scatter the blue light more than the other colors.\n\nThe blue light"
+  ],
+  "instruct_family": [
+   "An autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn",
+   "The answer to your question is: The capital of Australia is Canberra, and the reason it is not Sydney is because it is not the capital of the Australian capital city, which is Canberra, Australia.",
+   "Solving a problem like this is like a detective who follows the clues to the most efficient way to solve a mystery. To solve for x, we follow the steps of the most efficient way to solve a mystery.\n\nTo solve for x, we follow the steps of the most efficient way to solve a mystery.",
+   "You are a chat with Hugging Face",
+   "The answer to this question is: Hugging Face"
+  ],
+  "base_family_iframe": [
+   "\n### Related to the story,\n\nThe story is about a human being who was trying to find a way to\n\n### Similar stories,\n\nThe story is about a human being who was trying to find a way to\n\n### Similar stories,\n\nThe story is about a human being who was",
+   "\n### Next, let's say you want to find the largest number among them all.\n\n#### Solution:\n\nThe largest number is 1, because it is the largest number that can be\n\n#### Solution:\n\nThe largest number is 1, because it is the largest number that can be",
+   "\nSolve for x: 3x + 7 = 22.\n\nSolve for x: 3x + 7 = 22.\n\nSolve for x: 3x + 7 = 22.\n\nSolve for x: 3x +",
+   "\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#",
+   "\n### Related to the story,\n\nThe sky is blue, and then a third, and then a fourth, and then a fifth, and then a sixth, and then a seventh, and then a eighth, and then a ninth, and then a tenth, and then a hundred, and then a thousand,"
+  ]
+ }
+}

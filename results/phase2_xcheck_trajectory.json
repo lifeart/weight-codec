@@ -1,0 +1,126 @@
+{
+ "late_c0.35": {
+  "MB_chain": 224.666609,
+  "job_sha256": "3693737207db144afcba129b374c1af4a9368051942be580898b4705df530743",
+  "mac_sha256": "3693737207db144afcba129b374c1af4a9368051942be580898b4705df530743",
+  "job_decode_chain_s_constriction": 173.03,
+  "job_decode_chain_s_rans16": 189.021,
+  "job_hardware": "hf-job",
+  "sha_match": true,
+  "mac_constriction_1t_s": 38.728649999946356,
+  "mac_rans16_par_s": 7.387200416997075,
+  "gpu_sha_match": true,
+  "mac_gpu_s": 2.917330666910857,
+  "MB_chain_rans16": 224.99841,
+  "MB_chain_rans16_4k": 228.863702
+ },
+ "late_c0.7": {
+  "MB_chain": 149.821135,
+  "job_sha256": "5e8870668e66c8557f494f5942db922b33bd03dafddfb6855ca5dca5ac8309f7",
+  "mac_sha256": "5e8870668e66c8557f494f5942db922b33bd03dafddfb6855ca5dca5ac8309f7",
+  "job_decode_chain_s_constriction": 217.224,
+  "job_decode_chain_s_rans16": 182.552,
+  "job_hardware": "hf-job",
+  "sha_match": true
+ },
+ "late_ppl": {
+  "orig": {
+   "ppl": 15.828898820179129,
+   "nll": 2.7618373086292918,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.5
+  },
+  "I_c0.35": {
+   "ppl": 23.27206015204578,
+   "nll": 3.1472535059285502,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.2
+  },
+  "IPPP_end_c0.35": {
+   "ppl": 23.10196329228933,
+   "nll": 3.139917604924413,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.2
+  },
+  "I_c0.7": {
+   "ppl": 66.2162757032678,
+   "nll": 4.192926289270026,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 27.0
+  },
+  "IPPP_end_c0.7": {
+   "ppl": 67.57800692568848,
+   "nll": 4.213282588777975,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.5
+  }
+ },
+ "late_done": true,
+ "mid_c0.35": {
+  "MB_chain": 357.038774,
+  "job_sha256": "5c4084f755fd5996001464c5af617588b26cde5df48703c6e405b223c7d54d56",
+  "mac_sha256": "5c4084f755fd5996001464c5af617588b26cde5df48703c6e405b223c7d54d56",
+  "job_decode_chain_s_constriction": 156.453,
+  "job_decode_chain_s_rans16": 266.162,
+  "job_hardware": "hf-job",
+  "sha_match": true,
+  "mac_constriction_1t_s": 31.861598750110716,
+  "mac_rans16_par_s": 5.630771125201136,
+  "gpu_sha_match": true,
+  "mac_gpu_s": 2.6956080831587315,
+  "MB_chain_rans16": 357.395066,
+  "MB_chain_rans16_4k": 360.296316
+ },
+ "mid_c0.7": {
+  "MB_chain": 239.102217,
+  "job_sha256": "4975245f305f78b16f03bc5c6c0a75673793f9ba66fa6c3f0198243fd5d108ee",
+  "mac_sha256": "4975245f305f78b16f03bc5c6c0a75673793f9ba66fa6c3f0198243fd5d108ee",
+  "job_decode_chain_s_constriction": 294.929,
+  "job_decode_chain_s_rans16": 276.091,
+  "job_hardware": "hf-job",
+  "sha_match": true
+ },
+ "mid_ppl": {
+  "orig": {
+   "ppl": 18.001896997024865,
+   "nll": 2.890477141066767,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.3
+  },
+  "I_c0.35": {
+   "ppl": 19.18166009105208,
+   "nll": 2.9539546189450263,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.5
+  },
+  "IPPP_end_c0.35": {
+   "ppl": 19.192776996388524,
+   "nll": 2.9545340101487123,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.3
+  },
+  "I_c0.7": {
+   "ppl": 23.99348030314683,
+   "nll": 3.1777821394077557,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.6
+  },
+  "IPPP_end_c0.7": {
+   "ppl": 24.0249252542846,
+   "nll": 3.179091843687504,
+   "n_tokens": 81880,
+   "n_windows": 40,
+   "eval_s": 26.3
+  }
+ },
+ "mid_done": true
+}

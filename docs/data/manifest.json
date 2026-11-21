@@ -1,0 +1,215 @@
+{
+ "model_pair": [
+  "HuggingFaceTB/SmolLM2-135M",
+  "HuggingFaceTB/SmolLM2-135M-Instruct"
+ ],
+ "chains": {
+  "delta": {
+   "title": "fp16 base + full-rank \u0394 (c=0.12)",
+   "short": "near-lossless",
+   "groups": [
+    [
+     "B_rest_ll16",
+     "T_rest_xor_base"
+    ],
+    [
+     "B_lin_ll16",
+     "T_delta_c0.12"
+    ]
+   ],
+   "quality_file": "T_delta_c0.12",
+   "base_lossless": true,
+   "base_bytes": 178144183,
+   "delta_bytes": 53430391,
+   "standalone_bytes": 0,
+   "quality": {
+    "chat_kl": 0.029880677164444543,
+    "chat_top1": 0.9362143800717116,
+    "kl": 0.018061486755747532,
+    "top1": 0.9257144601856375,
+    "ppl": 17.58195425571569,
+    "real_bpw": 1.7065375434027779
+   }
+  },
+  "family": {
+   "title": "int4-class family: base I-frame + Instruct P-frame (c=0.35)",
+   "short": "smallest",
+   "groups": [
+    [
+     "B_rest_ll16",
+     "T_rest_xor_base"
+    ],
+    [
+     "B_ecsq_c0.35",
+     "T_pframe_c0.35"
+    ]
+   ],
+   "quality_file": "T_pframe_c0.35",
+   "base_lossless": false,
+   "base_bytes": 85292236,
+   "delta_bytes": 45351509,
+   "standalone_bytes": 0,
+   "quality": {
+    "chat_kl": 0.5378367891399832,
+    "chat_top1": 0.7214568786563502,
+    "kl": 0.3231820361347506,
+    "top1": 0.7119870542256962,
+    "ppl": 24.094009810782048,
+    "real_bpw": 1.09801485038098
+   }
+  },
+  "indep": {
+   "title": "control: standalone Instruct GPTQ-ECSQ c=0.35 (no base reuse)",
+   "short": "control",
+   "groups": [
+    [
+     "T_rest_ll16"
+    ],
+    [
+     "T_ecsq_c0.35"
+    ]
+   ],
+   "quality_file": "T_ecsq_c0.35",
+   "base_lossless": null,
+   "base_bytes": 0,
+   "delta_bytes": 0,
+   "standalone_bytes": 85278798,
+   "quality": {
+    "chat_kl": 0.5048905781337193,
+    "chat_top1": 0.7290054727307039,
+    "kl": 0.3566822784379103,
+    "top1": 0.700690034196385,
+    "ppl": 24.843568323171187,
+    "real_bpw": 3.593748492959105
+   }
+  }
+ },
+ "files": {
+  "B_rest_ll16": {
+   "bytes": 37567646,
+   "role": "base",
+   "model": "base",
+   "lossless": true,
+   "desc": "base embeddings + norms, lossless fp16 (ll16)",
+   "n_records": 62,
+   "n_weights": 28346688,
+   "sha256": "04ae3a191affcb4a1c6334000150efd2016c511d136bccf7c42cd088ffc793a9",
+   "w_sha256": "04ae3a191affcb4a1c6334000150efd2016c511d136bccf7c42cd088ffc793a9",
+   "src_bytes_constriction": 37549831,
+   "py_decode_s_1thread_constriction_free": 0.19,
+   "orig_sha256": "04ae3a191affcb4a1c6334000150efd2016c511d136bccf7c42cd088ffc793a9",
+   "identical_to_original": true
+  },
+  "T_rest_xor_base": {
+   "bytes": 30761902,
+   "role": "delta",
+   "model": "instruct",
+   "lossless": true,
+   "desc": "Instruct embeddings + norms, lossless, XOR with the base",
+   "n_records": 62,
+   "n_weights": 28346688,
+   "sha256": "726a686191e85c2a7ea26b46eb22f60470328f373be3eb63eb97d4d8c0e022ea",
+   "w_sha256": "726a686191e85c2a7ea26b46eb22f60470328f373be3eb63eb97d4d8c0e022ea",
+   "src_bytes_constriction": 30732796,
+   "py_decode_s_1thread_constriction_free": 0.23,
+   "orig_sha256": "726a686191e85c2a7ea26b46eb22f60470328f373be3eb63eb97d4d8c0e022ea",
+   "identical_to_original": true
+  },
+  "B_lin_ll16": {
+   "bytes": 140576537,
+   "role": "base",
+   "model": "base",
+   "lossless": true,
+   "desc": "base linears, lossless fp16 (ll16)",
+   "n_records": 210,
+   "n_weights": 106168320,
+   "sha256": "baa95b8d2f102772893dfad9df26173d36fa086b0f8a84c3b843b923829a3055",
+   "w_sha256": "baa95b8d2f102772893dfad9df26173d36fa086b0f8a84c3b843b923829a3055",
+   "src_bytes_constriction": 140511004,
+   "py_decode_s_1thread_constriction_free": 1.08,
+   "orig_sha256": "baa95b8d2f102772893dfad9df26173d36fa086b0f8a84c3b843b923829a3055",
+   "identical_to_original": true
+  },
+  "T_delta_c0.12": {
+   "bytes": 22668489,
+   "role": "delta",
+   "model": "instruct",
+   "lossless": false,
+   "desc": "Instruct linears, full-rank delta over the fp16 base (c=0.12)",
+   "n_records": 210,
+   "n_weights": 106168320,
+   "sha256": "df1adfa5c5229eb768940e5c7e5db65e02cfa6c5ffecadd5bda05e148fe26995",
+   "w_sha256": "9a9fce33a3ee8bf39cac4a8abf308b966fac19f3d4c729fedf0f386ccb0c2e82",
+   "src_bytes_constriction": 22647528,
+   "py_decode_s_1thread_constriction_free": 0.43
+  },
+  "B_ecsq_c0.35": {
+   "bytes": 47724590,
+   "role": "base",
+   "model": "base",
+   "lossless": false,
+   "desc": "base linears, I-frame: GPTQ-ECSQ c=0.35 (int4-class)",
+   "n_records": 210,
+   "n_weights": 106168320,
+   "sha256": "9b3bbcbd793117b65caa2f04d9b823d6ba61002f2beb949f66ad222d4167bcc3",
+   "w_sha256": "6879efe627944c6c828c0afd9321ea12398a38fb753c663a1c0d65eea07b18eb",
+   "src_bytes_constriction": 47694132,
+   "py_decode_s_1thread_constriction_free": 0.34
+  },
+  "T_pframe_c0.35": {
+   "bytes": 14589607,
+   "role": "delta",
+   "model": "instruct",
+   "lossless": false,
+   "desc": "Instruct linears, P-frame on the base I-frame lattice (c=0.35)",
+   "n_records": 210,
+   "n_weights": 106168320,
+   "sha256": "b6c7e706bb71139dc435ed9b38d3ed8fc7af6aabcc18f5804477252c3078a030",
+   "w_sha256": "9d33950b891cafe2918b29297a457fc38a36dcc436339f9d133f17864ad5412e",
+   "src_bytes_constriction": 14571799,
+   "py_decode_s_1thread_constriction_free": 0.44
+  },
+  "T_rest_ll16": {
+   "bytes": 37555746,
+   "role": "standalone",
+   "model": "instruct",
+   "lossless": true,
+   "desc": "Instruct embeddings + norms, lossless, no base",
+   "n_records": 62,
+   "n_weights": 28346688,
+   "sha256": "726a686191e85c2a7ea26b46eb22f60470328f373be3eb63eb97d4d8c0e022ea",
+   "w_sha256": "726a686191e85c2a7ea26b46eb22f60470328f373be3eb63eb97d4d8c0e022ea",
+   "src_bytes_constriction": 37537987,
+   "py_decode_s_1thread_constriction_free": 0.25,
+   "orig_sha256": "726a686191e85c2a7ea26b46eb22f60470328f373be3eb63eb97d4d8c0e022ea",
+   "identical_to_original": true
+  },
+  "T_ecsq_c0.35": {
+   "bytes": 47723052,
+   "role": "standalone",
+   "model": "instruct",
+   "lossless": false,
+   "desc": "Instruct linears, standalone GPTQ-ECSQ c=0.35 (no base)",
+   "n_records": 210,
+   "n_weights": 106168320,
+   "sha256": "83b949bf86728e876f1c4f521d310de170d6f376a05a8b49dab525373d68b6e5",
+   "w_sha256": "17aaa92b925ec4051a2faa8463b809cb4059a4a60ed36a415666a9cfa01b0036",
+   "src_bytes_constriction": 47692780,
+   "py_decode_s_1thread_constriction_free": 0.35
+  }
+ },
+ "original": {
+  "what": "official bf16 checkpoints cast to fp16 (the codec's reference)",
+  "base_cast": {
+   "n_params": 134515008,
+   "n_inexact_bf16_to_fp16": 3615
+  },
+  "instruct_cast": {
+   "n_params": 134515008,
+   "n_inexact_bf16_to_fp16": 3597
+  },
+  "base_bf16_safetensors_bytes": 269060552,
+  "instruct_bf16_safetensors_bytes": 269060552
+ },
+ "note": "rans16 = lossless re-encode of the constriction files measured in REPORT \u00a714 (+0.05 % bytes)"
+}

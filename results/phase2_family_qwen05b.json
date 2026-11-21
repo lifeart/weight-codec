@@ -1,0 +1,636 @@
+{
+ "B_rest_raw16": {
+  "file": "bitstreams/qwen05b/B_rest_raw16.wcdc",
+  "bytes": 272413544,
+  "MB": 272.413544,
+  "n_params": 136206208,
+  "bpp": 16.000066252486818,
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.032,
+   "total": 0.033
+  },
+  "lossless_verified": true,
+  "file_deleted": true
+ },
+ "B_rest_ll16": {
+  "file": "bitstreams/qwen05b/B_rest_ll16.wcdc",
+  "bytes": 178967709,
+  "MB": 178.967709,
+  "n_params": 136206208,
+  "bpp": 10.511574274206357,
+  "decode_s_first": {
+   "entropy": 10.165,
+   "reconstruct": 0.0,
+   "total": 10.184
+  },
+  "lossless_verified": true
+ },
+ "B_fp16": {
+  "file": "bitstreams/qwen05b/B_fp16.wcdc",
+  "bytes": 715654901,
+  "MB": 715.654901,
+  "real_bpw": 16.000039818173363,
+  "n_weights": 357826560,
+  "proxy_bpw": 16.0,
+  "side_bpw": 16.0,
+  "encode_s": 0.5,
+  "bytes_header": 1781,
+  "bytes_by_section": {
+   "d": 715653120
+  },
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.564,
+   "total": 0.567
+  },
+  "ppl": 13.070727086807842,
+  "nll": 2.570375156296008,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.8,
+  "kl": 0.0,
+  "top1": 1.0,
+  "kl_tokens": 32752,
+  "file_deleted": true
+ },
+ "B_gptq4_packed": {
+  "file": "bitstreams/qwen05b/B_gptq4_packed.wcdc",
+  "bytes": 185906025,
+  "MB": 185.906025,
+  "real_bpw": 4.156338199154361,
+  "n_weights": 357826560,
+  "proxy_bpw": 4.15625,
+  "side_bpw": 4.15625,
+  "encode_s": 50.2,
+  "bytes_header": 3945,
+  "bytes_by_section": {
+   "scale": 5591040,
+   "zero": 1397760,
+   "packed": 178913280
+  },
+  "decode_s_first": {
+   "entropy": 0.141,
+   "reconstruct": 0.423,
+   "total": 0.567
+  },
+  "ppl": 14.033078460338192,
+  "nll": 2.6414172898841453,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.6,
+  "kl": 0.07458404616489606,
+  "top1": 0.8600696140693698,
+  "kl_tokens": 32752
+ },
+ "B_gptq4_ans": {
+  "file": "bitstreams/qwen05b/B_gptq4_ans.wcdc",
+  "bytes": 168044028,
+  "MB": 168.044028,
+  "real_bpw": 3.756993958190247,
+  "n_weights": 357826560,
+  "proxy_bpw": 3.7567984843058633,
+  "side_bpw": 0.15625,
+  "encode_s": 50.2,
+  "bytes_header": 4529,
+  "bytes_by_section": {
+   "scale": 5591040,
+   "zero": 1397760,
+   "sym": 161050699
+  },
+  "decode_s_first": {
+   "entropy": 6.308,
+   "reconstruct": 0.466,
+   "total": 6.784
+  },
+  "identical_to": "B_gptq4_packed",
+  "ppl": 14.033078460338192,
+  "nll": 2.6414172898841453,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.6,
+  "kl": 0.07458404616489606,
+  "top1": 0.8600696140693698,
+  "kl_tokens": 32752
+ },
+ "B_ecsq_c0.35": {
+  "file": "bitstreams/qwen05b/B_ecsq_c0.35.wcdc",
+  "bytes": 160045936,
+  "MB": 160.045936,
+  "real_bpw": 3.5781790149954213,
+  "n_weights": 357826560,
+  "proxy_bpw": 3.578417262327638,
+  "side_bpw": 0.0135989010989011,
+  "encode_s": 50.8,
+  "bytes_header": 3430,
+  "bytes_by_section": {
+   "sym": 159434250,
+   "step": 608256
+  },
+  "decode_s_first": {
+   "entropy": 9.032,
+   "reconstruct": 0.559,
+   "total": 9.597
+  },
+  "ppl": 13.837706276250936,
+  "nll": 2.6273972049697845,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.0,
+  "kl": 0.05993989047389177,
+  "top1": 0.8736260381045432,
+  "kl_tokens": 32752
+ },
+ "B_ecsq_c0.5": {
+  "file": "bitstreams/qwen05b/B_ecsq_c0.5.wcdc",
+  "bytes": 137527623,
+  "MB": 137.527623,
+  "real_bpw": 3.0747325855297047,
+  "n_weights": 357826560,
+  "proxy_bpw": 3.0748482131291808,
+  "side_bpw": 0.0135989010989011,
+  "encode_s": 50.1,
+  "bytes_header": 3408,
+  "bytes_by_section": {
+   "sym": 136915959,
+   "step": 608256
+  },
+  "decode_s_first": {
+   "entropy": 8.678,
+   "reconstruct": 0.474,
+   "total": 9.157
+  },
+  "ppl": 14.73964478941411,
+  "nll": 2.6905407880592933,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.1,
+  "kl": 0.12146250026425211,
+  "top1": 0.8265754763067904,
+  "kl_tokens": 32752
+ },
+ "T_rest_raw16": {
+  "file": "bitstreams/qwen05b/T_rest_raw16.wcdc",
+  "bytes": 272413544,
+  "MB": 272.413544,
+  "n_params": 136206208,
+  "bpp": 16.000066252486818,
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.027,
+   "total": 0.028
+  },
+  "lossless_verified": true,
+  "file_deleted": true
+ },
+ "T_rest_ll16": {
+  "file": "bitstreams/qwen05b/T_rest_ll16.wcdc",
+  "bytes": 179192614,
+  "MB": 179.192614,
+  "n_params": 136206208,
+  "bpp": 10.524783951110363,
+  "decode_s_first": {
+   "entropy": 9.965,
+   "reconstruct": 0.0,
+   "total": 9.982
+  },
+  "lossless_verified": true
+ },
+ "T_rest_xor_base": {
+  "file": "bitstreams/qwen05b/T_rest_xor_base.wcdc",
+  "bytes": 143407434,
+  "MB": 143.407434,
+  "n_params": 136206208,
+  "bpp": 8.422960222194865,
+  "decode_s_first": {
+   "entropy": 8.58,
+   "reconstruct": 0.0,
+   "total": 8.598
+  },
+  "lossless_verified": true
+ },
+ "probe_c1_lite": {
+  "rel_delta_global": 0.07889073413978938,
+  "rel_delta_median": 0.07489533476366741,
+  "pass_small_lt_0.30": true
+ },
+ "T_fp16": {
+  "file": "bitstreams/qwen05b/T_fp16.wcdc",
+  "bytes": 715654901,
+  "MB": 715.654901,
+  "real_bpw": 16.000039818173363,
+  "n_weights": 357826560,
+  "proxy_bpw": 16.0,
+  "side_bpw": 16.0,
+  "encode_s": 0.2,
+  "bytes_header": 1781,
+  "bytes_by_section": {
+   "d": 715653120
+  },
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.197,
+   "total": 0.199
+  },
+  "ppl": 14.239973892192328,
+  "nll": 2.656053072568689,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 130.1,
+  "kl": 0.0,
+  "top1": 1.0,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5190814356608687,
+  "chat_tokens": 5203,
+  "chat_kl": 0.0,
+  "chat_top1": 1.0,
+  "file_deleted": true
+ },
+ "T_gptq4_packed": {
+  "file": "bitstreams/qwen05b/T_gptq4_packed.wcdc",
+  "bytes": 185906025,
+  "MB": 185.906025,
+  "real_bpw": 4.156338199154361,
+  "n_weights": 357826560,
+  "proxy_bpw": 4.15625,
+  "side_bpw": 4.15625,
+  "encode_s": 51.6,
+  "bytes_header": 3945,
+  "bytes_by_section": {
+   "scale": 5591040,
+   "zero": 1397760,
+   "packed": 178913280
+  },
+  "decode_s_first": {
+   "entropy": 0.158,
+   "reconstruct": 0.463,
+   "total": 0.624
+  },
+  "ppl": 15.312633834877165,
+  "nll": 2.728678228503626,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 130.1,
+  "kl": 0.0799226407371152,
+  "top1": 0.8575048851978505,
+  "kl_tokens": 32752,
+  "chat_nll": 0.7114978874964644,
+  "chat_tokens": 5203,
+  "chat_kl": 0.14816245021394828,
+  "chat_top1": 0.849125504516625
+ },
+ "T_gptq4_ans": {
+  "file": "bitstreams/qwen05b/T_gptq4_ans.wcdc",
+  "bytes": 168056482,
+  "MB": 168.056482,
+  "real_bpw": 3.7572723947601876,
+  "n_weights": 357826560,
+  "proxy_bpw": 3.757078345754316,
+  "side_bpw": 0.15625,
+  "encode_s": 51.6,
+  "bytes_header": 4505,
+  "bytes_by_section": {
+   "scale": 5591040,
+   "zero": 1397760,
+   "sym": 161063177
+  },
+  "decode_s_first": {
+   "entropy": 6.35,
+   "reconstruct": 0.486,
+   "total": 6.851
+  },
+  "identical_to": "T_gptq4_packed",
+  "ppl": 15.312633834877165,
+  "nll": 2.728678228503626,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 130.1,
+  "kl": 0.0799226407371152,
+  "top1": 0.8575048851978505,
+  "kl_tokens": 32752,
+  "chat_nll": 0.7114978874964644,
+  "chat_tokens": 5203,
+  "chat_kl": 0.14816245021394828,
+  "chat_top1": 0.849125504516625
+ },
+ "T_ecsq_c0.35": {
+  "file": "bitstreams/qwen05b/T_ecsq_c0.35.wcdc",
+  "bytes": 160051712,
+  "MB": 160.051712,
+  "real_bpw": 3.57830815018315,
+  "n_weights": 357826560,
+  "proxy_bpw": 3.578546992858037,
+  "side_bpw": 0.0135989010989011,
+  "encode_s": 53.1,
+  "bytes_header": 3426,
+  "bytes_by_section": {
+   "sym": 159440030,
+   "step": 608256
+  },
+  "decode_s_first": {
+   "entropy": 9.115,
+   "reconstruct": 0.52,
+   "total": 9.654
+  },
+  "ppl": 15.089447518141784,
+  "nll": 2.7139956596603194,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.7,
+  "kl": 0.06451423726084178,
+  "top1": 0.8723131411822179,
+  "kl_tokens": 32752,
+  "chat_nll": 0.6862612906131015,
+  "chat_tokens": 5203,
+  "chat_kl": 0.11733084411866707,
+  "chat_top1": 0.864501249279262
+ },
+ "T_ecsq_c0.5": {
+  "file": "bitstreams/qwen05b/T_ecsq_c0.5.wcdc",
+  "bytes": 137535244,
+  "MB": 137.535244,
+  "real_bpw": 3.0749029697516024,
+  "n_weights": 357826560,
+  "proxy_bpw": 3.0750166958519607,
+  "side_bpw": 0.0135989010989011,
+  "encode_s": 54.3,
+  "bytes_header": 3422,
+  "bytes_by_section": {
+   "sym": 136923566,
+   "step": 608256
+  },
+  "decode_s_first": {
+   "entropy": 8.831,
+   "reconstruct": 1.524,
+   "total": 10.373
+  },
+  "ppl": 16.061037622117468,
+  "nll": 2.776396315529761,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 130.6,
+  "kl": 0.12540655527454966,
+  "top1": 0.8264228138739619,
+  "kl_tokens": 32752,
+  "chat_nll": 0.8421992106367115,
+  "chat_tokens": 5203,
+  "chat_kl": 0.25617339201851486,
+  "chat_top1": 0.8016528925619835
+ },
+ "T_pframe_c0.35": {
+  "file": "bitstreams/qwen05b/T_pframe_c0.35.wcdc",
+  "bytes": 49243595,
+  "MB": 49.243595,
+  "real_bpw": 1.1009489066434868,
+  "n_weights": 357826560,
+  "proxy_bpw": 1.1007922996385175,
+  "side_bpw": 0.0,
+  "encode_s": 64.6,
+  "bytes_header": 2373,
+  "bytes_by_section": {
+   "sym": 49241222
+  },
+  "decode_s_first": {
+   "entropy": 5.864,
+   "reconstruct": 1.639,
+   "total": 7.705
+  },
+  "ppl": 15.07203170518621,
+  "nll": 2.7128408214136823,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 130.1,
+  "kl": 0.0656648307063257,
+  "top1": 0.8721604787493894,
+  "kl_tokens": 32752,
+  "chat_nll": 0.6736969946898476,
+  "chat_tokens": 5203,
+  "chat_kl": 0.12793018257482772,
+  "chat_top1": 0.8552758024216798,
+  "base_file": "bitstreams/qwen05b/B_ecsq_c0.35.wcdc"
+ },
+ "T_pframe_c0.5": {
+  "file": "bitstreams/qwen05b/T_pframe_c0.5.wcdc",
+  "bytes": 43254480,
+  "MB": 43.25448,
+  "real_bpw": 0.967049064217033,
+  "n_weights": 357826560,
+  "proxy_bpw": 0.9668866483493538,
+  "side_bpw": 0.0,
+  "encode_s": 62.2,
+  "bytes_header": 2378,
+  "bytes_by_section": {
+   "sym": 43252102
+  },
+  "decode_s_first": {
+   "entropy": 5.774,
+   "reconstruct": 1.723,
+   "total": 7.653
+  },
+  "ppl": 16.048741187778013,
+  "nll": 2.7756304158321425,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.9,
+  "kl": 0.13195043688700964,
+  "top1": 0.8217513434294089,
+  "kl_tokens": 32752,
+  "chat_nll": 0.8238170113491137,
+  "chat_tokens": 5203,
+  "chat_kl": 0.2557532873012551,
+  "chat_top1": 0.8079953872765712,
+  "base_file": "bitstreams/qwen05b/B_ecsq_c0.5.wcdc"
+ },
+ "T_delta_c0.06": {
+  "file": "bitstreams/qwen05b/T_delta_c0.06.wcdc",
+  "bytes": 114884599,
+  "MB": 114.884599,
+  "real_bpw": 2.568497967283368,
+  "n_weights": 357826560,
+  "proxy_bpw": 2.5684551621588527,
+  "side_bpw": 0.0135989010989011,
+  "encode_s": 53.1,
+  "bytes_header": 3481,
+  "bytes_by_section": {
+   "sym": 114272862,
+   "step": 608256
+  },
+  "decode_s_first": {
+   "entropy": 7.569,
+   "reconstruct": 0.67,
+   "total": 8.251
+  },
+  "ppl": 14.25478733987056,
+  "nll": 2.6570928039699866,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.5,
+  "kl": 0.0017640151967930106,
+  "top1": 0.9775891548607719,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5195124614428905,
+  "chat_tokens": 5203,
+  "chat_kl": 0.0030991673267634586,
+  "chat_top1": 0.9782817605227753
+ },
+ "T_delta_c0.12": {
+  "file": "bitstreams/qwen05b/T_delta_c0.12.wcdc",
+  "bytes": 75438310,
+  "MB": 75.43831,
+  "real_bpw": 1.68658939124027,
+  "n_weights": 357826560,
+  "proxy_bpw": 1.6864510231277057,
+  "side_bpw": 0.0135989010989011,
+  "encode_s": 53.7,
+  "bytes_header": 3417,
+  "bytes_by_section": {
+   "sym": 74826637,
+   "step": 608256
+  },
+  "decode_s_first": {
+   "entropy": 6.699,
+   "reconstruct": 0.567,
+   "total": 7.273
+  },
+  "ppl": 14.268775462436864,
+  "nll": 2.6580736157840383,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.2,
+  "kl": 0.005817947719058702,
+  "top1": 0.9592696629213483,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5293832148768777,
+  "chat_tokens": 5203,
+  "chat_kl": 0.010469147933003721,
+  "chat_top1": 0.9604074572362099
+ },
+ "T_delta_c0.25": {
+  "file": "bitstreams/qwen05b/T_delta_c0.25.wcdc",
+  "bytes": 37692563,
+  "MB": 37.692563,
+  "real_bpw": 0.8427001729552999,
+  "n_weights": 357826560,
+  "proxy_bpw": 0.8425136565667881,
+  "side_bpw": 0.0135989010989011,
+  "encode_s": 55.7,
+  "bytes_header": 3351,
+  "bytes_by_section": {
+   "sym": 37080956,
+   "step": 608256
+  },
+  "decode_s_first": {
+   "entropy": 5.709,
+   "reconstruct": 0.556,
+   "total": 6.282
+  },
+  "ppl": 14.236941679988057,
+  "nll": 2.655840113253763,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 130.0,
+  "kl": 0.020467816691428904,
+  "top1": 0.9224169516365412,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5571038830676676,
+  "chat_tokens": 5203,
+  "chat_kl": 0.037505620435043505,
+  "chat_top1": 0.9288871804728042
+ },
+ "T_lowrank_r32": {
+  "file": "bitstreams/qwen05b/T_lowrank_r32.wcdc",
+  "bytes": 35195512,
+  "MB": 35.195512,
+  "real_bpw": 0.7868731041094322,
+  "n_weights": 357826560,
+  "proxy_bpw": 0.7868131868131868,
+  "side_bpw": 0.7868131868131868,
+  "encode_s": 17.8,
+  "bytes_header": 2680,
+  "bytes_by_section": {
+   "A": 19464192,
+   "B": 15728640
+  },
+  "decode_s_first": {
+   "entropy": 0.001,
+   "reconstruct": 0.984,
+   "total": 0.987
+  },
+  "ppl": 13.636329875503865,
+  "nll": 2.612737545498437,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.6,
+  "kl": 0.08800843475967951,
+  "top1": 0.8512151929653151,
+  "kl_tokens": 32752,
+  "chat_nll": 0.612252910572956,
+  "chat_tokens": 5203,
+  "chat_kl": 0.08739288183626889,
+  "chat_top1": 0.8919853930424755
+ },
+ "T_lowrank_r64": {
+  "file": "bitstreams/qwen05b/T_lowrank_r64.wcdc",
+  "bytes": 70388406,
+  "MB": 70.388406,
+  "real_bpw": 1.5736876770690247,
+  "n_weights": 357826560,
+  "proxy_bpw": 1.5736263736263736,
+  "side_bpw": 1.5736263736263736,
+  "encode_s": 17.7,
+  "bytes_header": 2742,
+  "bytes_by_section": {
+   "A": 38928384,
+   "B": 31457280
+  },
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.42,
+   "total": 0.423
+  },
+  "ppl": 13.62283129887587,
+  "nll": 2.611747157155597,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.8,
+  "kl": 0.07726946451283107,
+  "top1": 0.8577491450903761,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5937284410584094,
+  "chat_tokens": 5203,
+  "chat_kl": 0.07061909158344844,
+  "chat_top1": 0.9031328079953873
+ },
+ "T_lowrank_r128": {
+  "file": "bitstreams/qwen05b/T_lowrank_r128.wcdc",
+  "bytes": 140774121,
+  "MB": 140.774121,
+  "real_bpw": 3.147315190912603,
+  "n_weights": 357826560,
+  "proxy_bpw": 3.147252747252747,
+  "side_bpw": 3.147252747252747,
+  "encode_s": 17.5,
+  "bytes_header": 2793,
+  "bytes_by_section": {
+   "A": 77856768,
+   "B": 62914560
+  },
+  "decode_s_first": {
+   "entropy": 0.0,
+   "reconstruct": 0.454,
+   "total": 0.457
+  },
+  "ppl": 13.674594879135421,
+  "nll": 2.6155397229431063,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 129.5,
+  "kl": 0.06080232239608131,
+  "top1": 0.8704201270151442,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5675162652261482,
+  "chat_tokens": 5203,
+  "chat_kl": 0.05223611540778793,
+  "chat_top1": 0.9179319623294253
+ }
+}

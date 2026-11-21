@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite it as below."
+title: "weight-codec: compressing neural-network weights like images and video -- a falsification-first study"
+type: software
+authors:
+  - family-names: Kanunnikov
+    given-names: Aleksandr
+    alias: lifeart
+date-released: 2026-11-21
+license: MIT
+repository-code: "https://github.com/lifeart/weight-codec"
+keywords:
+  - model compression
+  - quantization
+  - entropy coding
+  - rANS
+  - GPTQ
+  - delta compression
+  - checkpoint compression

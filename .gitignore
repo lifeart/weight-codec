@@ -1,0 +1,62 @@
+# ---- never commit weights, bitstreams, caches or data ----
+models/
+data/
+!docs/data/
+bitstreams/
+*.wcdc
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.gguf
+*.onnx
+*.h5
+*.msgpack
+*.npy
+*.npz
+*.pkl
+*.tar
+*.tar.gz
+*.zst
+# Hugging Face / generic caches
+.cache/
+.huggingface/
+hf_cache/
+huggingface/
+# static / Gradio Space staging (bitstreams + copied code + generated assets)
+build/
+spaces/*/bitstreams/
+spaces/*/wcodec/
+spaces/*/assets/
+
+# ---- secrets: tokens and credentials must never be tracked ----
+.env
+.env.*
+*.token
+*token*.txt
+*.pem
+*.key
+.netrc
+credentials*.json
+secrets*.json
+
+# ---- environments, bytecode, tooling ----
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.idea/
+.vscode/
+.DS_Store
+
+# ---- run logs and job scratch ----
+logs/
+*.log
+*.pid
+results/_exit_*.txt

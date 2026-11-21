@@ -1,0 +1,202 @@
+{
+ "r3_summary": {
+  "ratio": 3,
+  "c0": 1.4,
+  "n_weights": 357826560,
+  "layers": [
+   {
+    "layer": 0,
+    "file": "bitstreams/qwen05b/svc/r3_L0.wcdc",
+    "bytes": 74930490,
+    "layer_bpw": 1.6752359578897664,
+    "layer_proxy_bpw": 1.6751412480394503,
+    "single_file": "bitstreams/qwen05b/svc/r3_single_L0.wcdc",
+    "single_bytes": 74930505,
+    "single_bpw": 1.6752362932477678,
+    "single_proxy_bpw": 1.6751412480394503,
+    "cum_bytes": 74930490,
+    "cum_bpw": 1.6752359578897664,
+    "cum_MB": 74.93049,
+    "tax_bpw": -3.353580013736264e-07,
+    "tax_pct": -2.00185491849858e-05,
+    "bit_identical_to_single": true,
+    "decode_layer_s": {
+     "entropy": 6.985,
+     "reconstruct": 0.338,
+     "total": 7.344
+    },
+    "decode_single_s": {
+     "entropy": 6.978,
+     "reconstruct": 0.355,
+     "total": 7.356
+    },
+    "ppl": 18489.23564659621,
+    "nll": 9.824943984781228,
+    "n_tokens": 298862,
+    "n_windows": 146,
+    "eval_s": 129.6,
+    "kl": 6.897387431433099,
+    "top1": 0.08152173913043478,
+    "kl_tokens": 32752
+   },
+   {
+    "layer": 1,
+    "file": "bitstreams/qwen05b/svc/r3_L1.wcdc",
+    "bytes": 66861398,
+    "layer_bpw": 1.4948336534884386,
+    "layer_proxy_bpw": 1.493897713755227,
+    "single_file": "bitstreams/qwen05b/svc/r3_single_L1.wcdc",
+    "single_bytes": 141582776,
+    "single_bpw": 3.165394452552656,
+    "single_proxy_bpw": 3.1655272781302237,
+    "cum_bytes": 141791888,
+    "cum_bpw": 3.170069611378205,
+    "cum_MB": 141.791888,
+    "tax_bpw": 0.00467515882554945,
+    "tax_pct": 0.14769593160117722,
+    "bit_identical_to_single": true,
+    "decode_layer_s": {
+     "entropy": 10.394,
+     "reconstruct": 0.899,
+     "total": 11.336
+    },
+    "decode_single_s": {
+     "entropy": 8.739,
+     "reconstruct": 0.476,
+     "total": 9.296
+    },
+    "ppl": 18.61193273922387,
+    "nll": 2.923802920136622,
+    "n_tokens": 298862,
+    "n_windows": 146,
+    "eval_s": 130.1,
+    "kl": 0.36806115652213867,
+    "top1": 0.7032547630679042,
+    "kl_tokens": 32752
+   },
+   {
+    "layer": 2,
+    "file": "bitstreams/qwen05b/svc/r3_L2.wcdc",
+    "bytes": 71032920,
+    "layer_bpw": 1.5880972055288463,
+    "layer_proxy_bpw": 1.5874080194903208,
+    "single_file": "bitstreams/qwen05b/svc/r3_single_L2.wcdc",
+    "single_bytes": 211966713,
+    "single_bpw": 4.738982215294471,
+    "single_proxy_bpw": 4.739644252875831,
+    "cum_bytes": 212824808,
+    "cum_bpw": 4.7581668169070515,
+    "cum_MB": 212.824808,
+    "tax_bpw": 0.019184601612580128,
+    "tax_pct": 0.40482535576233936,
+    "bit_identical_to_single": true,
+    "decode_layer_s": {
+     "entropy": 9.996,
+     "reconstruct": 0.768,
+     "total": 10.786
+    },
+    "decode_single_s": {
+     "entropy": 9.965,
+     "reconstruct": 0.409,
+     "total": 10.423
+    },
+    "ppl": 13.44373296730889,
+    "nll": 2.5985130470732782,
+    "n_tokens": 298862,
+    "n_windows": 146,
+    "eval_s": 129.9,
+    "kl": 0.029991536036781643,
+    "top1": 0.909471177332682,
+    "kl_tokens": 32752
+   }
+  ]
+ },
+ "r2_summary": {
+  "ratio": 2,
+  "c0": 1.4,
+  "n_weights": 357826560,
+  "layers": [
+   {
+    "layer": 0,
+    "file": "bitstreams/qwen05b/svc/r2_L0.wcdc",
+    "bytes": 74930490,
+    "layer_bpw": 1.6752359578897664,
+    "layer_proxy_bpw": 1.6751412480394503,
+    "single_file": "bitstreams/qwen05b/svc/r2_single_L0.wcdc",
+    "single_bytes": 74930505,
+    "single_bpw": 1.6752362932477678,
+    "single_proxy_bpw": 1.6751412480394503,
+    "cum_bytes": 74930490,
+    "cum_bpw": 1.6752359578897664,
+    "cum_MB": 74.93049,
+    "tax_bpw": -3.353580013736264e-07,
+    "tax_pct": -2.00185491849858e-05,
+    "bit_identical_to_single": true,
+    "decode_layer_s": {
+     "entropy": 7.285,
+     "reconstruct": 0.358,
+     "total": 7.672
+    },
+    "decode_single_s": {
+     "entropy": 7.221,
+     "reconstruct": 0.406,
+     "total": 7.673
+    }
+   },
+   {
+    "layer": 1,
+    "file": "bitstreams/qwen05b/svc/r2_L1.wcdc",
+    "bytes": 62934657,
+    "layer_bpw": 1.407042719243647,
+    "layer_proxy_bpw": 1.4060571342543042,
+    "single_file": "bitstreams/qwen05b/svc/r2_single_L1.wcdc",
+    "single_bytes": 116141126,
+    "single_bpw": 2.596590392842834,
+    "single_proxy_bpw": 2.596616099494411,
+    "cum_bytes": 137865147,
+    "cum_bpw": 3.0822786771334134,
+    "cum_MB": 137.865147,
+    "tax_bpw": 0.4856882842905792,
+    "tax_pct": 18.704847927856317,
+    "bit_identical_to_single": true,
+    "decode_layer_s": {
+     "entropy": 9.871,
+     "reconstruct": 0.71,
+     "total": 10.605
+    },
+    "decode_single_s": {
+     "entropy": 7.999,
+     "reconstruct": 0.472,
+     "total": 8.572
+    }
+   },
+   {
+    "layer": 2,
+    "file": "bitstreams/qwen05b/svc/r2_L2.wcdc",
+    "bytes": 55976983,
+    "layer_bpw": 1.2514886094536974,
+    "layer_proxy_bpw": 1.250980718574607,
+    "single_file": "bitstreams/qwen05b/svc/r2_single_L2.wcdc",
+    "single_bytes": 159888612,
+    "single_bpw": 3.5746616908482145,
+    "single_proxy_bpw": 3.5749004794750108,
+    "cum_bytes": 193842130,
+    "cum_bpw": 4.33376728658711,
+    "cum_MB": 193.84213,
+    "tax_bpw": 0.7591055957388965,
+    "tax_pct": 21.23573253609832,
+    "bit_identical_to_single": true,
+    "decode_layer_s": {
+     "entropy": 8.877,
+     "reconstruct": 0.756,
+     "total": 9.654
+    },
+    "decode_single_s": {
+     "entropy": 8.868,
+     "reconstruct": 0.467,
+     "total": 9.404
+    }
+   }
+  ]
+ }
+}
