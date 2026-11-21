@@ -11,6 +11,12 @@ Legend: **FACT** = measured here, number in `results/`. **HYPOTHESIS / INTERPRET
 
 ## 0. TL;DR
 
+**In plain terms.** The compression comes not from a clever transform on a single model but from the fact that
+*related models are almost identical* — a fine-tune differs from its base by ~7.7 % of its weights, consecutive
+training checkpoints by less — so you keep one model in full and entropy-code only the small (full-rank) **difference**
+for the rest. A single standalone weight matrix has no structure a frequency transform can exploit (the JPEG transform
+fails); there, only quantization + entropy coding help.
+
 > **Phase 2 (2026-11-21): real ANS bitstreams, decode benchmark, Hugging Face runs → §14.** Real file bytes match the phase-1
 > entropy estimates to ±0.02 %; all phase-1 winners hold on real bytes.
 

@@ -13,6 +13,9 @@
 <header class="hero">
   <p class="eyebrow">weight-codec · live demo · <a href="https://github.com/lifeart/weight-codec">code &amp; report</a></p>
   <h1>Download the base once. Send a small entropy-coded delta.<br>Rebuild the Instruct model — in this tab.</h1>
+  <p class="lede"><b>The whole idea:</b> a fine-tune is ~92&nbsp;% identical to its base model, so you ship the base <b>once</b>
+    and then only the small <b>difference</b> — never a second full model. (A training run's checkpoints compress the same
+    way, like video frames.) Compressing a single standalone model, by contrast, buys little beyond ordinary rounding.</p>
   <p class="lede"><b>SmolLM2-135M → SmolLM2-135M-Instruct.</b> The page downloads our compressed <code>.wcdc</code> files,
     entropy-decodes them (rANS, plain JavaScript), rebuilds the fp16 weights, checks their <b>SHA-256 against the Python
     decoder</b>, and then generates text <b>with the rebuilt weights</b>. No server, no GPU, no official weight file is downloaded.</p>

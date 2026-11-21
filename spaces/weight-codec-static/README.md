@@ -12,6 +12,11 @@ short_description: Base once + entropy-coded delta → Instruct model, in-browse
 
 # weight-codec — base once + entropy-coded delta → Instruct model, in your browser
 
+**The idea:** a fine-tune is ~92&nbsp;% identical to its base model, so you store the base **once** and ship only the
+small **difference** — never a second full model. (A training run's checkpoints compress the same way, like video frames.)
+Compressing a *single* standalone model, by contrast, buys little beyond ordinary rounding. This Space shows it
+end-to-end, entirely in your browser.
+
 Static Space (no server). The page downloads the compressed `.wcdc` files of
 **SmolLM2-135M → SmolLM2-135M-Instruct**, entropy-decodes them in plain JavaScript (rANS, Web Worker),
 rebuilds the fp16 weights, checks their **SHA-256 against the Python decoder** (and, for the lossless parts,

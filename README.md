@@ -3,6 +3,17 @@
 **Can neural-network weights be compressed like images (JPEG, *intra*) — and model families or
 training checkpoints like video (*inter-frame* prediction)?**
 
+**In plain terms — where the compression comes from.** Not a clever trick on a single model, but the fact that
+*related models are almost identical.* A fine-tune (an Instruct / chat version, say) differs from its base model by
+only ~7–8 % of its weights; consecutive training checkpoints differ even less. So you store **one** model in full and
+keep only the small **difference** for each relative, then pack those differences with an entropy coder (ZIP-like).
+If you already have the base, a fine-tune then costs several times less than storing it whole, and a run's checkpoints
+compress like video frames. Compressing a *single* standalone model, by contrast, buys little beyond ordinary
+rounding (quantization): treating a weight matrix like a JPEG image fails outright — weights look like random noise,
+with no smooth structure for a frequency transform to exploit. **The win is "store one, diff the rest", not magic on
+one model** — and, surprisingly, the difference is best left full-rank and entropy-coded rather than squeezed into a
+low-rank (LoRA-style) form.
+
 This repository is a falsification-first study of that analogy on real ≤ 1 GB language models
 (Qwen2.5-0.5B family, SmolLM2-135M/360M, Pythia-410M training checkpoints), plus a working
 bitstream codec (`wcodec/`) that turns the surviving ideas into real files and measures their decode cost.
