@@ -16,6 +16,10 @@ qrow     symbols on a per-row uniform grid (ECSQ / GPTQ-ECSQ / P-frames / SVC la
                          "nest:k"-> Q = k*Q_ref + q      (SVC refinement, nested lattice)
            params.base : "fp16ref" -> W = W_ref + q*step (delta against an fp16 reference)
            params.ctx  : "clip3" -> symbols coded in 7 context streams, ctx = clip(q_ref_last, -3, 3)
+           params.col  : (absent) -> per-row step only
+                         "own"   -> section "col" (fp16 per input column): step_ij = step_i * col_j
+                                    (separable Hessian-column grid of quant.ghcol; exact fp32 product)
+                         "ref"   -> column factors of the reference record (P-frame on that lattice)
            W = Q * step  (fp32 math, then fp16)
 g128     GPTQ/RTN asymmetric min-max grid, groups of `group` along the input dim:
            sections "scale" (fp16 [O, I/g]), "zero" (packed 4-bit, or bytes if bits > 4),
@@ -42,6 +46,11 @@ class TState:
     Q: Optional[torch.Tensor] = None
     q_last: Optional[torch.Tensor] = None
     step: Optional[torch.Tensor] = None
+    col: Optional[torch.Tensor] = None      # [1, I] column factors of a separable row x column lattice (or None)
+
+    def lattice_step(self):
+        """Full lattice step (row x column product, exact in fp32) -- what Q is multiplied by."""
+        return self.step if self.col is None else self.step * self.col
 
 
 def _np16(t):
@@ -82,8 +91,11 @@ def _sym_sections(q, ctx=None):
     return {f"sym@{v}": ans_encode(q[ctx == v]) for v in present}, present
 
 
-def enc_qrow(q, step=None, step_mode="own", acc="none", base="none", ctx_prev=None):
-    """q: int symbols [O, I]; step: fp32/fp16 [O] or [O,1] (stored as fp16) when step_mode=='own'."""
+def enc_qrow(q, step=None, step_mode="own", acc="none", base="none", ctx_prev=None, col=None, col_mode=None):
+    """q: int symbols [O, I]; step: fp32/fp16 [O] or [O,1] (stored as fp16) when step_mode=='own'.
+    Separable row x column grid (step_ij = row_i * col_j, e.g. quant.ghcol): col = fp16-valued [I] column factors,
+    stored as section "col" (params col="own"); col_mode="ref" = inherit the reference record's column factors
+    (P-frame on a column-factor lattice, 0 side info).  Records without col are byte-identical to before."""
     params = {"step": step_mode, "acc": acc, "base": base}
     sec, present = _sym_sections(q, ctx_prev)
     if present is not None:
@@ -91,6 +103,16 @@ def enc_qrow(q, step=None, step_mode="own", acc="none", base="none", ctx_prev=No
         params["ctx_vals"] = present
     if step_mode.startswith("own"):
         sec["step"] = _np16(torch.as_tensor(step).reshape(-1)).tobytes()
+    if col is not None:
+        assert step_mode == "own" and col_mode in (None, "own"), "own column factors need an own row step"
+        c = torch.as_tensor(col).reshape(-1)
+        assert torch.isfinite(c).all() and bool((c > 0).all()), "column factors must be finite and > 0"
+        assert torch.equal(c.float(), c.half().float()), "column factors must be fp16-representable"
+        params["col"] = "own"
+        sec["col"] = _np16(c).tobytes()
+    elif col_mode == "ref":
+        assert step_mode == "ref", "inherited column factors need step='ref'"
+        params["col"] = "ref"
     return "qrow", params, sec
 
 
@@ -191,18 +213,45 @@ def decode_record(rd: Reader, rec, R=None, device="cpu", tim=None, keep_state=Tr
                 q = pre_sym
             else:
                 q = _syms(rd, rec, n, None if R is None or R.q_last is None else R.q_last.cpu().numpy())
+            if q.size and (q.min() < -32768 or q.max() > 32767):     # every fast decoder path is int16: never wrap
+                raise ValueError(f"{name}: qrow symbols outside int16 [{q.min()}, {q.max()}] -- invalid file")
             q = q.astype(np.int8 if (q.min() >= -128 and q.max() <= 127) else np.int16, copy=False).reshape(shape)
             t1 = time.perf_counter()
             qt = torch.from_numpy(q).to(device).to(torch.int32)
+        cmode = p.get("col")                              # None | "own" | "ref"  (separable row x column grid)
+        if cmode not in (None, "own", "ref"):
+            raise ValueError(f"{name}: unknown column-factor mode col={cmode!r}")
+        col = None
         if p["step"].startswith("own"):
             step = torch.from_numpy(np.frombuffer(rd.section(rec, "step"), dtype=np.float16).copy()
                                     ).to(device).float().reshape(-1, 1)
+            if step.shape[0] != shape[0]:                 # a short section would broadcast silently
+                raise ValueError(f"{name}: {step.shape[0]} row steps for {shape[0]} rows -- invalid file")
             if p["step"].startswith("own_div:"):          # e.g. own_div:3,3 -> (s/3)/3 (sequential)
+                if cmode is not None:
+                    raise NotImplementedError("own_div step with column factors")
                 for d in p["step"].split(":")[1].split(","):
                     step = step / float(d)
+            if cmode == "own":
+                if "col" not in rec["sec"]:
+                    raise ValueError(f"{name}: col='own' but the record has no 'col' section -- invalid file")
+                col = torch.from_numpy(np.frombuffer(rd.section(rec, "col"), dtype=np.float16).copy()
+                                       ).to(device).float().reshape(1, -1)
+                if col.shape[1] != shape[1]:              # a 1-element section would broadcast silently
+                    raise ValueError(f"{name}: {col.shape[1]} column factors for {shape[1]} columns -- invalid file")
+            elif cmode is not None:
+                raise ValueError(f"{name}: col={cmode!r} needs step='ref'")
         elif p["step"] == "ref":
             step = R.step.to(device)
+            if cmode == "ref":
+                if R.col is None:
+                    raise ValueError(f"{name}: record inherits column factors but the reference state has none")
+                col = R.col.to(device)
+            elif R.col is not None:
+                raise ValueError(f"{name}: reference lattice has column factors but the record does not inherit them")
         else:
+            if cmode is not None or (R is not None and R.col is not None):
+                raise NotImplementedError("div:k step on a column-factor lattice")
             step = R.step.to(device) / float(p["step"].split(":")[1])
         if p["acc"] == "none":
             Qi = qt
@@ -210,14 +259,16 @@ def decode_record(rd: Reader, rec, R=None, device="cpu", tim=None, keep_state=Tr
             Qi = R.Q.to(device).to(torch.int32) + qt
         else:
             Qi = int(p["acc"].split(":")[1]) * R.Q.to(device).to(torch.int32) + qt
-        Wf = Qi.float() * step
+        # step_ij = row_i * col_j: a product of two fp16 values is EXACT in fp32 (22-bit significand), so the
+        # decoder rebuilds the encoder's lattice bit-exactly, in any evaluation order or device
+        Wf = Qi.float() * (step if col is None else step * col)
         if p["base"] == "fp16ref":
             Wf = R.W.to(device).float() + Wf
         st.W = Wf.half()
         if keep_state is True:
-            st.Q, st.q_last, st.step = Qi, qt, step
+            st.Q, st.q_last, st.step, st.col = Qi, qt, step, col
         elif keep_state == "Q":                # enough to be a P-frame reference (no context)
-            st.Q, st.step = Qi, step
+            st.Q, st.step, st.col = Qi, step, col
     elif kind == "g128":
         O, I = shape
         g = p["group"]

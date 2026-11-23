@@ -34,23 +34,29 @@ Raw numbers: `results/*.json`, `results/phase2_tables.md`. Figures: `figures/`.
 
 ## Browser demo
 
-**Base once + entropy-coded delta → SmolLM2-135M-Instruct, rebuilt in your browser** ([`docs/`](docs/)): the page
+**Base once + entropy-coded delta → SmolLM2-135M-Instruct, rebuilt in your browser** ([live page](https://lifeart.github.io/weight-codec/),
+also on the [Hugging Face Space](https://huggingface.co/spaces/lifeart/weight-codec); source in [`docs/`](docs/)): the page
 downloads the compressed `.wcdc` files, rANS-decodes them in plain JavaScript (Web Worker), rebuilds the fp16 weights,
 checks **SHA-256 against the Python decoder** (and, for lossless parts, against the original checkpoint), then
 **generates text with the rebuilt weights** through a ~130-line JavaScript Llama forward pass. Base files stay in the
-browser's Cache Storage, so they are downloaded once.
+browser's Cache Storage, so they are downloaded once. The files use the codec's **default coders** (REPORT §17):
+quantization steps set per output row *and per input column* (Fisher-weighted for the base I-frame, Hessian-weighted for
+the delta) — the same container, one extra fp16 section per tensor.
 
-| configuration | base (cached once) | Instruct delta | rebuilt Instruct vs original |
-|---|---|---|---|
-| fp16 base (lossless) + full-rank Δ c=0.12 | 178.1 MB | **53.4 MB** | chat-KL 0.030, top-1 93.6 % (lossy linears; embeddings/norms bit-exact) |
-| int4-class base I-frame + Instruct P-frame | 85.3 MB | **45.4 MB** | chat-KL 0.54, top-1 72 % — smallest, visibly degraded on this fragile 135 M model |
-| control: standalone Instruct, no base reuse | — | 85.3 MB | chat-KL 0.50 |
+| configuration | base (cached once) | Instruct delta | rebuilt Instruct vs original | previous coder (row grid, §14) |
+|---|---|---|---|---|
+| fp16 base (lossless) + full-rank Δ, column grid c=1.6 | 178.1 MB | **51.8 MB** | chat-KL **0.012**, top-1 96.2 % (lossy linears; embeddings/norms bit-exact) | 53.4 MB → chat-KL 0.030 |
+| int4-class Fisher-grid base I-frame + Instruct P-frame | 86.3 MB | **43.9 MB** | chat-KL **0.084**, top-1 88.2 % — smallest; still below the original on this small model | 85.3 + 45.4 MB → chat-KL 0.54 |
+| control: standalone Instruct (same coder), no base reuse | — | 86.3 MB | chat-KL 0.095 | 85.3 MB → 0.50 |
 
-For scale: the official Instruct checkpoint is 269.1 MB (bf16), a standard GPTQ-int4 g64 file 113.9 MB (chat-KL 0.40).
-Verified offline (`node phase2/test_demo.mjs`): every file decodes bit-exactly like the Python decoder, lossless parts are
-identical to the checkpoint, and the JS forward pass reproduces PyTorch's greedy tokens on the rebuilt weights. Live
-decode ≈ 4–10 s and generation ≈ 7 tokens/s on one JS thread (Apple-Silicon laptop, headless Chromium). The page labels
-live vs precomputed output and lossless vs approximate weights explicitly.
+For scale: the official Instruct checkpoint is 269.1 MB (bf16), a standard GPTQ-int4 g64 file 113.9 MB (chat-KL 0.40);
+storing **both** models as the family pair takes 130.1 MB vs 227.9 MB for two int4 files (−43 %) at 4.8× lower chat-KL.
+Verified offline before every deploy: `node phase2/test_demo.mjs` (every file decodes bit-exactly like the Python decoder,
+lossless parts are identical to the checkpoint, the JS forward pass reproduces PyTorch's greedy tokens on the rebuilt
+weights), `phase2/test_codec_js.py` (JS vs Python on synthetic row- and column-grid files incl. malformed ones),
+`phase2/seam_fields.py` (every field the page reads exists in what the build wrote) and `phase2/test_page_cdp.mjs` (the
+real page in headless Chromium: decode → verify → generate). Live decode takes ≈ 5–10 s and generation ≈ 5 tokens/s on
+one JS thread. The page labels live vs precomputed output and lossless vs approximate weights explicitly.
 
 **Data.** The bitstreams (≈ 380 MB, rans16 re-encodes of the measured files + a new lossless base-linears file) and the
 official `tokenizer.json` are **not in git**. `phase2/demo_build.py` writes them to `docs/bitstreams/` (git-ignored)
@@ -65,8 +71,9 @@ cd docs && python3 -m http.server 8000         # local preview: http://localhost
 ```
 
 * **Hugging Face static Space** (hosts page + bitstreams): `.venv/bin/python phase2/deploy_static_space.py` stages
-  `docs/` + `docs/bitstreams/` + the Space card (`spaces/weight-codec-static/README.md`) into `build/space/`;
-  `--deploy` uploads it to `WC_SPACE` (created private; the script refuses to upload to a public Space).
+  `docs/` + `docs/bitstreams/` + the Space card (`spaces/weight-codec-static/README.md`) into `build/space/` and checks
+  the staged text for hardware / infrastructure details; `--deploy` uploads it to `WC_SPACE` (a new Space is created
+  private; updating an already public Space needs `--public-ok`).
 * **GitHub Pages** (page only): *Settings → Pages → Deploy from a branch → `<branch>` / `docs`*. Pages cannot serve the
   bitstreams from git, so set `dataBase` in `docs/config.js` to a public host with CORS — e.g. the Space once it is public,
   `https://huggingface.co/spaces/<user>/<space>/resolve/main/bitstreams/`, or a public HF dataset/model repo
@@ -81,6 +88,7 @@ cd docs && python3 -m http.server 8000         # local preview: http://localhost
 | JPEG **perceptual weighting** (Fisher-sensitivity step sizes) | confirmed | GPTQ-int4 quality at **3.05 bpw (−27 %)**; ranking holds out of domain (C4) with a smaller margin |
 | **layers as frames** (+ neuron-permutation / rotation "motion compensation") | **falsified** | adjacent-layer residual 0.986 after alignment vs 0.996 for a random null → ≈ 0.01 bit/weight |
 | **model family as a GOP** (instruct fine-tune as a P-frame of its base) | **confirmed — largest win** | pair {base, Instruct} on disk: **−42 % / −44 % / −43 %** vs two standard GPTQ-int4 files (Qwen2.5-0.5B / SmolLM2-360M / SmolLM2-135M) |
+| **per-column step sizes** (Fisher-weighted base I-frame, rounding P-frame on its lattice, Hessian-column Δ) — the codec's **default** since REPORT §17 | confirmed on 3 models, real files | same pair size, fine-tune chat-KL **2.2× / 2.9× / 6.4× lower** (Qwen / SmolLM2-360M / -135M); fine-tune Δ file **−19…−35 %** at equal chat-KL |
 | fine-tune Δ is **low-rank (LoRA-like)** | **falsified** | entropy-coded full-rank Δ gives **2–25× lower chat-KL** than a LoRA-style Δ at equal or fewer real bytes |
 | continued-pretraining relatives (Qwen2.5-Coder) as P-frames | **mostly falsified** | P/I = 0.96 in real bytes ("scene cut") |
 | **training checkpoints as video** (Pythia-410M) | confirmed late in training | 8-checkpoint GOP: **224.7 MB vs 1081 MB all-I (−79 %)**; mid-training −56 %; no drift |
@@ -107,10 +115,13 @@ Qwen2.5-0.5B + Qwen2.5-0.5B-Instruct, **every tensor of both models on disk**:
 | two standard GPTQ-int4 g128 files (rest fp16) | 917 | 14.03 | 0.148 |
 | both GPTQ-int4 + rANS, rest lossless | 694 | 14.03 | 0.148 |
 | both independent GPTQ-ECSQ c=0.35, rest lossless | 678 | 13.84 | 0.117 |
-| **family: base I-frame + Instruct P-frame + XOR-coded rest** | **532** | 13.84 | 0.128 |
+| family: base I-frame + Instruct P-frame + XOR-coded rest (phase 2, row grid) | 532 | 13.84 | 0.128 |
+| **family, default coders since §17: Fisher-grid I-frame + rounding P-frame on its lattice** | **530** | **13.42** | **0.059** |
 
-Same pattern on SmolLM2-360M (**295 MB** family vs 406 MB independent vs 528 MB two int4 files) and SmolLM2-135M
-(131 vs 171 vs 228 MB). The Instruct P-frame of all 168 Qwen linears is **49.2 MB (1.10 bpw)**; the gain on whole
+Same pattern on SmolLM2-360M (**294 MB** family at chat-KL 0.048 — phase 2: 295 MB at 0.138 — vs 528 MB for two int4
+files at 0.118) and SmolLM2-135M (130 MB at 0.084 — phase 2: 131 MB at 0.538 — vs 228 MB at 0.400). With the default
+coders the c = 0.5 pair is 6–9 % smaller than the phase-2 c = 0.35 pair and still better on base KL and chat-KL
+(REPORT §17.2). The Instruct P-frame of all 168 Qwen linears is **49.2 MB (1.10 bpw)**; the gain on whole
 files is smaller than on linears alone (−35 %) because embeddings were coded *losslessly* in all full-file numbers.
 
 ![Qwen2.5-0.5B-Instruct: real MB vs quality, decode time vs quality](figures/p2_qwen05b_mb_dec_quality.png)
@@ -128,7 +139,9 @@ matched bytes (fp16 base available losslessly):
 | SmolLM2-360M | **2.8×** at 88 %, **10.8×** at 91 %, **25.2×** at 70 % |
 
 Qwen2.5-0.5B-Instruct at 1.69 bpw as a Δ (75.4 MB for all linears) reaches chat-KL 0.011 — 14× lower than a
-standalone GPTQ-int4 copy (3.76 bpw → 0.148). Not tested: adapters that were *trained* as LoRA (there the low-rank
+standalone GPTQ-int4 copy (3.76 bpw → 0.148). The default Δ coder since REPORT §17 (per-column Hessian steps, plain
+rounding) does better again: 70.5 MB → chat-KL 0.007, and the Δ file is 19–35 % smaller at equal chat-KL on all three
+families. Not tested: adapters that were *trained* as LoRA (there the low-rank
 structure exists by construction).
 
 ![C2: Instruct coded given its base](figures/rd_c2_instruct_chat_kl.png)
@@ -282,6 +295,18 @@ the pre-registered pass lines are in the probe docstrings, the protocol in REPOR
 phase2/run_phase2_local.sh                    # family codec ×3, SVC, scene cut, decode bench, zstd reference, tables, figures
 ```
 
+`phase2/run_phase2_local.sh` reproduces phase 2 with the phase-2 coders (`family_codec.py --preset phase2`). Since
+REPORT §17 the family codec's **default** coders are the Fisher-grid I-frame + rounding P-frame on its lattice and the
+rounding column-grid Δ; the §17 re-measurement of one pair (baseline files reused from the phase-2 run):
+
+```bash
+.venv/bin/python phase2/family_codec.py --base HuggingFaceTB/SmolLM2-135M --target HuggingFaceTB/SmolLM2-135M-Instruct \
+    --tag smol135 --tok_tag smollm2 --ref_base smol135 --ref_target smol135_instruct --group 64 \
+    --store default_family_smol135 --no_baseline --pframe gptq --pframe_round_cs 0.35,0.5   # both P-frame quantizers
+.venv/bin/python phase2/ghcol_roundtrip.py --coders default      # SHA-256 round trip on all 5 decoder paths
+.venv/bin/python phase2/default_headline.py                      # before / after tables -> results/default_headline.json
+```
+
 **Phase 2 — off-machine runs on Hugging Face Jobs (optional, paid CPU).** `phase2/hf_job.py` ships the code as a
 base64 tarball in an environment variable, runs the unit tests and the script on a CPU job
 (`<cpu-flavor>` = any HF Jobs CPU hardware flavor; the Pythia run used 8 vCPU / 32 GB), and uploads results
@@ -297,7 +322,7 @@ export WC_REPO=<your-user>/weight-codec-runs
 ```
 
 **Demo Space.** See [Browser demo](#browser-demo): `phase2/demo_build.py` builds the data, `phase2/deploy_static_space.py --deploy`
-stages `docs/` + bitstreams and uploads them to `WC_SPACE` (created **private**; the script refuses to upload to a public Space).
+stages `docs/` + bitstreams and uploads them to `WC_SPACE` (created **private**; updating a public Space needs `--public-ok`).
 `spaces/weight-codec-demo/` is a Gradio variant (rebuild the fine-tune from the bitstreams and generate); it requires
 paid Space hardware (HTTP 402 otherwise).
 
@@ -323,8 +348,8 @@ spaces/weight-codec-demo/     Gradio Space app (rebuild + generate)
 
 ## Demo and data (author's Hugging Face resources)
 
-* Static demo Space: <https://huggingface.co/spaces/lifeart/weight-codec> — **currently private** (returns HTTP 401
-  until the author makes it public); it still serves the previous phase-2 page until the new demo is uploaded.
+* Static demo Space: <https://huggingface.co/spaces/lifeart/weight-codec> (public; serves the page and the bitstreams);
+  the same page on GitHub Pages: <https://lifeart.github.io/weight-codec/>.
 * Job results and bitstreams: dataset `lifeart/weight-codec-phase2` — **private**.
 
 Everything needed to regenerate both is in this repository.

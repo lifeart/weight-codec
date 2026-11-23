@@ -9,25 +9,20 @@ const pct = (x) => (100 * x).toFixed(1) + " %";
 const CHAIN_ORDER = ["delta", "family", "indep"];
 const GEN_LABEL = { delta: { instruct: "instruct_delta", base: "base_original" },
                     family: { instruct: "instruct_family", base: "base_family_iframe" }, indep: {} };
+// card text; Q = measured quality of this chain's lossy Instruct file, P = the file it replaced (previous coder, REPORT §14.3)
+const ratio = (Q, P) => (P && P.chat_kl && Q.chat_kl) ? (P.chat_kl / Q.chat_kl).toFixed(1) + "×" : "—";
 const CARD_TEXT = {
-  delta: { tag: "near-lossless · recommended", title: "fp16 base (lossless) + full-rank Δ (c=0.12)",
-           q: (Q) => `Embeddings/norms bit-exact; Instruct linears approximate: chat-KL ${fx(Q.chat_kl)}, top-1 agreement ${pct(Q.chat_top1)} with the original Instruct.` },
-  family: { tag: "smallest", title: "int4-class family: base I-frame + Instruct P-frame (c=0.35)",
-            q: (Q) => `Both models lossy (int4-class): Instruct chat-KL ${fx(Q.chat_kl, 2)}, top-1 ${pct(Q.chat_top1)}. SmolLM2-135M is fragile at this rate — answers are visibly worse (see examples).` },
-  indep: { tag: "control", title: "standalone Instruct GPTQ-ECSQ (no base reuse)",
-           q: (Q) => `Nothing reused from a base: chat-KL ${fx(Q.chat_kl, 2)}, top-1 ${pct(Q.chat_top1)}. Shows what the delta saves.` },
+  delta: { tag: "near-lossless · recommended",
+           q: (Q, P) => `Embeddings/norms bit-exact; Instruct linears approximate: chat-KL ${fx(Q.chat_kl, 4)}, top-1 agreement ${pct(Q.chat_top1)} with the original Instruct ` +
+             `(previous delta coder: chat-KL ${fx(P.chat_kl, 4)} at a similar size — ${ratio(Q, P)} lower now).` },
+  family: { tag: "smallest",
+            q: (Q, P) => `Both models lossy (int4-class): Instruct chat-KL ${fx(Q.chat_kl, 3)}, top-1 ${pct(Q.chat_top1)} — ${ratio(Q, P)} lower than the previous ` +
+              `row-grid coder (chat-KL ${fx(P.chat_kl, 2)}) at about the same size. Still visibly below the original on a model this small (see examples).` },
+  indep: { tag: "control",
+           q: (Q) => `Nothing reused from a base, same coder: chat-KL ${fx(Q.chat_kl, 3)}, top-1 ${pct(Q.chat_top1)}. Shows what reusing the base saves.` },
 };
 
 let MAN, GEN, RES, SUM, worker, DATA;
-// offline reference decode times of the chain's linears (REPORT §14.3/§14.6, Apple-Silicon laptop)
-const fmtRow = (pre) => RES.finetune_formats.find((r) => r.format.startsWith(pre));
-const refTxt = (what, r) => r ? `For comparison, offline on an Apple-Silicon laptop, ${what} decode in ${fx(r.dec_cpu_rans16_par_ms / 1000, 2)} s with the project's 8-core numba rANS ` +
-  `and ${fx(r.dec_gpu_ms / 1000, 2)} s with its Metal GPU decoder (${fx(r.dec_cpu_constriction_1t_ms / 1000, 1)} s with constriction on one thread; REPORT §14.3).` : "";
-const REF_DEC = {
-  family: () => refTxt("the linears of the I-frame + P-frame chain", fmtRow("P-frame on base I-frame lattice (c=0.35)")),
-  delta: () => refTxt("the Δ linears (given the fp16 base in RAM; the lossless base decode was not benchmarked there)", fmtRow("full-rank Δ vs fp16 base, GPTQ c=0.12")),
-  indep: () => refTxt("the standalone linears", fmtRow("GPTQ-ECSQ c=0.35")),
-};
 let chain = "delta", busy = false, decoded = null, cached = {}, cacheAvailable = false;
 let session = { net: 0, cache: 0 };
 let genRun = null;
@@ -51,9 +46,9 @@ function renderCards() {
     const baseCached = c !== "indep" && chainFiles(c).filter((n) => MAN.files[n].role === "base").every((n) => cached[n]);
     const el = document.createElement("div");
     el.className = "card"; el.tabIndex = 0; el.setAttribute("role", "radio"); el.setAttribute("aria-checked", String(c === chain));
-    el.innerHTML = `<div class="c-tag">${esc(T.tag)}</div><div class="c-title">${esc(T.title)}</div>
+    el.innerHTML = `<div class="c-tag">${esc(T.tag)}</div><div class="c-title">${esc(ch.title)}</div>
       <div class="c-sizes">${c === "indep" ? `standalone Instruct <b>${MB(deltaB)}</b>` : `base <b>${MB(baseB)}</b> + Instruct delta <b>${MB(deltaB)}</b>`}</div>
-      <div class="c-q">${esc(T.q(Q))}</div>
+      <div class="c-q">${esc(T.q(Q, ch.prev_quality || {}))}</div>
       <div class="c-cached ${baseCached ? "ok" : "muted"}">${c === "indep" ? "" : baseCached ? "✓ base already cached in this browser" : "base not cached yet"}</div>`;
     const pick = () => { if (busy) return; chain = c; renderCards(); renderTiles(); };
     el.addEventListener("click", pick);
@@ -82,11 +77,20 @@ function renderTiles() {
   $("#t-out-sub").innerHTML = `fp16, ${MB(2 * 134515008)} in memory · lossless parts bit-exact · linears approximate (chat-KL ${fx(Q.chat_kl)})`;
   const off = MAN.original.instruct_bf16_safetensors_bytes;
   const int4 = RES.files.T_gptq4_packed.MB + RES.files.T_rest_raw16.MB;
-  const pFam = RES.pairs.find((p) => p.scenario.startsWith("FAMILY: base I-frame + fine-tune P-frame"));
-  const pInt4 = RES.pairs.find((p) => p.scenario.startsWith("both GPTQ-int4 fixed-rate"));
+  const pFam = RES.pairs.find((p) => p.kind === "default" && p.scenario.startsWith("family"));
+  const pInt4 = RES.pairs.find((p) => p.scenario.startsWith("two standard GPTQ-int4"));
   $("#refline").innerHTML = `For scale: the official Instruct checkpoint is <b>${MB(off)}</b> (bf16 safetensors); a standard GPTQ-int4 g64 file of it ` +
     `(rest fp16) is <b>${int4.toFixed(1)} MB</b> at chat-KL ${fx(RES.files.T_gptq4_packed.chat_kl, 2)}. Storing <i>both</i> models: family ` +
-    `<b>${pFam.pair_MB.toFixed(1)} MB</b> vs two standard int4 files ${pInt4.pair_MB.toFixed(1)} MB (<b>${(100 * (pFam.pair_MB / pInt4.pair_MB - 1)).toFixed(0)} %</b>).`;
+    `<b>${pFam.pair_MB.toFixed(1)} MB</b> (chat-KL ${fx(pFam.ft_chat_kl, 3)}) vs two standard int4 files ${pInt4.pair_MB.toFixed(1)} MB (chat-KL ${fx(pInt4.ft_chat_kl, 2)}): ` +
+    `<b>${(100 * (pFam.pair_MB / pInt4.pair_MB - 1)).toFixed(0)} %</b> bytes.`;
+}
+
+function renderWhatsNew() {          // measured numbers of this build vs the files it replaced (manifest: quality / prev_quality)
+  const f = MAN.chains.family, d = MAN.chains.delta;
+  $("#whatsnew").innerHTML = `<b>New coder (REPORT §17):</b> quantization steps are now set per output row <i>and per input column</i> ` +
+    `(Fisher-weighted for the base, Hessian-weighted for the delta). At about the same size, the smallest configuration's Instruct ` +
+    `chat-KL fell from ${fx(f.prev_quality.chat_kl, 2)} to <b>${fx(f.quality.chat_kl, 3)}</b> and the near-lossless delta's from ` +
+    `${fx(d.prev_quality.chat_kl, 3)} to <b>${fx(d.quality.chat_kl, 3)}</b> (lower = closer to the original).`;
 }
 
 function renderSession() {
@@ -154,8 +158,8 @@ function onChainDone(m) {
     [allOrig, "Lossless parts are identical to the original checkpoint.", `${ll.map((r) => `<code>${esc(r.name)}</code>`).join(", ")}: the rebuilt tensors have the same SHA-256 as the original tensors (computed from the official checkpoint, not from a decode). “Original” = the official bf16 checkpoint cast to fp16, the codec's reference; that cast itself changes ${bc.toLocaleString("en")} (base) / ${tc.toLocaleString("en")} (Instruct) of ${(MAN.original.base_cast.n_params / 1e6).toFixed(1)} M values, all |w| &lt; 7.6·10⁻⁶.`],
   ];
   const lossyNames = lossy.map((r) => `<code>${esc(r.name)}</code>`).join(", ");
-  let approxTxt = `${lossyNames} ${lossy.length > 1 ? "are" : "is"} quantized: the rebuilt Instruct is an <b>approximation</b> of the original — chat-KL <b>${fx(Q.chat_kl)}</b>, top-1 agreement ${pct(Q.chat_top1)} on the original's own answers (48 prompts), WikiText KL ${fx(Q.kl)} — measured offline on models decoded from these files (REPORT §14.3).`;
-  if (m.chain === "family") approxTxt += ` The base is lossy too (int4-class I-frame: WikiText PPL ${fx(RES.files["B_ecsq_c0.35"].ppl, 2)} vs ${fx(RES.files.B_fp16.ppl, 2)} for fp16).`;
+  let approxTxt = `${lossyNames} ${lossy.length > 1 ? "are" : "is"} quantized: the rebuilt Instruct is an <b>approximation</b> of the original — chat-KL <b>${fx(Q.chat_kl, 4)}</b>, top-1 agreement ${pct(Q.chat_top1)} on the original's own answers (48 prompts), WikiText KL ${fx(Q.kl, 4)} — measured offline on models decoded from these files (REPORT §17).`;
+  if (m.chain === "family") approxTxt += ` The base is lossy too (int4-class I-frame: WikiText PPL ${fx(RES.files[RES.names.iframe].ppl, 2)} vs ${fx(RES.files.B_fp16.ppl, 2)} for fp16).`;
   if (m.chain === "delta") approxTxt += ` The base here is lossless, so the rebuilt base is bit-identical to the fp16 base.`;
   const ul = $("#checks"); ul.innerHTML = "";
   for (const [ok, k, txt] of items) {
@@ -166,7 +170,7 @@ function onChainDone(m) {
   li.innerHTML = `<span class="approx">≈</span> <span class="k">Lossy parts are NOT identical.</span> ${approxTxt}`; ul.appendChild(li);
   $("#timing-note").innerHTML = `All timings were measured in <b>your</b> browser just now (one JavaScript thread in a Web Worker): entropy decode ${(entropy / 1000).toFixed(2)} s, ` +
     `rebuild ${(rebuild / 1000).toFixed(2)} s, SHA-256 ${(shams / 1000).toFixed(2)} s; total decode ${(m.decMs / 1000).toFixed(2)} s for ${(nW / 1e6).toFixed(1)} M weights. ` +
-    (REF_DEC[m.chain] ? REF_DEC[m.chain]() : "");
+    `Native multi-threaded / GPU decoders of the same container are much faster (REPORT §14.6).`;
   $("#verify").hidden = false;
   const ok = allSym && allW && allOrig;
   $("#demo-log").className = "log " + (ok ? "" : "err");
@@ -218,57 +222,54 @@ function onGenDone(m) {
 function renderExamples() {
   $("#ex-how").textContent = "Precomputed once, offline — " + GEN.how + ` ${GEN.max_new_tokens} new tokens. Not live: the live path is step 4.`;
   const cols = [["base_original", "base (original fp16)"], ["instruct_original", "Instruct (original fp16)"],
-                ["instruct_delta", "Instruct rebuilt: fp16 base + Δ c=0.12"], ["instruct_family", "Instruct rebuilt: int4-class family (P-frame)"]];
+                ["instruct_delta", "Instruct rebuilt: fp16 base + Δ (column grid, c=1.6)"], ["instruct_family", "Instruct rebuilt: int4-class family (Fisher-grid P-frame)"]];
   $("#extable thead").innerHTML = "<tr><th>prompt</th>" + cols.map(([, t]) => `<th>${esc(t)}</th>`).join("") + "</tr>";
   $("#extable tbody").innerHTML = GEN.prompts.map((p, i) => "<tr><td>" + esc(p) + "</td>" +
     cols.map(([k]) => `<td>${esc(GEN.outputs[k][i])}</td>`).join("") + "</tr>").join("");
 }
 
 function renderNumbers() {
-  const F = RES.files, P = RES.pairs;
-  const pick = (pre) => P.find((p) => p.scenario.startsWith(pre));
-  const cs = (n) => MAN.files[n].src_bytes_constriction / 1e6;
-  const newPair = cs("B_lin_ll16") + cs("B_rest_ll16") + cs("T_delta_c0.12") + cs("T_rest_xor_base");
-  const rows = [
-    ["both fp16 (raw)", pick("both fp16"), false],
-    ["two standard GPTQ-int4 g64 files (rest fp16)", pick("both GPTQ-int4 fixed-rate"), false],
-    ["both GPTQ-int4 + rANS, rest lossless", pick("both GPTQ-int4 + rANS"), false],
-    ["both independent GPTQ-ECSQ c=0.35, rest lossless", pick("both independent"), false],
-    ["<b>family: base I-frame + Instruct P-frame</b> (c=0.35)", pick("FAMILY: base I-frame + fine-tune P-frame"), true],
-    ["lossless fp16 base + Instruct Δ c=0.12 <span class='muted'>(base linears losslessly coded: new file of this demo)</span>",
-      { pair_MB: newPair, base_ppl: F.B_fp16.ppl, ft_chat_kl: F["T_delta_c0.12"].chat_kl }, true],
-  ];
+  const F = RES.files, P = RES.pairs, N = RES.names;
+  const rows = P.map((p) => [p.scenario, p, p.kind === "default"]);
   const max = Math.max(...rows.map((r) => r[1].pair_MB));
   let h = `<h3>Storing the pair {base, Instruct} — every tensor of both models, MB on disk</h3><div class="hbars" role="img" aria-label="pair storage in MB">`;
   for (const [lab, p, hi] of rows) {
     const w = (100 * p.pair_MB / max).toFixed(2);
-    h += `<div class="hb ${hi ? "hi" : ""}" title="${esc(lab.replace(/<[^>]+>/g, ""))}: ${p.pair_MB.toFixed(1)} MB · base PPL ${fx(p.base_ppl, 2)} · Instruct chat-KL ${fx(p.ft_chat_kl)}">
-      <span class="lab">${lab}</span><span class="track"><span class="fill" style="width:${w}%"></span><span class="val" style="left:calc(${w}% + 6px)">${p.pair_MB.toFixed(1)} MB · chat-KL ${fx(p.ft_chat_kl, 3)}</span></span></div>`;
+    const l = hi ? `<b>${esc(lab)}</b>` : esc(lab);
+    h += `<div class="hb ${hi ? "hi" : ""}" title="${esc(lab)}: ${p.pair_MB.toFixed(1)} MB · base PPL ${fx(p.base_ppl, 2)} · Instruct chat-KL ${fx(p.ft_chat_kl, 4)}">
+      <span class="lab">${l}</span><span class="track"><span class="fill" style="width:${w}%"></span><span class="val" style="left:calc(${w}% + 6px)">${p.pair_MB.toFixed(1)} MB · chat-KL ${fx(p.ft_chat_kl, 3)}</span></span></div>`;
   }
-  h += `</div><p class="small muted">Base PPL (WikiText-2) / Instruct chat-KL: fp16 ${fx(F.B_fp16.ppl, 2)} / 0; int4 files ${fx(F.B_gptq4_packed.ppl, 2)} / ${fx(F.T_gptq4_packed.chat_kl, 3)}; ` +
-    `family ${fx(F["B_ecsq_c0.35"].ppl, 2)} / ${fx(F["T_pframe_c0.35"].chat_kl, 3)}. Family vs two standard int4 files: <b>${(100 * (rows[4][1].pair_MB / rows[1][1].pair_MB - 1)).toFixed(0)} %</b>; ` +
-    `vs the best independent entropy-coded pair: ${(100 * (rows[4][1].pair_MB / rows[3][1].pair_MB - 1)).toFixed(0)} %. The last row is computed from this demo's files (constriction bytes).</p>`;
+  const fam = P.find((p) => p.kind === "default" && p.scenario.startsWith("family"));
+  const famPrev = P.find((p) => p.kind === "prev" && p.scenario.includes("family"));
+  const int4 = P.find((p) => p.scenario.startsWith("two standard GPTQ-int4"));
+  const indep = P.find((p) => p.kind === "control");
+  h += `</div><p class="small muted">Highlighted = this demo's files (the codec's default coders). Family vs two standard int4 files: <b>${(100 * (fam.pair_MB / int4.pair_MB - 1)).toFixed(0)} %</b> bytes ` +
+    `at chat-KL ${fx(fam.ft_chat_kl, 3)} vs ${fx(int4.ft_chat_kl, 3)}; vs both models coded standalone with the same coder: ${(100 * (fam.pair_MB / indep.pair_MB - 1)).toFixed(0)} %. ` +
+    `Same pair size as the previous row-grid family (${famPrev.pair_MB.toFixed(1)} MB), ${(famPrev.ft_chat_kl / fam.ft_chat_kl).toFixed(1)}× lower Instruct chat-KL. ` +
+    `Base PPL (WikiText-2): fp16 ${fx(F.B_fp16.ppl, 2)}, Fisher-grid I-frame ${fx(F[N.iframe].ppl, 2)}, previous row-grid I-frame ${fx(F[N.prev.iframe].ppl, 2)}, int4 ${fx(F.B_gptq4_packed.ppl, 2)}.</p>`;
 
-  const int4 = F.T_gptq4_packed.MB + F.T_rest_raw16.MB;
   const off = MAN.original.instruct_bf16_safetensors_bytes / 1e6;
   const tr = (cells) => "<tr>" + cells.map((c) => `<td>${c}</td>`).join("") + "</tr>";
+  const row = (lab, lin, rest) => tr([lab, (F[lin].MB + F[rest].MB).toFixed(1), fx(F[lin].real_bpw, 2), fx(F[lin].chat_kl, 4), pct(F[lin].chat_top1)]);
   h += `<h3>What a client that already has the base downloads to get the Instruct model</h3><div class="tw"><table>
     <thead><tr><th>what is downloaded</th><th>MB</th><th>linears bpw</th><th>Instruct chat-KL</th><th>top-1 agreement</th></tr></thead><tbody>
     ${tr(["official Instruct checkpoint (bf16 safetensors)", off.toFixed(1), "16", "0 (it is the original)", "100 %"])}
-    ${tr(["standard GPTQ-int4 g64 file + fp16 rest", int4.toFixed(1), fx(F.T_gptq4_packed.real_bpw, 2), fx(F.T_gptq4_packed.chat_kl), pct(F.T_gptq4_packed.chat_top1)])}
-    ${tr(["standalone GPTQ-ECSQ c=0.35 + lossless rest (control)", (F["T_ecsq_c0.35"].MB + F.T_rest_ll16.MB).toFixed(1), fx(F["T_ecsq_c0.35"].real_bpw, 2), fx(F["T_ecsq_c0.35"].chat_kl), pct(F["T_ecsq_c0.35"].chat_top1)])}
-    ${tr(["<b>P-frame + XOR rest</b> (int4-class base I-frame cached)", "<b>" + (F["T_pframe_c0.35"].MB + F.T_rest_xor_base.MB).toFixed(1) + "</b>", fx(F["T_pframe_c0.35"].real_bpw, 2), fx(F["T_pframe_c0.35"].chat_kl), pct(F["T_pframe_c0.35"].chat_top1)])}
-    ${tr(["<b>full-rank Δ c=0.12 + XOR rest</b> (fp16 base cached)", "<b>" + (F["T_delta_c0.12"].MB + F.T_rest_xor_base.MB).toFixed(1) + "</b>", fx(F["T_delta_c0.12"].real_bpw, 2), fx(F["T_delta_c0.12"].chat_kl), pct(F["T_delta_c0.12"].chat_top1)])}
+    ${row("standard GPTQ-int4 g64 file + fp16 rest", "T_gptq4_packed", "T_rest_raw16")}
+    ${row("standalone Fisher-grid c=0.35 + lossless rest (control: no base reuse)", N.indep, "T_rest_ll16")}
+    ${row("<b>P-frame + XOR rest</b> (int4-class Fisher-grid base I-frame cached)", N.pframe, "T_rest_xor_base")}
+    ${row("<span class='muted'>previous coder: row-grid P-frame + XOR rest</span>", N.prev.pframe, "T_rest_xor_base")}
+    ${row("<b>full-rank Δ, column grid c=1.6 + XOR rest</b> (fp16 base cached)", N.delta, "T_rest_xor_base")}
+    ${row("<span class='muted'>previous coder: full-rank Δ, GPTQ row grid c=0.12 + XOR rest</span>", N.prev.delta, "T_rest_xor_base")}
     </tbody></table></div>
-    <p class="small muted">Linears alone: the P-frame is ${F["T_pframe_c0.35"].MB.toFixed(1)} MB (${fx(F["T_pframe_c0.35"].real_bpw, 2)} bpw) vs ${F.T_gptq4_packed.MB.toFixed(1)} MB for GPTQ-int4
-    (${(100 * (F["T_pframe_c0.35"].MB / F.T_gptq4_packed.MB - 1)).toFixed(0)} %). The ${F.T_rest_xor_base.MB.toFixed(1)} MB lossless embedding/norm XOR stream dominates both deltas — lossy
-    embedding coding was not evaluated. Quality caveat: SmolLM2-135M is fragile at int4-class rates (every ≈3.6–4.3 bpw format lands at chat-KL 0.40–0.54); the family GOP saves
-    bytes, not quality. The fp16-base Δ has no such problem.</p>`;
+    <p class="small muted">Linears alone: the P-frame is ${F[N.pframe].MB.toFixed(1)} MB (${fx(F[N.pframe].real_bpw, 2)} bpw) vs ${F.T_gptq4_packed.MB.toFixed(1)} MB for GPTQ-int4
+    (${(100 * (F[N.pframe].MB / F.T_gptq4_packed.MB - 1)).toFixed(0)} %). The ${F.T_rest_xor_base.MB.toFixed(1)} MB lossless embedding/norm XOR stream dominates both deltas — lossy
+    embedding coding was not evaluated. What changed vs the previous coder: quantization steps are now set per row <i>and per input column</i> (Fisher-weighted for the base,
+    Hessian-weighted for the delta; REPORT §16–§17) — the file format only gained one small fp16 section per tensor.</p>`;
 
   h += `<h3>Full-rank Δ + entropy coding vs a LoRA-style low-rank Δ (same fp16 base)</h3><div class="tw"><table>
     <thead><tr><th>full-rank Δ</th><th>MB</th><th>chat-KL</th><th>LoRA-style</th><th>MB</th><th>chat-KL</th><th>KL ratio</th><th>bytes ratio</th></tr></thead><tbody>`;
   for (const [d, l] of RES.delta_vs_lora) {
-    h += tr([d, F[d].MB.toFixed(1), fx(F[d].chat_kl), l, F[l].MB.toFixed(1), fx(F[l].chat_kl), (F[l].chat_kl / F[d].chat_kl).toFixed(1) + "× lower", pct(F[d].MB / F[l].MB)]);
+    h += tr([d, F[d].MB.toFixed(1), fx(F[d].chat_kl, 4), l, F[l].MB.toFixed(1), fx(F[l].chat_kl, 4), (F[l].chat_kl / F[d].chat_kl).toFixed(1) + "× lower", pct(F[d].MB / F[l].MB)]);
   }
   h += `</tbody></table></div><p class="small muted">Source: ${esc(RES.source)}. ${esc(RES.chat_set)}.</p>`;
   $("#numbers-body").innerHTML = h;
@@ -320,7 +321,7 @@ window.addEventListener("load", async () => {
     $("#demo-log").className = "log err"; $("#demo-log").textContent = "Failed to load the page data: " + e.message; return;
   }
   DATA = dataBase();
-  renderCards(); renderTiles(); renderSession(); renderExamples(); renderNumbers(); renderAllResults();
+  renderCards(); renderTiles(); renderSession(); renderWhatsNew(); renderExamples(); renderNumbers(); renderAllResults();
   for (const p of GEN.prompts) {
     const b = document.createElement("button"); b.className = "chip"; b.textContent = p;
     b.addEventListener("click", () => { $("#prompt").value = p; $("#maxnew").value = GEN.max_new_tokens; });

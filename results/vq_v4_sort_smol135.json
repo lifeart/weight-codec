@@ -1,0 +1,6 @@
+{
+ "frac_delta_energy_explained_linear_per_row": 0.0022766144750544504,
+ "frac_delta_energy_explained_E[D|Wb]_64bins": 0.0004220850958187583,
+ "perm_cost_bits_per_weight_row576": 7.737491973207303,
+ "perm_cost_bits_per_weight_row1536": 9.146576253833697
+}

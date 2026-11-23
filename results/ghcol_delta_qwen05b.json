@@ -1,0 +1,232 @@
+{
+ "_meta": {
+  "base": "Qwen/Qwen2.5-0.5B",
+  "target": "Qwen/Qwen2.5-0.5B-Instruct",
+  "dev_eval": "mps",
+  "gptq_dev": "cpu",
+  "harness": "phase-2 family codec, fp16-base scenario (T_delta)",
+  "eval": "WikiText-2 PPL all windows + KL first 16 vs data/ref_qwen05b_instruct.pt; chat KL/top-1/NLL on results/chat_set_qwen05b_instruct.json",
+  "hessian": "INSTRUCT model, 128 x 2048 WikiText-2 train windows, seed 0",
+  "rate": "Delta symbols: per-tensor order-0 entropy + 32 b/used symbol + side (16 b/row [+16 b/col])"
+ },
+ "tdelta_c0.12": {
+  "cfg": {
+   "kind": "tdelta",
+   "gamma": 1.0,
+   "c": 0.12
+  },
+  "entropy_bpw": 1.6864510231277057,
+  "side_bpw": 0.0135989010989011,
+  "quant_s": 53.6,
+  "ppl": 14.268775462436864,
+  "nll": 2.6580736157840383,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 213.4,
+  "kl": 0.005852465207074757,
+  "top1": 0.9592696629213483,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5293832148768777,
+  "chat_tokens": 5203,
+  "chat_kl": 0.010469147933003721,
+  "chat_top1": 0.9604074572362099
+ },
+ "dghcol_c1.6": {
+  "cfg": {
+   "kind": "dghcol",
+   "gamma": 1.0,
+   "c": 1.6
+  },
+  "entropy_bpw": 1.6186754469420714,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 60.0,
+  "ppl": 14.297277983866126,
+  "nll": 2.6600691683682602,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 215.1,
+  "kl": 0.003985615506309617,
+  "top1": 0.9679103566194431,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5285881151723193,
+  "chat_tokens": 5203,
+  "chat_kl": 0.008068862159034964,
+  "chat_top1": 0.9667499519507976
+ },
+ "dhcol_c1.6": {
+  "cfg": {
+   "kind": "dhcol",
+   "gamma": 1.0,
+   "c": 1.6
+  },
+  "entropy_bpw": 1.5764862835820963,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 5.2,
+  "ppl": 14.322806425673209,
+  "nll": 2.6618531217774897,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 213.7,
+  "kl": 0.0067091524004062675,
+  "top1": 0.9545371275036639,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5306262762849431,
+  "chat_tokens": 5203,
+  "chat_kl": 0.007313409041561073,
+  "chat_top1": 0.9667499519507976
+ },
+ "dghcol_c0.8": {
+  "cfg": {
+   "kind": "dghcol",
+   "gamma": 1.0,
+   "c": 0.8
+  },
+  "entropy_bpw": 2.4946853165203065,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 60.5,
+  "ppl": 14.244779218630608,
+  "nll": 2.6563904689621327,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 214.4,
+  "kl": 0.0010605399302581373,
+  "top1": 0.9816805080605765,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5220433261196086,
+  "chat_tokens": 5203,
+  "chat_kl": 0.001986199708173258,
+  "chat_top1": 0.9838554679992312
+ },
+ "dhcol_c0.8": {
+  "cfg": {
+   "kind": "dhcol",
+   "gamma": 1.0,
+   "c": 0.8
+  },
+  "entropy_bpw": 2.4825912213190664,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 5.9,
+  "ppl": 14.25301050864626,
+  "nll": 2.656968148166263,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 214.6,
+  "kl": 0.0017587928147827293,
+  "top1": 0.9775891548607719,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5215608876140535,
+  "chat_tokens": 5203,
+  "chat_kl": 0.001848789858813472,
+  "chat_top1": 0.9861618297136268
+ },
+ "dghcol_c3.2": {
+  "cfg": {
+   "kind": "dghcol",
+   "gamma": 1.0,
+   "c": 3.2
+  },
+  "entropy_bpw": 0.8047355274921701,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 60.2,
+  "ppl": 14.29311366919873,
+  "nll": 2.659777859683344,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 214.2,
+  "kl": 0.013886994365138662,
+  "top1": 0.9391182217879824,
+  "kl_tokens": 32752,
+  "chat_nll": 0.551840404306676,
+  "chat_tokens": 5203,
+  "chat_kl": 0.028274393673931066,
+  "chat_top1": 0.9402267922352489
+ },
+ "dhcol_c3.2": {
+  "cfg": {
+   "kind": "dhcol",
+   "gamma": 1.0,
+   "c": 3.2
+  },
+  "entropy_bpw": 0.6695039779385051,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 3.8,
+  "ppl": 14.174403797176229,
+  "nll": 2.6514377885653277,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 214.9,
+  "kl": 0.0322393467208497,
+  "top1": 0.9026013678553981,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5656564367200099,
+  "chat_tokens": 5203,
+  "chat_kl": 0.033297521688148604,
+  "chat_top1": 0.9323467230443975
+ },
+ "dghcolW_c0.12": {
+  "cfg": {
+   "kind": "dghcolW",
+   "gamma": 1.0,
+   "c": 0.12
+  },
+  "entropy_bpw": 1.7289739802103,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 66.4,
+  "ppl": 14.276915361209616,
+  "nll": 2.6586439224579013,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 214.5,
+  "kl": 0.004403856705326422,
+  "top1": 0.9644296531509526,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5308380847295248,
+  "chat_tokens": 5203,
+  "chat_kl": 0.00763861500779276,
+  "chat_top1": 0.9659811647126658
+ },
+ "dghcolW_c0.06": {
+  "cfg": {
+   "kind": "dghcolW",
+   "gamma": 1.0,
+   "c": 0.06
+  },
+  "entropy_bpw": 2.6212286212767033,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 61.3,
+  "ppl": 14.254384079216308,
+  "nll": 2.6570645140805085,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 214.4,
+  "kl": 0.0011683520180790611,
+  "top1": 0.9808866634098681,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5215534807374197,
+  "chat_tokens": 5203,
+  "chat_kl": 0.0021285600004409475,
+  "chat_top1": 0.9827022871420334
+ },
+ "dghcolW_c0.25": {
+  "cfg": {
+   "kind": "dghcolW",
+   "gamma": 1.0,
+   "c": 0.25
+  },
+  "entropy_bpw": 0.8634376441538187,
+  "side_bpw": 0.024587912087912087,
+  "quant_s": 64.2,
+  "ppl": 14.285162122700855,
+  "nll": 2.659221384774853,
+  "n_tokens": 298862,
+  "n_windows": 146,
+  "eval_s": 214.8,
+  "kl": 0.015809821220625304,
+  "top1": 0.9327979970688813,
+  "kl_tokens": 32752,
+  "chat_nll": 0.5558636781918689,
+  "chat_tokens": 5203,
+  "chat_kl": 0.030270308387891253,
+  "chat_top1": 0.9359984624255238
+ }
+}

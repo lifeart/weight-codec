@@ -19,6 +19,22 @@ fails); there, only quantization + entropy coding help.
 
 > **Phase 2 (2026-11-21): real ANS bitstreams, decode benchmark, Hugging Face runs → §14.** Real file bytes match the phase-1
 > entropy estimates to ±0.02 %; all phase-1 winners hold on real bytes.
+>
+> **Phase 3 (2026-11-22): "sort / cluster the weights as vectors" (vector quantization, k-means codebooks, lattices,
+> GPTVQ, VQ of the fine-tune delta, one codebook per family) → §15.** Clustering does not beat entropy-coded scalar
+> quantization at equal total bits; every large VQ gain disappears against a scalar coder given the same sensitivity
+> information; only the D4 lattice adds a small, repeatable ≈ 0.05–0.1 bpw.
+>
+> **ghcol (2026-11-22): GPTQ on a per-input-column (Hessian-scaled) step grid, confirmed on 3 models and integrated into
+> the codec (opt-in) → §16.** It beats every coder the codec had (SmolLM2-135M +0.73…+0.97, SmolLM2-360M +0.28…+0.48,
+> Qwen +0.09…+0.18 bpw at equal KL), but the same grid with A3's Fisher factors (§3) is better still (+0.17…+0.31);
+> on the fine-tune delta the column grid saves 0.2–0.9 bpw at equal chat-KL. Real files bit-exact on all decoders.
+>
+> **Default coders (2026-11-22) → §17.** The Fisher-grid I-frame, a plain-rounding P-frame on its lattice (won a
+> pre-registered rule on all 3 pairs) and the rounding Hessian-column Δ are now the codec's default; re-measured on real
+> files: at the same pair size the fine-tune's chat-KL is **2.2× / 2.9× / 6.4× lower** (Qwen / SmolLM2-360M / -135M), the
+> Δ file 19–35 % smaller at equal chat-KL; bit-exact on all 5 decoder paths; the browser demo was rebuilt with them
+> ("smallest" config chat-KL 0.54 → 0.084). Earlier sections keep their (phase-2-coder) numbers unchanged.
 
 
 | hypothesis | verdict on these models | headline number (FACT) |
@@ -32,6 +48,7 @@ fails); there, only quantization + entropy coding help.
 | C. continued-pretraining relatives (Coder) | **mostly falsified** | ‖Δ‖/‖W‖ = 0.88 → P-frame saves only 8.6 % |
 | D. training checkpoints as video | **confirmed late in training** | 1000-step P-frame = **9.5–27 %** of an I-frame; D2 GOP of 8 late checkpoints: **−79 % bits** (IPPP, no drift: PPL 23.16 vs 23.08), mid-training −56 % |
 | E. one progressive stream (SVC) | **confirmed with nested quantizers** | every layer reproduces the single-shot quantizer exactly, but ratio-2 refinement costs +0.5…1.6 bpw; with a **nested ×3 lattice + context coding the overhead is +0.004…0.016 bpw** (≈ free) |
+| F. "sort / cluster weights as vectors" (VQ, §15) | **falsified as a compression gain** | k-means VQ needs **+0.09…0.30 bpw** vs scalar at equal KL (codebook charged, ≤ 0.06 bpw of it); one codebook per family loses to the scalar P-frame; GPTVQ / weighted VQ gains (−45 % KL) are sensitivity weighting — **scalar + per-column steps beats them** (SmolLM2 KL 0.080 vs 0.116 @ 3.7 bpw; Qwen: A3 0.027 vs GPTVQ 0.044); D4 lattice: +0.04…0.11 bpw on 2 models |
 
 Bottom line (INTERPRETATION): the *video* half of the analogy works where real temporal redundancy
 exists — between a base model and its fine-tunes and between nearby training checkpoints — and the
@@ -661,7 +678,8 @@ beats r=64 (39.1 MB) **14×** and r=128 (78.2 MB) **7×** at 44 % of the bytes. 
 170.5 MB (−23 %) vs two GPTQ-int4 files 227.9 MB (−43 %). Quality caveat (FACT): at the int4 class the P-frame fine-tune
 (chat-KL 0.54) is close to independent GPTQ-ECSQ (0.505) but clearly worse than GPTQ-int4 g64 (0.40, which pays 4.3 bpw incl.
 per-64 scales). INTERPRETATION: on this fragile model the per-row ECSQ step (inherited from the base) is the weak point, not the
-inter-model coding — the full-rank Δ over an fp16 base has no such problem (22.6 MB → 0.030).
+inter-model coding — the full-rank Δ over an fp16 base has no such problem (22.6 MB → 0.030). [Confirmed in §16.5: with a
+column-step I-frame the same-size P-frame pair reaches chat-KL 0.105 instead of 0.538.]
 
 ### 14.4 Training trajectory as video — Pythia-410M on an HF Job (FACT, `results/phase2_trajectory_pythia410m.json`, `results/phase2_xcheck_trajectory.json`, `figures/p2_pythia_frames_real.png`)
 
@@ -922,3 +940,769 @@ Base I-frame on its own lattice: 159.9 MB (3.5747 bpw). Phase-1 estimate (C4, α
   `bitstreams/` keeps only the 8 SmolLM2-135M demo files (282 MB, git-ignored; everything else is reproducible and was deleted);
   `data/` (363 MB, git-ignored) keeps tokenized eval sets / reference hidden states.
 * Nothing secret or heavy is in git: no token, no `.wcdc` / weights (`.gitignore`), job specs contain only run names / scripts / args.
+
+## 15. Vector quantization / clustering — "sort the weights as vectors and compress the clusters" (2026-11-21/22)
+
+**Hypothesis (owner, 2026-11-21).** Group neighbouring weights into d-dimensional vectors, cluster them (a shared
+k-means codebook — the AQLM / QuIP# / GPTVQ family) and store each vector as a cluster index; scalar quantization
+is the d = 1 special case. Does d ≥ 2 buy downstream quality at equal *total* size, and does clustering compose with
+the family / delta coding of §5 and §14?
+
+### 15.0 TL;DR (verdicts; numbers in §15.3–15.8)
+
+| probe (pre-registered rule in each script docstring) | verdict | headline (FACT, SmolLM2-135M unless noted) |
+|---|---|---|
+| V1 plain k-means / entropy-constrained VQ, d = 2, 4 vs scalar ECSQ | **FAIL** | VQ needs **0.09–0.30 bpw *more*** than scalar for equal KL; codebook only 0.001–0.06 bpw of it |
+| V1 lattice VQ (codebook-free) | D4 INCONCLUSIVE (small, replicated), E8 model-dependent | D4: −2…−21 % KL at equal rate on SmolLM2, −14…−17 % on Qwen (+0.04…+0.11 bpw), still −3…−13 % on top of the best scalar coder; E8: SmolLM2 +10…+35 % KL (despite −14 % weight-MSE), Qwen −26 % (one point) |
+| V2 Hessian-aware VQ (GPTVQ, diag(H)-weighted ECVQ) vs Hessian-aware scalar (GPTQ) | PASS by its rule (+0.53…+0.65 bpw on SmolLM2; ≈ +0.09 on Qwen) | **but a sensitivity-weighted *scalar* quantizer beats it**: SmolLM2 ≈ 30 % lower KL; Qwen2.5-0.5B: the existing A3 coder (Fisher steps + GPTQ) 38 % lower KL in-domain, 30 % on C4 — the win is per-channel sensitivity, not vectors |
+| V3a VQ of the fine-tune Δ (fp16 base given) vs scalar Δ | PASS vs naive scalar on SmolLM2 (+0.07…+0.24 bpw); **not replicated on Qwen** (D4 +0.06…+0.08, k-means FAIL) | **no gain vs the Hessian-aware scalar Δ coder** on either model (chat-KL wash, WikiText KL clearly worse) |
+| V3b one codebook for the whole family ("cluster once, reuse") | **FAIL** | instruct-given-base costs 1.02–2.19 bpw vs 0.70–1.11 for the scalar P-frame; sharing saves ≤ 0.06 bpw |
+| V4 literal "sort" | **FAIL by construction** | a row permutation costs 7.7–9.1 bpw; E[Δ \| W_base] explains 0.04 % of Δ |
+
+**Synthesis — FACT vs HYPOTHESIS.** FACT (SmolLM2-135M for every probe, Qwen2.5-0.5B for the decisive ones; one
+seed plus seed reruns; codebooks, escape streams, entropy tables and all side info charged): clustering weights into
+vectors does **not** compress better than entropy-coded scalar quantization at equal total bits — not plain k-means,
+not entropy-constrained k-means, not a shared family codebook; what survives is the codebook-free lattice's
+space-filling gain (D4 ≈ +0.04–0.11 bpw on both models; E8 helps on Qwen but hurts on SmolLM2). Every *large* VQ win
+we found (GPTVQ d = 4: −45…−50 % KL on SmolLM2; VQ of the fine-tune Δ: −20…−30 % chat-KL on SmolLM2, much less on
+Qwen) **disappears against a scalar coder that is given the same side information** (per-input-channel sensitivity,
+Hessian-aware error feedback) — on both models, in-domain and on C4. HYPOTHESIS: the literature's VQ gains at 2 bpw
+(AQLM, QuIP#) come mostly from fixed-rate operation (no entropy coder to capture the non-uniform density), from
+fine-tuning, and from Hessian-aware assignment — not from vector clustering per se; in an entropy-coded codec the
+right place for "multi-dimensional" thinking is the error metric (eᵀHe), not the codebook.
+
+### 15.1 Setup and rate accounting (FACT)
+
+SmolLM2-135M base (V1/V2) and → -Instruct (V3); quantized set = all 210 block linears (106.2 M weights); WikiText-2
+test PPL (148 windows) + KL / top-1 vs fp16 (first 16 windows); chat-KL on the instruct model's own 48 greedy answers
+for V3. Vector = d consecutive input-dim weights of one row; rows normalised by their fp16 RMS (16 b/row — the same
+side info as the ECSQ_row baseline). Codebooks: one per weight type shared by all 30 layers (7 codebooks), fitted on
+≤ 6 M normalised vectors; k-means (`km`), entropy-constrained k-means (`ecvq`, Lagrangian assignment
+‖x−c‖² + λ·(−log₂p(c)), Chou–Lookabaugh–Gray) and the same codebook with plain nearest-centroid encoding (`ecvqnn`).
+Lattices D4 / E8 by Conway–Sloane nearest point (checked against brute force), coded per coordinate with the parity
+bit implicit (+1 coset bit for E8). One seed (0) unless "seed 1" is stated.
+
+**Everything is charged:** index stream (empirical order-0 entropy + a 32-bit-per-symbol frequency table, either per
+tensor = `common.coded_bits` or one pooled table per codebook / weight type, whichever is smaller — *all 75 V1/V2
+configs, scalar and VQ, chose the pooled table*; with per-tensor tables a d = 4 alphabet of ≤ 16 k symbols would cost
+another 0.26–0.61 bpw) + escape
+stream (§15.2) + **codebook 16·d·K_used bits per scope** + 16 b/row (+16 b/column where stated). `quantize_model`'s
+own total is asserted equal to the toolkit's per-tensor variant for every config.
+
+Scripts: `scripts/vq.py` (toolkit), `probe_vq.py` (V1), `probe_vq_hess.py` (V2), `vq_family.py` (V3),
+`vq_summary.py`, `vq_v3_summary.py`. Envelopes are lower convex hulls of (bpw, log KL) per family (two operating
+points can always be mixed across tensors); savings are read off at equal KL.
+
+### 15.2 Pitfall: a finite codebook clips the outliers (FACT, `naive_*` in `results/vq_v1_smol135.json`)
+
+The first V1 run gave d = 1 ECVQ at **4.42 bpw → KL 0.248** while uniform ECSQ at 4.39 bpw has **KL 0.089** — at the
+*same* weight NMSE (0.0035 vs 0.0033). LLM weights reach 28 × row RMS (`mlp.down_proj`), the codebook spanned
+[−8.4, 7.1]; on the top 0.01 % |w| the squared error was **2.9 vs 0.003** (≈ 900×), 6–9 % of all squared error —
+invisible in weight-MSE, decisive downstream. Fix used for every VQ number below: a per-vector RD mode decision
+between the codebook index and an ESCAPE symbol + d integers on the unbounded uniform lattice of step √(6λ/ln 2)
+(the ECSQ step with the same RD slope), entropy-coded and charged (0.01–0.3 % of vectors at d ≤ 2; ≈ 55 % at d = 4,
+where a K ≤ 16 k codebook covers only the central mass).
+
+### 15.3 V1 — VQ vs scalar at equal total rate (FACT, `results/vq_v1_smol135.json`, `results/vq_summary_smol135.json`, `figures/vq_v1_smol135.png`)
+
+| family (all costs charged) | bpw saved vs best scalar at equal KL | verdict |
+|---|---|---|
+| k-means / ECVQ d = 2 | **−0.21 … −0.09** | FAIL |
+| k-means / ECVQ d = 4 (codebook 0.02–0.06 bpw) | **−0.30 … −0.13** | FAIL |
+| E8 lattice | −0.18 … +0.01 | FAIL |
+| D4 lattice | +0.04 … +0.11 | INCONCLUSIVE |
+
+| step c | bpw | scalar ECSQ KL | D4 lattice KL | E8 lattice KL | E8 weight-NMSE vs scalar |
+|---|---|---|---|---|---|
+| 0.20 | 4.39 | 0.0886 | 0.0819 (−8 %) | 0.0865 (−2 %) | −12 % |
+| 0.25 | 4.07 | 0.148 | 0.146 (−2 %) | 0.148 (0 %) | −13 % |
+| 0.35 | 3.59 | 0.255 | 0.236 (−7 %) | 0.280 (+10 %) | −14 % |
+| 0.50 | 3.08 | 0.523 | 0.489 (−7 %) | 0.667 (+27 %) | −14 % |
+| 0.70 | 2.62 | 1.246 | 0.981 (−21 %) | 1.688 (+35 %) | −14 % |
+
+| k-means / ECVQ config | bpw [codebook] | KL | scalar ECSQ at that bpw |
+|---|---|---|---|
+| ECVQ d=1, λ=0.0072, RDO assignment / nearest-centroid | 4.415 / 4.428 | 0.101 / 0.0905 | ≈ 0.088 |
+| ECVQ d=2, nearest-centroid | 4.333 [0.002] | 0.108 | ≈ 0.097 |
+| ECVQ d=4, λ=0.0072 | 4.173 [0.063] | 0.145 | ≈ 0.126 |
+| ECVQ d=2, λ=0.0141, seed 0 / seed 1 | 3.802 / 3.798 [0.001] | 0.255 / 0.227 | ≈ 0.200 |
+| ECVQ d=4, λ=0.0141 | 3.774 [0.053] | 0.236 | ≈ 0.207 |
+| ECVQ d=1, nearest-centroid, λ=0.0289 | 3.397 | 0.467 | ≈ 0.335 |
+| ECVQ d=4, λ=0.0566 | 2.682 [0.022] | 1.97 | ≈ 1.09 |
+
+What the controls established (FACT):
+1. *The Lagrangian (RDO) assignment hurts downstream* although it is weight-MSE-optimal: 13–50 % KL vs plain
+   rounding at equal weight-NMSE. Nearest-centroid encoding removes it at 4.4 bpw, not at 3.4 bpw (0.467 vs ≈ 0.335):
+   the entropy-constrained *codebook shape* (wide zero cell, conditional-mean levels) is itself downstream-worse.
+2. *Centroid shrinkage is real but not the cause:* β = ⟨w,ŵ⟩/‖w‖² = 0.987 for a K = 32 codebook vs 0.9997 for
+   rounding; a zero-bit per-row gain folded into the fp16 row scale changes KL by 3–7 % (noise), ECSQ by < 1 %.
+3. *Codebook fits are noisy downstream:* seed 1 moves KL by −11 % at equal rate (d = 2) and +26 % at −0.08 bpw
+   (d = 1); every VQ deficit has the same sign at all 4 rates.
+4. *Codebook cost is not what kills k-means VQ:* 0.001–0.002 bpw (d = 2) and 0.02–0.06 bpw (d = 4) — d = 4 loses
+   3–10× more than its codebook costs (§15.8).
+5. *Space-filling gain is Euclidean; the downstream loss is not.* With the real input Hessians, plain rounding to
+   D4 / E8 at the same step changes the layer-output error tr(E H Eᵀ) by **−5…−6 % / +2…+8 %** while the weight error
+   falls 8 % / 14 % (`results/vq_v2_smol135.json` → `_diag_output_error`): E8's errors are correlated across the 8
+   coordinates of a block (the half-integer coset moves all 8 by ±s/2) and land on the strongly non-isotropic H.
+   (SmolLM2-specific: on Qwen2.5-0.5B E8 *lowers* KL by 26 % at 3.08 bpw, §15.9.)
+
+### 15.4 V2 — Hessian-aware VQ, and the control that decides it (FACT, `results/vq_v2_smol135.json`, `results/vq_summary_v2_smol135.json`, `figures/vq_v2_smol135.png`)
+
+H = E[xxᵀ] of every block-linear input (128 × 2048 WikiText-2 train windows). Implementation checks: GPTVQ at d = 1
+reproduces GPTQ to 2·10⁻⁷; the joint-block update (W_R −= (e·inv(U_SS))·U_SR with U = chol(H⁻¹)) equals explicit
+OBS to 10⁻¹⁶; the decoder rebuilds W bit-exactly from indices + escape integers + codebook + fp16 row scales.
+
+| coder | bpw | WikiText KL | note |
+|---|---|---|---|
+| scalar ECSQ c = 0.35 / 0.5 | 3.589 / 3.082 | 0.255 / 0.523 | no Hessian |
+| scalar GPTQ-ECSQ c = 0.35 / 0.5 | 3.593 / 3.089 | **0.283 / 0.610** | **worse than rounding on this model** (= phase 2's real-bytes 0.2833) |
+| GPTQ on D4 / E8 lattice (Euclidean-nearest) c = 0.35 | 3.596 / 3.599 | 0.309 / 0.302 | FAIL vs scalar GPTQ |
+| GPTQ + joint Hessian-metric rounding search, Z⁴ grid c = 0.35 / 0.5 | 3.593 / 3.089 | 0.304 / 0.662 | no gain: sequential GPTQ already optimal |
+| GPTQ + joint Hessian-metric search, **D4** c = 0.35 / 0.5 | 3.596 / 3.095 | 0.231 / 0.439 | −19 / −28 % vs scalar GPTQ, no codebook |
+| **GPTVQ d = 4** (ECVQ codebook, Mahalanobis-nearest, joint OBS), seed 0 / 1 | 3.775 | **0.116 / 0.126** | |
+| GPTVQ d = 4, λ = 0.0289 | 3.355 | 0.195 | ECSQ ≈ 0.355 there |
+| diag(H)-weighted ECVQ d = 4, **no error feedback** | 3.658 | 0.118 | the weighting alone does it |
+| GPTVQ d = 1 / diag(H)-weighted d = 1 | 3.977 / 5.173 | 0.176 / 0.051 | d = 1 weighting cannot change the nearest centroid |
+| **scalar ECSQ + per-column steps from diag(H)** (γ = 1, 16 b/col), c = 0.35 / 0.5 / 0.25 | **3.700 / 3.193 / 4.182** | **0.080 / 0.176 / 0.039** | **best coder in this study** |
+| same, γ = 0.5 | 3.631 / 3.124 / 4.113 | 0.096 / 0.206 / 0.047 | |
+| **D4 lattice in the same column-weighted coordinates** (γ = 1), c = 0.35 / 0.5 / 0.25 | 3.703 / 3.199 / 4.184 | **0.077 / 0.165 / 0.036** | −3 / −6 / −7 % vs the scalar line: VQ on top of the best scalar ≈ +0.03–0.05 bpw |
+
+By its pre-registered rule V2 PASSES (Hessian-aware d = 4 VQ saves 0.53–0.65 bpw vs Hessian-aware scalar GPTQ). But
+the control decides the interpretation: **a scalar quantizer with per-input-column step sizes from diag(H) — the A3
+idea of §3 with H instead of Fisher — reaches KL 0.080 at 3.70 bpw, ≈ 30 % below GPTVQ / weighted VQ at equal rate
+and 69 % below plain ECSQ.** The VQ "win" was the per-channel sensitivity (SmolLM2 has a few input channels with very
+large E[x²]); a vector quantizer can only exploit it indirectly by steering error between the d coordinates of a
+block, while the scalar coder exploits it directly for 16 bits per column. On this model the Hessian-aware lever is
+*column steps*, not GPTQ's error feedback (which hurts here) and not vector clustering. What vectors add *on top of*
+the best scalar coder is the D4 lattice's space-filling gain, −3…−7 % KL ≈ +0.03–0.05 bpw (consistent sign at all
+three rates, below the 0.10-bpw bar). [Qwen2.5-0.5B: §15.9. GPTQ *on this column grid* ("ghcol") does pay — §16.]
+
+### 15.5 V3a — VQ of the fine-tune delta, fp16 base given (FACT, `results/vq_v3_smol135.json`, `results/vq_v3_summary_smol135.json`, `figures/vq_v3a_smol135.png`)
+
+Δ = W_inst − W_base, rate = Δ stream only, quality = chat-KL (+ WikiText KL) vs fp16 instruct. Δ rows normalised by
+their own RMS ("nD"; for scalar Δ this beats normalising by the weight RMS, the phase-1 convention, by ≈ 0.1–0.15 bpw).
+
+| Δ coder | Δ bpw | chat-KL | WikiText KL |
+|---|---|---|---|
+| scalar ECSQ, nD, c = 0.8 / 1.6 / 3.2 | 2.425 / 1.518 / 0.630 | 0.0096 / 0.0349 / 0.147 | 0.0099 / 0.0339 / 0.078 |
+| D4 lattice, same steps | 2.442 / 1.575 / 0.743 | 0.0069 / 0.0252 / 0.110 | 0.0077 / 0.0252 / 0.072 |
+| k-means d = 2 (nearest + escape) | 2.526 / 1.617 / 0.396 | 0.0068 / 0.0214 / 0.240 | 0.0077 / 0.0223 / 0.096 |
+| k-means d = 2, c = 1.6, seed 1 | 1.608 | 0.0255 | 0.0264 |
+| k-means d = 4 | 2.548 / 1.582 / 0.422 | 0.0063 / 0.0248 / 0.220 | 0.0066 / 0.0259 / 0.093 |
+| **scalar + GPTQ (instruct Hessian), nD**, c = 0.8 / 1.6 | 2.441 / 1.570 | 0.0081 / 0.0248 | **0.0057 / 0.0163** |
+| scalar + GPTQ, nW = phase-1/2 setting, c = 0.06 / 0.12 / 0.25 | 2.596 / 1.706 / 0.870 | 0.0101 / 0.0300 / 0.102 | 0.0069 / 0.0182 / 0.043 |
+| phase 2 `T_delta` (same coder, **real bytes**) | 2.596 / 1.707 / 0.870 | 0.0101 / 0.0299 / 0.102 | 0.0069 / 0.0181 / 0.043 |
+| GPTQ on the D4 lattice, nD, c = 0.8 / 1.6 | 2.456 / 1.619 | 0.0080 / 0.0260 | 0.0053 / 0.0164 |
+| instruct := base (0 bits) | 0 | 0.557 | 0.151 |
+
+* vs **naive** scalar Δ: D4 +0.07…+0.20 bpw, k-means d = 2 −0.01…+0.24 (both seeds −17…−30 % chat-KL at 1.6 bpw),
+  d = 4 −0.00…+0.18 → PASS by the rule; the edge vanishes below ≈ 0.7 bpw. The harness reproduces phase 2's real-bytes
+  `T_delta` to 4 digits.
+* vs the **Hessian-aware** scalar Δ (the project's best Δ coder): VQ-Δ without H is a wash on chat-KL (−0.01…+0.10 bpw)
+  and **loses 0.18–0.33 bpw on WikiText KL**; adding the D4 lattice to GPTQ gains nothing (−0.08…−0.02 bpw).
+* Row-normalised W and Δ have the same per-pair statistics (adjacent correlation −0.0002 / +0.0015, squared-magnitude
+  correlation 0.0049 / 0.0045, kurtosis 3.51 / 3.47; `results/vq_v3_delta_structure_smol135.json`), so the edge over
+  naive scalar is not intra-vector memory. HYPOTHESIS: at 0.4–2.5 bits/sample (most scalar Δ symbols are 0) a 2–4-D
+  cell structure keeps joint small excursions that the scalar dead zone discards — and Hessian-aware feedback recovers
+  the same information.
+[Qwen2.5-0.5B → -Instruct: §15.9.]
+
+### 15.6 V3b — "cluster once, reuse the clustering": one codebook for the whole family (FACT, `results/vq_v3_smol135.json`)
+
+No fp16 base anywhere: base I-frame + instruct coded given the decoded base. Scalar = phase-1 `pframe_rtn` (instruct
+rounded on the base's grid, stream q_I − q_B). VQ: one ECVQ codebook per type fitted on the **base**, both models
+assigned to it (base row scales reused), instruct stream = rank of its centroid among the 64 nearest neighbours of
+the base centroid (+ escape / raw index). Lattice: same D4 / E8 lattice, stream = lattice-point difference.
+
+| pair coder | base bpw | instruct \| base | instruct alone | **pair** | codebook | base KL | instr. KL | chat-KL |
+|---|---|---|---|---|---|---|---|---|
+| scalar grid c = 0.35 | 3.589 | **0.888** | 3.571 | **4.478** | 0 | 0.255 | 0.264 | 0.228 |
+| D4 lattice c = 0.35 | 3.593 | 0.987 | 3.574 | 4.580 | 0 | 0.236 | 0.241 | 0.222 |
+| E8 lattice c = 0.35 | 3.597 | 1.150 | 3.578 | 4.746 | 0 | 0.280 | 0.299 | 0.278 |
+| k-means index P-frame d = 2 | 3.830 | 1.020 | 3.810 | 4.850 | 0.001 | 0.230 | 0.244 | 0.219 |
+| k-means index P-frame d = 4 | 3.781 | **1.909** | 3.711 | **5.689** | 0.053 | 0.245 | 0.250 | 0.215 |
+| scalar grid c = 0.25 / D4 / k-means d = 4 | 4.071 / 4.073 / 4.174 | 1.108 / 1.185 / 2.193 | — | 5.179 / 5.258 / 6.367 | 0 / 0 / 0.063 | 0.148 / 0.146 / 0.146 | 0.148 / 0.141 / 0.148 | 0.126 / 0.127 / 0.130 |
+| scalar grid c = 0.5 / D4 / k-means d = 4 | 3.082 / 3.089 / 3.354 | 0.695 / 0.805 / 1.587 | — | 3.777 / 3.894 / 4.940 | 0 / 0 / 0.036 | 0.523 / 0.489 / 0.461 | 0.525 / 0.469 / 0.448 | 0.485 / 0.453 / 0.416 |
+
+**FAIL.** Coding the fine-tune as indices into the base's codebook costs 1.02 (d = 2) – 2.19 (d = 4) bpw vs
+0.70–1.11 for the scalar difference stream at about the same quality, although 62–69 % of instruct vectors keep the
+base's index: every vector that moves costs a whole neighbour-rank symbol, while the scalar stream pays ≈ 1–2 bits
+only for the individual weights that cross a cell border. Sharing the codebook saves only the codebook (0.001–0.06
+bpw per extra model): "store the clustering once" amortizes the cheap part — the index streams are the cost. D4 I+P
+≈ break-even (+0.08–0.12 bpw for 1–11 % lower KLs), E8 loses. **Against "store base in full + entropy-coded Δ"**
+(§15.5, §14.3): that design delivers the instruct for 1.5–2.5 bpw at chat-KL 0.01–0.035 *with an exact base*; the
+shared-codebook family pays ≥ 4.85 bpw for both models at chat-KL ≈ 0.22 / base KL ≈ 0.23 — not the same quality
+regime, and inside the lossy regime it loses to the plain scalar I+P-frame.
+
+### 15.7 V4 — the literal "sort" reading (FACT, `results/vq_v4_sort_smol135.json`)
+
+Sorting a row and coding the smooth sorted sequence requires the permutation: log₂(n!)/n = **7.74 bits/weight for a
+576-wide row, 9.15 for 1536** — more than twice the whole 3.5-bpw budget, and the decoder cannot recompute the sort key
+without the original weights. The only free variant sorts by a key the decoder already has — for a fine-tune, the
+base weights — but E[Δ | W_base] (64 quantile bins per tensor) explains **0.04 %** of the Δ energy and a per-row
+linear fit α·W_base 0.23 %. A family-shared sort order therefore buys nothing either. No codec built.
+
+### 15.8 Codebook-cost accounting (FACT / arithmetic, 106.17 M weights)
+
+| codebook scope | d, K | codebook bits | bpw |
+|---|---|---|---|
+| one per weight type (7), as used | d = 2, K ≤ 4096 (K_used 289–740) | 16·d·K_used·7 | **0.0004–0.0016** (measured) |
+| one per weight type (7), as used | d = 4, K ≤ 16384 | 16·4·K_used·7 | **0.022–0.063** (measured) |
+| one per tensor (210) | d = 4, K = 4096 | 210·4096·4·16 | **0.52** (arithmetic) |
+| one per weight type (7) | d = 8, K = 65536 | 7·65536·8·16 | **0.55** (arithmetic) |
+| one global | d = 8, K = 65536 | 65536·8·16 | 0.079 (arithmetic) |
+| entropy model per tensor instead of per codebook | d = 4, K ≤ 16 k | 32 b × used symbols × 210 | +0.26–0.61 (measured) |
+
+At the 3–4.4 bpw where this model is usable, the index stream is ≈ 97–99 % of the VQ rate when codebook *and* its
+entropy model are shared per weight type; per-tensor codebooks or per-tensor frequency tables would add ≈ 0.5 bpw —
+more than any gain measured anywhere in §15. Unstructured k-means at d = 8 is capped at log₂K/8 = 2 bpw for K = 65 536
+(and 4.4 M distance evaluations per vector of encoding work); it was not run downstream (dropped for time — the
+d = 2 / 4 results and the lattice results already decide V1).
+
+### 15.9 Second model: Qwen2.5-0.5B (FACT, `results/vq_v2_qwen05b.json`, `results/vq_v1_qwen05b.json`, `results/vq_v3_qwen05b.json`)
+
+The decisive V2 comparison re-run on the model where scalar GPTQ *does* work (spine §1: GPTQ-ECSQ halves KL), with
+an out-of-domain check: Hessians from WikiText-2 train, KL on WikiText-2 test and on C4 validation (64 × 2048,
+KL on the first 16 windows; protocol of §8). Scalar baselines from `results/spine_qwen05b.json`,
+`results/a3_codec_qwen05b.json`, `results/crossdomain_c4_qwen05b.json` (same quantizers, same accounting family).
+
+| Qwen2.5-0.5B coder (all side info charged) | bpw | WikiText KL | C4 KL |
+|---|---|---|---|
+| scalar ECSQ c = 0.35 (spine) | 3.575 | 0.153 | 0.161 |
+| scalar GPTQ-ECSQ c = 0.35 (spine) | 3.578 | 0.060 | 0.089 |
+| scalar + diag(H) column steps, γ = 1, c = 0.35 / 0.5 | 3.684 / 3.176 | 0.063 / 0.135 | 0.068 / 0.142 |
+| **D4 lattice in the same column-weighted coordinates**, c = 0.35 / 0.5 | 3.687 / 3.183 | **0.059 / 0.117** (−7 / −13 %) | **0.063 / 0.125** (−7 / −12 %) |
+| **GPTVQ d = 4** (ECVQ codebook, Mahalanobis-nearest, joint OBS) | 3.707 | **0.044** | 0.067 |
+| A3 Fisher-weighted scalar, no GPTQ, γ = 1 / 0.5 (§3) | 3.792 / 3.644 | 0.041 / 0.047 | — |
+| **A3 Fisher-weighted scalar + GPTQ** (§3, the project's best intra coder) | **3.647** | **0.027** | **0.047** |
+| diag(H)-weighted ECVQ d = 4 (no feedback) | 3.604 | 0.091 | 0.095 |
+| scalar + diag(H) column steps, γ = 0.5, c = 0.35 (same rate) | 3.608 | **0.073** | **0.076** |
+
+FACT (Qwen): (i) GPTVQ d = 4 beats plain scalar GPTQ by ≈ 12 % KL in-domain and ≈ 11 % on C4 at equal rate
+(≈ 0.09 bpw) — far less than on SmolLM2, where scalar GPTQ was broken; (ii) against the diag(H) column-step scalar
+it wins by 31 % in-domain but **only 2 % out-of-domain** (0.0665 vs 0.0678) — its in-domain edge comes with the full
+WikiText-calibrated Hessian; (iii) **the project's existing sensitivity-weighted scalar coder (A3 Fisher + GPTQ)
+beats GPTVQ by 38 % (WikiText) and 30 % (C4) at a lower rate**; (iv) the D4 lattice on top of the column-weighted
+scalar is again a small, consistent gain (−7…−13 % KL in both domains ≈ +0.05–0.09 bpw) — on both models the only
+vector effect that survives every control; (v) the diag(H)-weighted ECVQ that matched GPTVQ on SmolLM2 is **23 %
+worse than the column-step scalar at the same rate** on Qwen (0.091 vs 0.073; C4 0.095 vs 0.076).
+
+**Plain lattice VQ on Qwen (V1 confirmation, `results/vq_v1_qwen05b.json`; ECSQ re-run reproduces the spine to 4
+digits):**
+
+| step c | bpw | scalar ECSQ KL | D4 lattice KL | E8 lattice KL |
+|---|---|---|---|---|
+| 0.35 | 3.575 / 3.578 | 0.153 | **0.131 (−14 %)** | — |
+| 0.50 | 3.068 / 3.074 / 3.082 | 0.372 | **0.311 (−17 %)** | **0.277 (−26 %)** |
+
+D4 replicates (and is larger on Qwen: ≈ +0.09–0.11 bpw). **E8 does not replicate the SmolLM2 reversal: on Qwen it is
+the best plain lattice (−26 % at 3.08 bpw, one point).** The E8 penalty of §15.3 (output error +2…+8 % despite
+−14 % weight error) is therefore a property of SmolLM2's input covariances, not of E8 — the general lesson stands
+(the Euclidean space-filling gain does not transfer predictably to eᵀHe), the sign is model-dependent.
+
+**VQ of the fine-tune Δ on Qwen2.5-0.5B → -Instruct (V3a confirmation, `results/vq_v3_qwen05b.json`; "instruct :=
+base" reproduces §5's 0.277 chat-KL).** Phase-1 Hessian-aware scalar Δ (`results/c2_qwen05b_instruct.json`, nW)
+for reference:
+
+| Δ coder (Qwen) | Δ bpw | chat-KL | WikiText KL |
+|---|---|---|---|
+| scalar ECSQ, nD, c = 1.6 / 0.8 | 1.516 / 2.418 | 0.0119 / 0.0036 | 0.0255 / 0.0055 |
+| D4 lattice, nD, same steps | 1.568 / 2.434 | **0.0103 / 0.0031** | **0.0167 / 0.0044** |
+| k-means d = 2, nD, λ(c = 1.6 / 0.8) | 1.619 / 2.527 | 0.0114 / 0.0029 | 0.0156 / 0.0041 |
+| scalar + GPTQ Δ, nW (phase 1 `delta_gptq_c0.12 / c0.06`) | 1.687 / 2.569 | 0.0105 / 0.0031 | **0.0058 / 0.0018** |
+
+By the pre-registered V3a rule (convex hulls, chat-KL; `results/vq_v3_summary_qwen05b.json`) the SmolLM2 PASS does
+**not** replicate: D4 Δ saves **+0.06…+0.08 bpw** vs the naive scalar Δ (INCONCLUSIVE, below the 0.10 bar; it is
+−13…−14 % chat-KL and −20…−35 % WikiText KL at +0.02–0.05 bpw), k-means d = 2 Δ **−0.07…+0.00 bpw (FAIL)**. Both match
+the Hessian-aware scalar Δ on chat-KL (0.0029–0.0031 at 2.4–2.6 bpw) but are 2.3–3× worse on WikiText KL than
+GPTQ-Δ — VQ does not displace the project's Δ coder on either model.
+
+### 15.10 Process notes and deviations (for honesty)
+
+* **Pre-registration held; interpretations moved.** Every probe's rule is in its script docstring, written before its
+  results. The V2 rule ("Hessian-aware VQ vs Hessian-aware scalar") PASSED, but the post-hoc control (scalar +
+  diag(H) column steps) shows the win is not a vector effect — reported as such. Envelopes were changed from a Pareto
+  front to the convex hull after the first lattice summary inflated the D4 saving (+0.26 → +0.11 bpw); all verdicts
+  quoted use the hull.
+* **First V1 run was flawed** (outlier clipping, §15.2) — its two points are kept as `naive_*`, everything else re-run.
+* **Plans were trimmed for time** (compute was shared with other jobs): k-means sweeps cut
+  to one K per d; d = 8 k-means, per-tensor / global codebook controls and the diag(H)-weighted GPTVQ variants were
+  not run downstream (codebook costs in §15.8 are arithmetic); V3a k-means Δ moved to nD normalisation only.
+* **Incidents.** (1) Two MPS processes at once → Metal "command buffer exited with error status" in one of them and a
+  crash with an empty codebook; from then on strictly one GPU job at a time (queue in `logs/`, not committed).
+  (2) Two "hangs" (0 % CPU in `MTLCommandBuffer waitUntilCompleted`) were `index_add_` on MPS with heavy atomic
+  contention once the Δ codebooks collapsed to ≈ 10 live centroids (6–8 s per call); the centroid update now runs on
+  CPU (numerically equivalent), which also cut V1-style fits from 100–460 s to seconds. (3) I once killed processes
+  by command-line pattern instead of PID; only my own diagnostic matched (verified) — PID-only kills afterwards.
+* **Qwen Hessian precision.** Storing Qwen's 2.5 GB of Hessians in fp16 (H / max|H|) and then in bf16 made several of
+  them indefinite (massive activation channels: rounding errors of the large off-diagonal entries exceed small channels'
+  diagonals) → Cholesky failure, then 100 % damping, which would silently turn GPTVQ's metric Euclidean. Both runs were
+  discarded; the final Qwen run stores U = chol(H⁻¹) computed in fp64 from the fp32 H (bf16 storage, no PD requirement)
+  plus diag(H) in fp32 — checked to reproduce the raw-H GPTVQ result (99.8 % identical indices, rest near-ties).
+* GPTVQ's decodability test first *failed* — the test decoder read the escape integers in row-major order while the
+  encoder writes them block-major; with the encoder's order the reconstruction is bit-exact (the rate is unaffected:
+  order-0 entropy does not depend on order).
+
+### 15.11 Limitations
+
+* One small model carries V1–V3 (SmolLM2-135M, fragile: ≥ 0.25 KL at 3.6 bpw for plain ECSQ, and GPTQ hurts on it);
+  the second model (§15.9) covers only the decisive configs. One seed except the stated seed reruns; codebook fits
+  move KL by ±10–25 %, lattice / scalar quantizers have no fitting randomness.
+* Rates are the empirical-entropy proxy (validated to ±0.02 % vs real rANS bytes in phase 2), not real files; the
+  pooled frequency tables are charged at 32 b/symbol.
+* No VQ fine-tuning (AQLM / QuIP#-style codebook or end-to-end tuning), no trellis-coded quantization, no fixed-rate
+  2-bpw regime (where the literature's VQ results live) — the question here was entropy-coded VQ at equal total bits.
+* WikiText-2 calibration and evaluation (same domain) except the C4 check in §15.9.
+
+### 15.12 Summary paragraph for README / Space
+
+**Does "sorting the weights as vectors and compressing the clusters" (vector quantization with a shared k-means
+codebook) beat plain rounding?** Not once you charge the codebook *and* compare with an entropy-coded scalar
+quantizer at the same total size. On SmolLM2-135M, 2- and 4-dimensional k-means codebooks needed 0.1–0.3 more bits
+per weight than scalar rounding for the same quality, even though the codebook itself cost almost nothing. Structured
+lattices fare better: D4 gave a small, repeatable gain (≈ 0.05–0.1 bits per weight) on both models, while E8 cut the
+raw weight error by 14 % yet made one model *worse* and the other better — what matters is the error the layer's
+inputs actually see, not the raw weight error. Reusing one codebook for a whole model family lost to the
+existing "store the base, code the small difference" scheme, and literally sorting weights costs more bits for the
+permutation than the whole compressed model. The big gains that vector methods did show (−45 % KL) turned out to come
+from knowing which input channels are sensitive — and a plain scalar quantizer given the same per-channel step sizes
+did even better (KL 0.080 vs 0.116 at ≈ 3.7 bits/weight). Lesson: in an entropy-coded codec, spend the
+"multi-dimensional" effort on the error metric, not on the codebook.
+
+## 16. ghcol — GPTQ on the Hessian-column step grid: confirmation and integration (2026-11-22)
+
+The pruning study's one positive side finding (PRUNE_FINDINGS.md, S1 dense baselines) was `ghcol`: GPTQ error
+feedback (`common.gptq`) on the **Hessian-column grid** `step_ij = fp16(c·rms_row_i) × fp16((h_j / geomean h)^(−1/2))`,
+h = diag(H) = E[x_j²] of the layer input (the V2 / §15.4 `hcol` grid, 16 b/row + 16 b/col side info). Found on one
+model (SmolLM2-135M), CPU only. On that model GPTQ on the plain *row* grid hurts (§15.4), so the claim was: "the error
+feedback pays only once the steps are Hessian-scaled per column". This section tests whether that generalizes,
+applies it to the fine-tune delta, integrates it into the real codec, and re-measures the phase-2 headline pairs.
+Scripts: `scripts/ghcol_probe.py` (stages `base` / `delta`), `scripts/ghcol_summary.py`, `phase2/ghcol_roundtrip.py`,
+`phase2/ghcol_headline.py`; results `results/ghcol_base_*.json`, `results/ghcol_delta_*.json`, `results/ghcol_verdict.json`,
+`results/ghcol_roundtrip_smol135.json`, `results/ghcol_family_*.json`, `results/ghcol_headline.json`.
+
+### 16.0 TL;DR (FACT unless marked)
+
+| question | answer |
+|---|---|
+| **A.** Does ghcol beat the codec's dense coders on other models? (pre-registered: ≥ 0.05 bpw vs the production GPTQ-row line at ≥ 2 points, never a loss > 0.02 vs GPTQ-row or hcol) | **PASS on all 3 models, never a loss.** bpw saved at equal WikiText KL vs the production I-frame coder (GPTQ-ECSQ row grid): **SmolLM2-135M +0.73…+0.97, SmolLM2-360M +0.28…+0.48, Qwen2.5-0.5B +0.09…+0.18**; vs plain `hcol` +0.16…+0.33; vs plain ECSQ +0.66…+0.84 |
+| …but is it the **best** dense line? | **No.** The control I added (A3's separable **Fisher** grid, §3, in the same fp16 row × fp16 column form, same GPTQ feedback, same side info = `gfisher`) is better on **all three** models by **0.17–0.31 bpw** (it reproduces §3's Qwen numbers to 4 decimals). The mechanism generalizes — GPTQ pays on a *sensitivity-scaled separable* grid — but diag(H) is not the best source of the scales |
+| **B.** ghcol on the fine-tune delta (fp16 base given) | **PASS**: Δ bpw saved at equal chat-KL vs the phase-2 delta coder: **SmolLM2-135M +0.38 / +0.83, Qwen +0.23 / +0.26**. But **plain rounding on the same column grid (`hcol-Δ`) is as good or better on chat-KL** (+0.22 / +0.86, +0.25 / +0.37): on Δ the win is the column grid; GPTQ feedback helps WikiText KL (+0.18…+0.35 bpw vs hcol-Δ) and costs 0.04–0.10 bpw of chat-KL on Qwen |
+| integrated? | **Yes, opt-in, alongside phase 2.** `qrow` records can carry fp16 column factors (own or inherited by a P-frame); `quant.ghcol`, `quant.gptq_sep` + `quant.fisher_grid`; family-codec configs `B_ghcol`, `T_pframe_ghcol`, `B_gfisher`, `T_pframe_gfisher`, `T_dghcol`, `T_dhcol`. Defaults and every phase-2 file / result unchanged |
+| bit-exact? | **Yes.** Real SmolLM2-135M and SmolLM2-360M pairs (210 / 224 tensors), I-frame + P-frame on the inherited column lattice + fp16-ref Δ: SHA-256 of decoded symbols and fp16 weights = encoder on **all 5 decoder paths** (constriction CPU, process-pool parallel, rans16 numba, MPS, Metal GPU). The new decoder reproduces the published phase-2 demo digests. One real bug was found on the way (int16 wrap of fine-grid lattice indices, §16.7) and fixed on encoder and decoders before the headline runs |
+| headline pairs (real files, §16.5) | **Same pair size → much better fine-tune:** chat-KL Qwen 0.128 → **0.078**, SmolLM2-360M 0.138 → **0.059**, SmolLM2-135M 0.538 → **0.105** (+0.7…1.0 % bytes). **Equal quality → smaller:** −2.4 % (Qwen) / −7.4…−7.7 % (360M) pair, and vs two standard GPTQ-int4 files **−42 … −46 %** with lower KL. Fine-tune Δ file (fp16 base given): **−14 … −35 %** at equal chat-KL. The Fisher grid in the same record: a further 9–21 % lower chat-KL at equal size |
+
+### 16.1 Harness (same as the spine / phase 2, every line re-run in it)
+
+* **VERDICT A** = the spine harness (§1): fp16 model on MPS, Hessians 128 × 2048 WikiText-2 train windows (seed 0,
+  non-sequential, percdamp 0.01), GPTQ on CPU fp32, WikiText-2 PPL over all windows + KL/top-1 vs the cached fp16
+  reference on the first 16. Rate = `common.quantize_model`: per-tensor empirical order-0 entropy + 32 b per used symbol
+  + side info (16 b/row; + 16 b/col for column grids, q/k/v and gate/up charged per tensor although they share H) —
+  the proxy phase 2 matched to real rANS bytes within ±0.02 % (and §16.5's real files again within ±0.05 %).
+* **Anchors reproduce earlier runs:** GPTQ-row c = 0.35 → Qwen 3.5784 bpw / PPL 13.8377 / KL 0.0604 (spine 0.0599:
+  Hessian run-to-run noise on MPS), SmolLM2-360M 3.5827 / 0.0907 (phase 2 0.0906), SmolLM2-135M 3.5944 / 0.2833
+  (= phase 2); ghcol c = 0.35 on SmolLM2-135M 0.0607 (prune lead, CPU: 0.0608); `gfisher_g0.5` on Qwen 3.6468 / 0.0270
+  and 3.1425 / 0.0559 (§3 A3: 0.0271 / 0.0559).
+* **Comparison rule:** line by line — bpw the other line needs for the same KL by log-linear interpolation between its
+  two bracketing points, both directions (each line's points looked up on the other), never extrapolated, never a
+  mixed hull (the S1 trap).
+* **VERDICT B** = the phase-2 `T_delta` harness: Δ = W_inst − W_base(fp16), instruct-model Hessians, chat-KL / top-1 /
+  NLL on the instruct model's 48 greedy answers + WikiText-2; rate = Δ symbols + side info.
+
+### 16.2 VERDICT A — base weights, 3 models (FACT, `results/ghcol_base_*.json`, `results/ghcol_verdict.json`)
+
+Lines (bpw → WikiText KL), all in-harness:
+
+| model | ghcol (γ = 1) c = 1.0 / 0.7 / 0.5 / 0.35 / 0.25 | hcol c = 0.7 / 0.5 / 0.35 | GPTQ-row (production) c = 0.7 / 0.5 / 0.35 / 0.25 | gfisher γ = 0.5 c = 0.7 / 0.5 / 0.35 |
+|---|---|---|---|---|
+| SmolLM2-135M | 2.249→0.739, 2.730→0.288, 3.199→0.131, 3.706→**0.0607**, 4.190→0.0293 | 2.722→0.398, 3.195→0.176, 3.704→0.0798 | 2.624→1.376, 3.090→0.610, 3.594→0.283, 4.075→0.154 | 2.697→0.228, 3.165→0.103, 3.670→**0.0482** |
+| SmolLM2-360M | 2.229→0.500, 2.709→0.196, 3.178→0.0923, 3.684→**0.0424**, 4.166→0.0214 | 2.702→0.287, 3.174→0.131, 3.682→0.0618 | 2.613→0.411, 3.079→0.203, 3.583→0.0907, 4.063→0.0495 | 2.678→0.141, 3.145→0.0662, 3.650→**0.0304** |
+| Qwen2.5-0.5B | 2.235→0.410, 2.713→0.176, 3.181→0.0835, 3.686→**0.0400**, 4.167→0.0198 | 2.704→0.288, 3.176→0.137, 3.684→0.0647 | (spine) 2.610→0.249, 3.075→0.122, 3.578→0.0604, 4.059→0.0293 | 2.676→0.122, 3.142→0.0559, 3.647→**0.0270** |
+
+bpw **saved by ghcol** at equal KL (range over all interpolable points, both directions; + = ghcol cheaper):
+
+| model | vs GPTQ-row (production I-frame) | vs hcol (= V2's best scalar) | vs ECSQ-row (rounding) | vs gfisher (A3 Fisher grid + GPTQ) | GPTQ-int4 quality (KL of the standard int4 file) reached at |
+|---|---|---|---|---|---|
+| SmolLM2-135M | **+0.73 … +0.97** | +0.16 … +0.19 | +0.66 … +0.79 | **−0.17 … −0.20** | 2.74 bpw (int4 g64: 4.31 fixed-rate, 4.05 rANS) |
+| SmolLM2-360M | **+0.28 … +0.48** | +0.19 … +0.24 | +0.70 … +0.84 | **−0.24 … −0.27** | 3.23 bpw (4.31 / 4.05) |
+| Qwen2.5-0.5B | **+0.09 … +0.18** | +0.27 … +0.33 | +0.77 … +0.80 | **−0.27 … −0.31** | 3.26 bpw (int4 g128: 4.16 / 3.76) |
+
+* **The finding generalizes as stated:** GPTQ feedback on the column grid beats both plain rounding on it (hcol) and
+  GPTQ on the row grid, on every model and at every rate tested (2.2–4.2 bpw); it is never a net loss. On Qwen, where
+  row-grid GPTQ already works (it halves KL vs rounding), the gain over the production coder is smallest (≈ 0.1–0.18).
+* **γ** (column-factor exponent) 0.5 vs 1 on Qwen: −0.02…−0.03 bpw (γ = 1 kept, as in V2).
+* **It is not the best dense line.** `gfisher` uses the same record and the same GPTQ, only the row/column factors come
+  from the empirical Fisher (64 × 512 train tokens) with A3's global cross-matrix allocation; it wins by 0.17–0.31 bpw on
+  all three models. INTERPRETATION: diag(H) sees how strongly each *input channel* is driven, but not how much the
+  *loss* cares about each output row or matrix (A3's probe: per-matrix sensitivity varies ~50×, §3); Fisher supplies
+  both. The pre-registered gate was against the production line (written before any Qwen number); the gfisher control
+  was added after the first Qwen point lost to §3's A3 line, and is reported, not used to move the gate.
+
+### 16.3 VERDICT B — the fine-tune delta (FACT, `results/ghcol_delta_*.json`)
+
+Δ lines (Δ bpw → chat-KL; WikiText KL in brackets):
+
+| model | production Δ (GPTQ, row grid c·rms(W_T)), c = 0.25 / 0.12 / 0.06 | ghcol-Δ (GPTQ, column grid, rows rms(Δ)), c = 3.2 / 1.6 / 0.8 | hcol-Δ (rounding, same grid) | ghcol-Δ with rows rms(W_T) |
+|---|---|---|---|---|
+| SmolLM2-135M | 0.870→0.102, 1.706→0.0299, 2.596→0.0101 | 0.815→0.0634, 1.621→**0.0121** (0.0076), 2.504→**0.0030** (0.0019) | 0.687→0.0959, 1.584→0.0121 (0.0107), 2.494→0.0031 (0.0026) | 0.896→0.0696, 1.753→0.0119, 2.654→0.0031 |
+| Qwen2.5-0.5B | 0.843→0.0375, 1.686→0.0105, 2.568→0.0031 | 0.805→0.0283, 1.619→**0.0081** (0.0040), 2.495→**0.0020** (0.0011) | 0.670→0.0333, 1.576→**0.0073** (0.0067), 2.483→**0.0018** (0.0018) | 0.863→0.0303, 1.729→0.0076, 2.621→0.0021 |
+
+Δ bpw saved at equal quality vs the production Δ coder:
+
+| model | ghcol-Δ, chat-KL | hcol-Δ, chat-KL | ghcol-Δ, WikiText KL | hcol-Δ, WikiText KL | ghcol-Δ vs hcol-Δ, chat-KL / WikiText KL |
+|---|---|---|---|---|---|
+| SmolLM2-135M | **+0.38 / +0.83** | +0.22 / +0.86 | +0.53 / +0.88 | +0.60 | +0.05 / −0.04 ; +0.18 / +0.20 |
+| Qwen2.5-0.5B | **+0.23 / +0.26** | +0.25 / +0.37 | +0.30 / +0.35 | +0.02 | −0.04 / −0.10 / −0.06 ; +0.31 / +0.35 |
+
+(The ≈ 2.5-bpw points lie below the production line's range: they beat its best point outright — Qwen chat-KL
+0.0020 / 0.0018 vs 0.0031 at fewer bits, SmolLM2-135M 0.0030 vs 0.0101.)
+
+* **PASS** by the pre-registered rule (≥ 0.05 bpw vs the production Δ coder at ≥ 2 points, chat-KL).
+* **What wins on Δ is the column grid itself.** GPTQ feedback on it is metric-dependent: it buys 0.18–0.35 bpw of
+  WikiText KL (the calibration domain) and loses 0.04–0.10 bpw of chat-KL on Qwen (≈ neutral on SmolLM2). INTERPRETATION:
+  the Hessian is WikiText-calibrated; on a small, nearly Gaussian Δ (PRUNE_FINDINGS S2) the error feedback tunes the
+  reconstruction to the calibration inputs — the same in-domain/out-of-domain split §15.9 saw for GPTVQ on C4.
+* Row normalisation by rms(Δ) beats rms(W_T) by 0.08–0.18 bpw (the phase-2 `T_delta` used rms(W_T)).
+
+### 16.4 Integration (FACT: code + tests)
+
+* **Format** (`wcodec/codecs.py`): a `qrow` record may carry `params.col = "own"` + section `col` (fp16 per input
+  column) → `step_ij = step_i · col_j`, or `params.col = "ref"` (inherit the reference record's column factors: P-frame on
+  that lattice, 0 side info). The product of two fp16 values is **exact in fp32**, so encoder and decoder build the
+  identical lattice on any device/order. Records without `col` are byte-identical to phase 2. A P-frame that would drop
+  inherited column factors, or a reference without them, raises instead of mis-decoding (several older call sites copy
+  only `TState.step`). `own_div` / `div:k` (SVC) with column factors are explicitly not implemented. Not supported by
+  the browser (JS) decoder of the published demo — the demo files are row-grid files and are unaffected. [Since §17 the
+  JS decoder reads `col`, and the column-grid coders are the default.]
+* **Quantizers** (`wcodec/quant.py`): `hcol_factor`, `hcol_grid`, `ghcol` (= `common.gptq` on the column grid, symbols
+  identical — unit-tested), `gptq_sep` (GPTQ on any separable grid), `fisher_grid` / `fisher_rowcol` (A3 factors in the
+  decodable form; `p2common.fisher_stats` = the a3_fisher procedure). Guards: column factors clamped to the finite
+  positive fp16 range, row steps floored at the smallest fp16 (dead input columns and all-zero rows code as 0 instead of
+  inf / NaN — unit-tested), and **`int16_safe_col`**: a column factor is raised only where its finest step would need
+  lattice indices |W/step| > 2¹⁴ (every fast decoder holds symbols in int16; see §16.7) — after GPTQ the symbols are
+  checked again (row-grid fallback for that tensor). Decoders (serial, process-pool, Metal) now **raise** on symbols
+  outside int16 instead of wrapping.
+* **Family codec** (`phase2/family_codec.py`, opt-in flags, defaults unchanged): `B_ghcol_c*`, `T_ghcol_c*`,
+  `T_pframe_ghcol_c*` (P-frame on the decoded ghcol base lattice), `B_gfisher_c*` / `T_pframe_gfisher_c*`, `T_dghcol_c*`
+  (GPTQ Δ), `T_dhcol_c*` (rounding Δ). **Fallback:** a tensor whose column grid is degenerate is coded on the row grid
+  (no `col`; counted as `n_row_fallback`) and the columns raised by the int16 floor are counted (`n_cols_raised`); both
+  are in `results/ghcol_family_*.json` (§16.5). `--no_baseline --store` writes new configs to
+  `results/ghcol_family_<tag>.json` and never re-writes a phase-2 result or file. **Per-model applicability (FACT):**
+  the column grid beat the row grid on every model and at every rate tested (§16.2, §16.5); no tensor needed the
+  row-grid fallback. Per-tensor wins were not measured — the guard is for degenerate grids, not an RD selector.
+* **Seam checks:** `phase2/test_wcodec.py` (CPU + MPS) adds I/P/Δ round trips on column lattices, the loud-failure cases
+  and degenerate inputs; `phase2/ghcol_roundtrip.py` (§16.0 row) on the real SmolLM2-135M and -360M pairs; and every §16.5 quality
+  number is measured on the model **decoded from the written file**, which reproduces the probe's in-memory numbers.
+  (Found while building it: GPTQ's in-memory output holds −0.0 where symbols × lattice give +0.0 — value-identical, now
+  asserted; the encoder-side digest is the lattice reconstruction, the codec's contract.)
+
+### 16.5 Headline numbers on real files
+
+(FACT, `results/ghcol_family_*.json`, `results/ghcol_headline.json`, `phase2/ghcol_headline.py`.) Same machinery as
+§14.3: every size is the bytes of `.wcdc` files (header, tables, fp16 row + column factors, ANS words), every quality
+number is measured on the model **decoded from those files**; the lossless rest files (embeddings / norms / biases,
+XOR P-frame for the fine-tune) are the phase-2 ones, unchanged. Over the 45 new files: real vs proxy bpw −0.03 … +0.05 %,
+row-grid fallback 0, int16 floor raised 1 column in each ghcol file of Qwen and SmolLM2-360M (0 on SmolLM2-135M, 0 for
+the Fisher grid); decoded-file quality reproduces the probe (e.g. Qwen B_ghcol_c0.35 KL 0.0404 vs 0.0400 in memory —
+Hessian run-to-run noise — SmolLM2-360M 0.0424 vs 0.0424, SmolLM2-135M 0.0607 vs 0.0607).
+
+| pair (real files, every tensor) | phase 2: row-grid I + P, c = 0.35 | ghcol I + P, c = 0.35 | ghcol I + P, c = 0.5 | A3-Fisher grid I + P, c = 0.35 | A3-Fisher grid I + P, c = 0.5 | two standard GPTQ-int4 files |
+|---|---|---|---|---|---|---|
+| Qwen2.5-0.5B {base, Instruct} | 531.7 MB · base KL 0.060 · chat-KL **0.128** | 535.6 MB · base KL 0.040 · chat-KL **0.078** | 506.5 MB · base KL 0.084 · chat-KL **0.173** | 532.8 MB · base KL 0.027 · chat-KL **0.062** | 504.2 MB · base KL 0.057 · chat-KL **0.135** | 916.6 MB · base KL 0.075 · chat-KL **0.148** |
+| SmolLM2-360M {base, Instruct} | 295.3 MB · base KL 0.091 · chat-KL **0.138** | 298.3 MB · base KL 0.042 · chat-KL **0.059** | 272.7 MB · base KL 0.092 · chat-KL **0.129** | 296.2 MB · base KL 0.030 · chat-KL **0.053** | 271.0 MB · base KL 0.066 · chat-KL **0.108** | 528.2 MB · base KL 0.086 · chat-KL **0.118** |
+| SmolLM2-135M {base, Instruct} | 130.5 MB · base KL 0.283 · chat-KL **0.538** | 131.7 MB · base KL 0.061 · chat-KL **0.105** | 122.9 MB · base KL 0.131 · chat-KL **0.236** | 130.9 MB · base KL 0.048 · chat-KL **0.088** | 122.3 MB · base KL 0.102 · chat-KL **0.200** | 227.9 MB · base KL 0.281 · chat-KL **0.400** |
+
+| fine-tune Δ file (fp16 base given) | phase-2 Δ (GPTQ, row grid) MB → chat-KL | ghcol-Δ MB → chat-KL | hcol-Δ (rounding) MB → chat-KL | Δ MB saved at equal chat-KL: ghcol-Δ / hcol-Δ |
+|---|---|---|---|---|
+| Qwen2.5-0.5B {base, Instruct} | 37.7 → 0.0375, 75.4 → 0.0105, 114.9 → 0.0031 | 36.0 → 0.0283, 72.4 → 0.0081, 111.6 → 0.0020 | 30.0 → 0.0333, 70.5 → 0.0073, 111.0 → 0.0018 | +10.1 MB (+22 %), +11.5 MB (+14 %), n/a / +11.3 MB (+27 %), +16.5 MB (+19 %), n/a |
+| SmolLM2-360M {base, Instruct} | 30.6 → 0.0681, 63.0 → 0.0134, 97.6 → 0.0035 | 31.3 → 0.0407, 63.0 → 0.0063, 97.8 → 0.0018 | 26.5 → 0.0684, 61.6 → 0.0066, 97.4 → 0.0016 | +9.5 MB (+23 %), +19.6 MB (+24 %), n/a / n/a, +19.9 MB (+24 %), n/a |
+| SmolLM2-135M {base, Instruct} | 11.5 → 0.1018, 22.6 → 0.0299, 34.5 → 0.0101 | 10.8 → 0.0634, 21.5 → 0.0121, 33.2 → 0.0030 | 9.1 → 0.0959, 21.0 → 0.0121, 33.1 → 0.0031 | +5.0 MB (+32 %), +11.0 MB (+34 %), n/a / +3.0 MB (+25 %), +11.5 MB (+35 %), n/a |
+
+**Family pair (base I-frame + fine-tune P-frame on its lattice + lossless rest):**
+
+* **At the same pair size the fine-tune is much better:** Qwen 535.6 vs 531.7 MB (+0.7 %): chat-KL **0.078 vs 0.128
+  (1.6×)**, base KL 0.040 vs 0.060; SmolLM2-360M 298.3 vs 295.3 MB (+1.0 %): **0.059 vs 0.138 (2.4×)**; SmolLM2-135M
+  131.7 vs 130.5 MB (+0.9 %): **0.105 vs 0.538 (5.1×)** — the phase-2 caveat of §14.3 (the inherited per-row step is the
+  weak point on that model) is resolved.
+* **At equal quality the pair gets smaller** (line-by-line interpolation where the lines overlap): Qwen −12.7 MB
+  (−2.4 %) at equal chat-KL, −11.7 MB (−2.3 %) at equal base KL; SmolLM2-360M −21.9 MB (−7.4 %) at equal base KL, and its
+  c = 0.5 pair (272.7 MB) is **7.7 % smaller** than the phase-2 c = 0.35 pair (295.3 MB) with better fine-tune chat-KL
+  (0.129 vs 0.138) and equal base KL (0.092 vs 0.091); SmolLM2-135M's c = 0.5 pair (122.9 MB, chat-KL 0.236) beats the phase-2 c = 0.35 pair (130.5 MB,
+  0.538) on both axes. Pair-level percentages are small because 38–61 % of every pair is the lossless rest (embeddings,
+  norms), which none of this touches; as a share of the linears alone the same MB are 1.6–2.5× larger.
+* **vs two standard GPTQ-int4 files** (the format people ship): Qwen 535.6 vs 916.6 MB (**−42 %**) with chat-KL 0.078 vs
+  0.148; SmolLM2-360M 298.3 vs 528.2 MB (−44 %), 0.059 vs 0.118; SmolLM2-135M 122.9 vs 227.9 MB (−46 %), 0.236 vs 0.400.
+* **The A3 Fisher grid in the same record is better again:** chat-KL 0.062 / 0.053 / 0.088 at the c = 0.35 pair sizes
+  (−21 / −9 / −16 % vs ghcol), −11.4 MB (Qwen) / −7.5 MB (360M) / −2.4 MB (135M) vs the ghcol family at equal chat-KL.
+
+**Fine-tune Δ over an fp16 base (the C2 / §14.3 "full-rank Δ" scenario):** the Δ file shrinks by **14–34 % with ghcol-Δ
+and 19–35 % with hcol-Δ** at equal chat-KL (Qwen −14 / −22 % and −19 / −27 %, SmolLM2-360M −23 / −24 % and −24 %,
+SmolLM2-135M −32 / −34 % and −25 / −35 %); at the ≈ 2.5-bpw end both reach chat-KL 0.0016–0.0031, below anything the
+phase-2 Δ coder produced. GPTQ feedback vs plain rounding on the column grid: equal or worse on chat-KL (Qwen −2…−7 % of
+the Δ file; mixed on the SmolLM2 pairs, −3 … +8 %), better on WikiText KL (Qwen +18 / +27 % of the Δ file vs hcol-Δ's
++1 %). Pair-level the Δ saving is only 1–4 % because the pair is dominated by the raw fp16 base linears (§14.3 note: a
+lossless rANS of those is ≈ 4/5).
+
+### 16.6 What did not generalize / caveats
+
+* **"ghcol is the new best dense scalar line"** — not true on any of the three models once the A3 Fisher grid is run in
+  the same harness (−0.17…−0.31 bpw). The SmolLM2-135M claim was made without that control; the memory rule "always run
+  the scalar + same side-info control" applied again.
+* **"GPTQ feedback is what pays on the column grid"** — true for base weights (+0.16…+0.33 bpw over hcol), **not for the
+  fine-tune delta's chat quality** (hcol-Δ ≥ ghcol-Δ on Qwen chat-KL).
+* **Nothing in the real files contradicted VERDICT A / B** once the decoder bug (§16.7) was fixed; the first SmolLM2-360M
+  real-file run looked like "ghcol fails on the Instruct model" (chat-KL 0.388 vs 0.138) — it was that bug.
+* **Margin shrinks with model strength:** +0.73…+0.97 bpw vs the production coder on the fragile SmolLM2-135M, +0.09…+0.18
+  on Qwen, where row-grid GPTQ already works.
+
+### 16.7 Process notes (for honesty)
+
+* Pre-registered rules are in the `scripts/ghcol_probe.py` docstring (written before any Qwen / SmolLM2-360M number);
+  the `gfisher` control and the `hcol-Δ` real-file configs were added after seeing data, and are labelled as such.
+* **Bug found by the real-file runs (the seam rule paid off):** on SmolLM2-360M the base I-frame decoded from its
+  `.wcdc` file had WikiText KL **0.313**, the identical in-memory quantization **0.0424**. Cause: column factors down to
+  0.0014 gave lattice indices up to |q| = 34 798 (a single weight of `layers.3.mlp.down_proj`); the file stored it
+  correctly (int32 ANS), but the decoder cast symbols to int16 and the wrapped weight wrecked the model. Phase-2 row-grid
+  files never come near int16, and the SmolLM2-135M round trip had passed. Fixed on both sides (§16.4: encoder floor +
+  decoders raise), re-verified bit-exact on SmolLM2-360M on all 5 decoder paths (`results/ghcol_roundtrip_smol360.json`),
+  and **all §16.5 files were re-encoded with the fixed code**; the invalid pre-fix SmolLM2-360M results were discarded.
+* **Incident:** the first real-model round trip ran its process-pool decoder from an unguarded script; `spawn` workers
+  re-imported it and each re-ran the whole test (4 × 1.4 GB); memory and disk headroom ran out within minutes.
+  The concurrently running delta probe stopped itself at its free-disk guard (no result lost — its finished configs were
+  checkpointed); the round trip was killed by PID, wrapped in `main()`, and re-run alone.
+* A baseline-skip flag was first applied before the LoRA rank list was parsed, so the first SmolLM2-135M real-file run
+  re-created the three phase-2 LoRA files in `bitstreams/smol135/` (byte-identical sizes and identical quality —
+  deterministic encoder); they were deleted again (the directory is back to its phase-2 state) and the flag fixed.
+* Strictly one MPS process at a time (sequential queues in `logs/`, not committed); new `.wcdc` files are deleted after
+  each family (sizes and decoded-model quality are in `results/ghcol_family_*.json`; files are reproducible).
+
+### 16.8 Limitations / next
+
+* One seed / one calibration set (WikiText-2) everywhere; chat-KL is the only out-of-domain metric here.
+* VERDICT B's probe ran on SmolLM2-135M and Qwen (as planned); SmolLM2-360M's Δ is covered by the real files of §16.5
+  only. VERDICT A / B numbers are in-memory reconstructions with the entropy-proxy rate; the decoded real files of §16.5
+  reproduce them (rate within ±0.05 %, KL to the 4th digit up to Hessian run-to-run noise).
+* The Fisher grid was taken over from §3 as-is (γ = 0.5, 64 × 512 tokens, global shift) — not tuned; its Δ analogue
+  (instruct-model Fisher for T_dghcol) and per-tensor RD selection between grids were not tried.
+* Not deployed: the published demo / Space / bitstreams are untouched; the browser decoder would need the `col` record
+  parameter (and an int16 range check) before column-grid files can be served.
+* NEXT (INTERPRETATION): make the Fisher grid (`gfisher`) the default I-frame/P-frame lattice and the column grid with
+  plain rounding (`T_dhcol`) the default Δ coder, add `col` to the JS decoder, then rebuild the demo. [Done in §17.]
+
+## 17. The column-grid coders become the DEFAULT — re-measured on real files, browser demo rebuilt (2026-11-22)
+
+§16 found that the best coders in the codec are (i) the **A3 Fisher grid** (fp16 row × fp16 column steps from the
+empirical Fisher, + GPTQ; `gfisher`) for base weights, and (ii) the **Hessian-column grid with plain rounding**
+(`hcol-Δ`) for the fine-tune delta. Both were integrated opt-in. This section makes them the codec's **default**, re-measures
+the three family pairs with the default code path on real `.wcdc` files, verifies every decoder path bit-exactly, and
+rebuilds + redeploys the browser demo with them. Scripts: `phase2/family_codec.py` (`--preset`), `phase2/default_headline.py`,
+`phase2/ghcol_roundtrip.py --coders default`, `phase2/test_codec_js.py`, `phase2/seam_fields.py`, `phase2/test_page_cdp.mjs`;
+results `results/default_family_*.json`, `results/default_headline.json`, `results/default_roundtrip_*.json`,
+`results/demo_seam_fields.json`.
+
+### 17.0 TL;DR (FACT unless marked)
+
+| question | answer |
+|---|---|
+| what is the default now? | **Base I-frame = A3 Fisher grid + GPTQ** (`B_gfisher`); **fine-tune P-frame = plain rounding on the inherited Fisher lattice** (`T_pframe_gfisher_rnd`); **fine-tune Δ over an fp16 base = Hessian-column grid, plain rounding** (`T_dhcol`). `family_codec.py --preset phase2` reproduces phase 2; every older coder stays opt-in |
+| same pair size → fine-tune quality (real files, c = 0.35) | chat-KL **Qwen 0.128 → 0.059 (2.2×)**, **SmolLM2-360M 0.138 → 0.048 (2.9×)**, **SmolLM2-135M 0.538 → 0.084 (6.4×)**, at −0.3…−0.4 % bytes; base KL 2.2× / 3.0× / 5.9× lower |
+| smaller at better quality | the default **c = 0.5** pair is **5.7 % / 8.9 % / 6.8 % smaller** than the phase-2 c = 0.35 pair *and* better on base KL and chat-KL (Qwen 501.2 vs 531.7 MB, 360M 269.0 vs 295.3 MB, 135M 121.6 vs 130.5 MB); vs two standard GPTQ-int4 files: −42 / −44 / −43 % bytes with 2.5–4.8× lower chat-KL |
+| fine-tune Δ over the fp16 base | Δ file **−19…−35 %** at equal chat-KL (Qwen −27 / −19 %, 360M −24 %, 135M −25 / −35 %); its ≈ 2.5-bpw point beats the old coder's best point outright |
+| P-frame: rounding or GPTQ? (pre-registered rule) | **rounding, on all 3 pairs** (rule needed 2): it dominates GPTQ at c = 0.35 on every pair (fewer MB *and* lower chat-KL) and saves 8–9 % of the P-frame at equal chat-KL where interpolable — but GPTQ keeps **better WikiText KL** (e.g. Qwen 0.029 vs 0.053): the metric split of §16.3 again; `--pframe gptq` remains available |
+| reproducibility | all 21 files that §16.5 had already measured come out with **identical byte counts**; decoded-model KL / chat-KL equal to the 4th digit except 4 values differing by ≤ 0.0007 (MPS run-to-run noise, as in §16.5); real vs proxy bytes −0.03…+0.06 %; no row-grid fallback, no column raised by the int16 floor in any default file |
+| bit-exact? | **yes** — SHA-256 of decoded symbols and fp16 weights = encoder on all 5 decoder paths (constriction CPU, process pool, rans16 numba, MPS, Metal) for I-frame, both P-frame quantizers and the Δ, on all three real model pairs (§17.5) |
+| demo | JS decoder reads per-column steps (loud errors on missing / inconsistent fields); demo rebuilt with the default coders: "smallest" config **chat-KL 0.538 → 0.084** at 86.3 + 43.9 MB, near-lossless Δ **0.030 → 0.012**; seam gate clean (JS = Python SHA-256 on every file, JS greedy = PyTorch, 32 field groups zero mismatches, real page decode → verify → generate in headless Chromium) before any upload; **deployed to the Space and GitHub Pages and verified live** with the same browser flow (§17.6) |
+
+### 17.1 What "default" means now (FACT: code)
+
+`phase2/family_codec.py --preset default` (the default) writes, for every c in `--cs` (0.35, 0.5):
+
+| role | config | coder |
+|---|---|---|
+| base I-frame | `B_gfisher_c{c}` | A3 Fisher grid (§3 factors, γ = 0.5, 64 × 512 train tokens, global shift) in the decodable fp16 row × fp16 column `qrow` record + GPTQ (`quant.fisher_rowcol` + `quant.gptq_sep`, int16-safe column floor) |
+| fine-tune P-frame | `T_pframe_gfisher_rnd_c{c}` (**plain rounding, default**) / `T_pframe_gfisher_c{c}` (GPTQ, `--pframe gptq`) | closed-loop P-frame on the decoded I-frame's lattice: inherits row **and** column factors (`col = "ref"`, 0 side info), decoder `Q = Q_B + q`; the quantizer was chosen by the pre-registered rule below (§17.4) |
+| fine-tune Δ over an fp16 base | `T_dhcol_c{0.8, 1.6, 3.2}` | Hessian-column grid of the Δ (rows rms(Δ), columns diag(H)^−½ of the fine-tune), **plain rounding**, own row + column factors, `base = "fp16ref"` |
+| standalone control | `T_gfisher_c0.35` | the I-frame coder on the fine-tune alone (its own Fisher, `data/fisher_<tag>_instruct.pt`) |
+
+`--preset phase2` is exactly the previous default (row-grid GPTQ-ECSQ I / P / standalone, GPTQ row-grid Δ, LoRA ranks,
+zstd/gzip reference coders; `phase2/run_phase2_local.sh` now passes it), `--preset none` runs only explicit flags; every
+older coder stays available opt-in (`--row_cs`, `--row_delta_cs`, `--ranks`, `--ghcol_cs`, `--ghcol_delta_cs`,
+`--gfisher_cs`, `--hcol_delta_cs`, `--pframe_round_cs`). `--no_baseline` now only skips the coder-independent reference
+files (fp16, GPTQ-int4, lossless rest), which are reused from `results/phase2_family_<tag>.json` exactly as in §16.5.
+No phase-2 file, result or table (§14) and no §15 / §16 number was changed; the decoder accepts every older file.
+The decoder also got stricter: unknown `col` modes, `col = "own"` without its section, and step / column sections whose
+length does not match the record shape now raise (a 1-element section would have broadcast silently).
+
+Pre-registered (written 20:58, after the SmolLM2-135M GPTQ P-frame but before any rounding-P-frame number): the
+owner's brief asked for "plain rounding on the Hessian-column grid for the delta / P-frame". §16 measured plain
+rounding only for the Δ over an fp16 base (T_dhcol); a P-frame on the inherited lattice was only measured with GPTQ.
+Rule: **rounding becomes the default P-frame quantizer only if, on ≥ 2 of the 3 pairs, the rounding P-frame needs
+fewer P-frame MB than the GPTQ P-frame at equal chat-KL (line by line over c = 0.35 / 0.5) or dominates it at the same
+c (≤ MB and ≤ chat-KL); otherwise GPTQ stays.**
+
+### 17.2 Headline pairs, before vs after (FACT, `results/default_headline.json`, `results/default_family_*.json`)
+
+Same machinery as §14.3 / §16.5: sizes = bytes of the `.wcdc` files (header, tables, fp16 row + column factors, ANS
+words), quality measured on the model **decoded from those files**; the lossless rest files (embeddings / norms, XOR
+P-frame for the fine-tune) and the int4 / fp16 reference files are the phase-2 ones, unchanged. "before" = the phase-2
+default (row-grid GPTQ-ECSQ I-frame + GPTQ P-frame on its lattice, §14.3); "after" = the new default with the rounding
+P-frame.
+
+| pair (real files, every tensor) | before: phase-2 default, row-grid I + P, c = 0.35 | **after: default, Fisher-grid I + P, c = 0.35** | after, c = 0.5 | both standalone, same new coder, c = 0.35 | two standard GPTQ-int4 files |
+|---|---|---|---|---|---|
+| Qwen2.5-0.5B {base, Instruct} | 531.7 MB · base KL 0.060 · chat-KL **0.128** | 529.7 MB · base KL 0.027 · chat-KL **0.059** | 501.2 MB · base KL 0.056 · chat-KL **0.122** | 684.5 MB · base KL 0.027 · chat-KL **0.065** | 916.6 MB · base KL 0.075 · chat-KL **0.148** |
+| SmolLM2-360M {base, Instruct} | 295.3 MB · base KL 0.091 · chat-KL **0.138** | 294.0 MB · base KL 0.030 · chat-KL **0.048** | 269.0 MB · base KL 0.066 · chat-KL **0.108** | 411.1 MB · base KL 0.030 · chat-KL **0.053** | 528.2 MB · base KL 0.086 · chat-KL **0.118** |
+| SmolLM2-135M {base, Instruct} | 130.5 MB · base KL 0.283 · chat-KL **0.538** | 130.1 MB · base KL 0.048 · chat-KL **0.084** | 121.6 MB · base KL 0.102 · chat-KL **0.179** | 172.5 MB · base KL 0.048 · chat-KL **0.095** | 227.9 MB · base KL 0.281 · chat-KL **0.400** |
+
+| pair | same pair size (c = 0.35): MB change · fine-tune chat-KL ratio · base KL ratio | c = 0.5 | vs two int4 files (c = 0.35) |
+|---|---|---|---|
+| Qwen2.5-0.5B {base, Instruct} | -0.4 % · **2.2×** · 2.2× | -0.4 % · **2.1×** · 2.2× | -42 % bytes |
+| SmolLM2-360M {base, Instruct} | -0.4 % · **2.9×** · 3.0× | -0.4 % · **2.8×** · 3.1× | -44 % bytes |
+| SmolLM2-135M {base, Instruct} | -0.3 % · **6.4×** · 5.9× | -0.3 % · **5.7×** · 5.9× | -43 % bytes |
+
+* At the same c the new pair is 0.3–0.4 % **smaller** (the Fisher I-frame costs +1.9…+2.4 % in bytes, the rounding
+  P-frame is 9–11 % smaller than the phase-2 P-frame), so every gain above is at equal or lower bytes. The line-by-line equal-quality
+  interpolation of §16.5 is undefined here because the two lines no longer overlap: the new c = 0.5 point is already
+  better than the old c = 0.35 point on both base KL and chat-KL (TL;DR row 3).
+* The standalone control with the same coder (both models coded independently, rest lossless) costs 684.5 / 411.1 /
+  172.5 MB at chat-KL 0.065 / 0.053 / 0.095: **storing the base once and the fine-tune as a P-frame still saves 23–29 % of
+  the pair** at the same quality class — the core result of the study holds with the better coder.
+* The weakest phase-2 case (SmolLM2-135M, §14.3 caveat: the inherited row step was the weak point on that fragile model)
+  improves most (6.4×); the strongest (Qwen, where row-grid GPTQ already worked) least (2.2×) — as in §16.6.
+
+### 17.3 Fine-tune Δ over an fp16 base (FACT)
+
+| fine-tune Δ file over the fp16 base | before: GPTQ row grid, MB → chat-KL | **after: column grid, rounding**, MB → chat-KL | Δ MB saved at equal chat-KL (line by line) |
+|---|---|---|---|
+| Qwen2.5-0.5B {base, Instruct} | 37.7 → 0.0375, 75.4 → 0.0105, 114.9 → 0.0031 | 30.0 → 0.0333, 70.5 → 0.0073, 111.0 → 0.0018 | +11.3 MB (+27 %), +16.5 MB (+19 %), n/a |
+| SmolLM2-360M {base, Instruct} | 30.6 → 0.0681, 63.0 → 0.0134, 97.6 → 0.0035 | 26.5 → 0.0684, 61.6 → 0.0066, 97.4 → 0.0016 | n/a, +19.9 MB (+24 %), n/a |
+| SmolLM2-135M {base, Instruct} | 11.5 → 0.1018, 22.6 → 0.0299, 34.5 → 0.0101 | 9.1 → 0.0959, 21.0 → 0.0121, 33.1 → 0.0031 | +3.0 MB (+25 %), +11.5 MB (+35 %), n/a |
+
+(Identical to §16.5's hcol-Δ files — same coder, re-measured.) At WikiText KL the Δ saving is smaller (Qwen +1 %, 360M
++11 %, 135M +28 % of the Δ file): the rounding Δ is tuned for nothing, so it does not exploit the calibration domain
+the way GPTQ does (§16.3).
+
+### 17.4 The P-frame quantizer: pre-registered rule and result (FACT)
+
+| P-frame on the inherited Fisher lattice | GPTQ: MB → chat-KL / WikiText KL (c = 0.35; 0.5) | plain rounding: MB → chat-KL / WikiText KL | rounding: P-frame MB saved at equal chat-KL | rule: rounding wins? |
+|---|---|---|---|---|
+| Qwen2.5-0.5B {base, Instruct} | 47.35 → 0.0617 / 0.0292; 41.29 → 0.1347 / 0.0622 | 44.21 → 0.0594 / 0.0528; 38.32 → 0.1217 / 0.1094 | n/a, +3.75 MB (+8.9 %) | yes (dominates at the same c) |
+| SmolLM2-360M {base, Instruct} | 39.88 → 0.0533 / 0.0402; 34.53 → 0.1078 / 0.0841 | 37.67 → 0.0478 / 0.0585; 32.51 → 0.1084 / 0.1237 | n/a, n/a | yes (dominates at the same c) |
+| SmolLM2-135M {base, Instruct} | 13.91 → 0.0885 / 0.0540; 12.02 → 0.1999 / 0.1126 | 13.14 → 0.0839 / 0.0727; 11.29 → 0.1789 / 0.1576 | n/a, +0.99 MB (+8.0 %) | yes (dominates at the same c) |
+
+* **Rule outcome: rounding wins on 3 / 3 pairs** (dominance at c = 0.35 everywhere; at c = 0.5 it is smaller with lower
+  chat-KL on Qwen and SmolLM2-135M and 2.0 MB smaller with +0.0006 chat-KL on SmolLM2-360M). Default: `--pframe round`.
+* **Metric-dependent, as for the Δ in §16.3:** GPTQ's WikiText-calibrated error feedback buys in-domain KL (rounding is
+  0.5–1.6 MB *worse* per P-frame at equal WikiText KL, or equal on SmolLM2-135M) and loses chat-KL. INTERPRETATION: a
+  P-frame codes the fine-tune on the base's lattice; the fine-tune's Hessian comes from WikiText, the domain the Instruct
+  model was not trained for, so feedback that minimises WikiText output error moves the Instruct weights away from what
+  its chat answers need. The rounding P-frame also encodes 3.3–4.0× faster (no GPTQ pass).
+* The P-frame is still the cheapest way to ship the fine-tune given the lossy base: 0.83–0.99 bpw (rounding) for the
+  Instruct linears.
+
+### 17.5 Bit-exact round trip of the default coders (FACT, `results/default_roundtrip_*.json`)
+
+`phase2/ghcol_roundtrip.py --coders default` on the three real pairs, every block linear: Fisher-grid I-frame (c = 0.35),
+GPTQ P-frame and rounding P-frame on its inherited lattice, rounding column-grid Δ (c = 1.6) over the fp16 base. For every
+file, SHA-256 over all records of the decoded lattice index Q and of the decoded fp16 weights must equal the digests the
+encoder computed from its own symbols and lattice reconstruction (the §16 contract), on each decoder path.
+
+| pair | tensors | files (MB) I / P-GPTQ / P-round / Δ | max \|Q\| I / P / P-round / Δ | constriction CPU | process pool | rans16 numba | MPS | Metal GPU |
+|---|---|---|---|---|---|---|---|---|
+| SmolLM2-135M | 210 | 48.7 / 14.5 / 13.5 / 21.0 | 1276 / 1269 / 1269 / 486 | ✓ | ✓ | ✓ | ✓ | ✓ |
+| SmolLM2-360M | 224 | 143.5 / 42.4 / 39.3 / 61.6 | 999 / 999 / 999 / 578 | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Qwen2.5-0.5B | 168 | 163.1 / 50.4 / 46.2 / 70.6 | 1612 / 1584 / 1584 / 2096 | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+**Zero mismatches** (4 files × 5 paths × 3 pairs). Lattice indices stay ≤ 2 096, far inside int16 (the Fisher grid needed
+no int16 floor anywhere; §16.7's overflow was a ghcol-grid effect). Hessians here are a few CPU calibration windows (only
+the round trip is tested, not quality), so these files differ slightly from the measured ones. The round trip now encodes
+in two passes (one model's Hessians resident at a time) and opens one 4-worker decoder pool at a time — the §16 version
+held both Hessian sets and one pool per file, which would not have fit for Qwen next to the other jobs.
+
+### 17.6 Browser demo: JS decoder with per-column steps, rebuilt and redeployed
+
+* **Decoder** (`docs/js/codec.js`): `qrow` records may now carry `params.col` — `"own"` reads the fp16 section `col`
+  (one factor per input column), `"ref"` inherits the reference record's factors — and the lattice is
+  `fround(step_r · col_j)` (a product of two fp16 values, exact in fp32 and in double), then `W = fp16(fround(Q · lattice)
+  [+ W_ref])`, the PyTorch decoder's arithmetic. Every missing or inconsistent field raises a named error instead of
+  decoding: `col = "own"` without a `col` section, a `col` / `step` section whose length is not the record's column / row
+  count, `col = "ref"` against a reference without factors, a reference *with* factors that the record does not inherit,
+  unknown `col` modes, symbols outside int16, and P-frame sums `Q_ref + q` outside int16 (the JS holds `Q` in an
+  `Int16Array`; the Python decoder accumulates in int32, so this check is JS-only — the encoder already refuses such
+  P-frames). Row-grid records decode exactly as before.
+* **Synthetic seam test** (`phase2/test_codec_js.py` → `phase2/test_codec_js.mjs`): row-grid I + P, column-grid I +
+  GPTQ P + rounding P, fp16-ref column-grid Δ, and an extremes file (int16-limit indices, fp16 overflow → inf and
+  subnormal outputs) on 4 tensor shapes incl. 3 × 5 and 128 × 257: JS symbol + weight SHA-256 = Python on all 8 files;
+  all 7 malformed-record cases raise in JS (6 of them also in Python, the 7th is the int16 P-frame sum above).
+* **Demo files** (`phase2/demo_build.py`, SmolLM2-135M → -Instruct, rans16 twins of the measured files): the default
+  coders, quality copied only from the results store that measured that exact file (path **and** byte count checked):
+
+  | configuration | base (cached once) | Instruct delta | rebuilt Instruct (decoded-file quality) | files it replaced (§14.3) |
+  |---|---|---|---|---|
+  | near-lossless: lossless fp16 base + column-grid rounding Δ `T_dhcol_c1.6` | 178.1 MB | 51.8 MB | chat-KL **0.0121**, top-1 96.2 % | Δ `T_delta_c0.12`: 53.4 MB, 0.0299 |
+  | smallest: Fisher-grid I-frame `B_gfisher_c0.35` + rounding P-frame `T_pframe_gfisher_rnd_c0.35` | 86.3 MB | 43.9 MB | chat-KL **0.0839**, top-1 88.2 % | 85.3 + 45.4 MB, chat-KL 0.538 |
+  | control: standalone `T_gfisher_c0.35` (no base reuse) | — | 86.3 MB | chat-KL 0.0951 | `T_ecsq_c0.35`: 85.3 MB, 0.505 |
+
+  The first rebuild used the GPTQ P-frame (`T_pframe_gfisher_c0.35`, chat-KL 0.0885) and passed the same gate; it was
+  rebuilt after the P-frame rule (§17.4) chose rounding. The precomputed answers changed accordingly (e.g. the old
+  "smallest" Instruct looped "An autumn rain, an autumn rain, …" on the haiku prompt; the new one writes a haiku).
+* **Seam gate before any upload** (owner rule; all on the final build):
+  `node phase2/test_demo.mjs` — every file of every chain: JS SHA-256 of decoded symbols **and** rebuilt fp16 weights =
+  Python decoder (manifest digests); lossless parts = the original checkpoint tensors; the JS Llama forward pass gives
+  PyTorch's top-1 and greedy tokens on all test prompts (32 / 32, 15 / 15, 28 / 28 … tokens agree; top-10 logits within
+  2.2–5.2 · 10⁻⁵). `phase2/seam_fields.py` — names diffed between the real files / JSON the build wrote and every field
+  the JS decoder, worker and page read (record kinds, params, param values, sections, manifest / results / generations
+  fields, config names, worker ↔ page message types and commands): **32 groups, zero mismatches**
+  (`results/demo_seam_fields.json`). `phase2/test_page_cdp.mjs local` — the real page in headless Chromium (fresh
+  profile): each of the 3 configurations downloads → decodes → SHA-verifies (all ✓, the base comes from Cache Storage the
+  second time), live generation equals the offline PyTorch answer for family/Instruct, family/base and delta/Instruct, no
+  page exception or console error.
+* **Public text.** The previous page and its exported phase-2 tables named the measurement machine and the job
+  infrastructure in a few captions; these were rewritten (`demo_build.PUBLIC_REWRITE`), the offline decode-timing
+  sentence was dropped (it described other files), and `demo_build.public_clean` / the deploy staging now refuse to
+  finish if any public demo file or the Space card contains hardware / infrastructure / account words.
+* **Deployed (2026-11-22, after the gate):** Hugging Face Space `lifeart/weight-codec` (static, public; commit
+  `5476151`, previous head `c310e04`): page + the 8 new rans16 bitstreams + tokenizer + Space card
+  (`phase2/deploy_static_space.py --deploy --public-ok`; the results dataset was checked to be private before and after —
+  anonymous API access returns 401). GitHub `main` (`136f351`, Pages source `docs/`): `docs/` + README + REPORT + the Space
+  card as two commits on top of the previously published history; the research commits behind §15–§17 (scripts,
+  results, wcodec changes) are not part of that push. The phase-2 demo bitstreams were left on the Space (no longer
+  referenced by the page).
+* **Verified live, anonymously:** both hosts serve the new manifest (8 files, "smallest" chat-KL 0.0839) and the new
+  decoder; every bitstream resolves (302 → CDN, 200) with exactly the manifest's byte count and CORS headers.
+  `node phase2/test_page_cdp.mjs https://lifeart.github.io/weight-codec/` (fresh headless-browser profile, data fetched
+  cross-origin from the Space): all 3 configurations download → decode → SHA-verify ✓ (symbols and weights on all 10
+  file loads, lossless parts identical to the checkpoint, the base served from Cache Storage on the second chain), live
+  generation identical to the offline PyTorch answer for family / Instruct, family / base and delta / Instruct, no page
+  error — 37 / 37 checks. The same on the Space's own page (`https://lifeart-weight-codec.static.hf.space/`, family + delta).
+
+### 17.7 Process notes (for honesty)
+
+* The SmolLM2-135M / -360M default runs reproduce the §16.5 files **byte for byte** (identical sizes and decoded-model
+  KL / chat-KL to the 4th digit) — the encoder is deterministic and the Hessians / Fisher are recomputed identically
+  (MPS, same seeds). On Qwen2.5-0.5B the byte counts are identical too, but four decoded-model numbers moved in the 4th
+  digit (B_gfisher_c0.5 KL 0.0558 vs 0.0565, T_pframe_gfisher_c0.5 0.0622 vs 0.0619, T_dhcol_c0.8 0.0018 vs 0.0017;
+  SmolLM2-135M T_dhcol_c3.2 0.0437 vs 0.0436) — the MPS run-to-run noise §16.5 already reported; §16 stored sizes, not
+  file hashes, so byte-identity of the content itself is not claimed.
+* The P-frame rule was pre-registered after the first SmolLM2-135M GPTQ P-frame number (which §16.5 had already
+  published) and before any rounding-P-frame number; the rule's metric (chat-KL) was the owner's stated reason for
+  preferring rounding. The decision fell after two pairs (2 / 3 needed); Qwen was still measured with both quantizers.
+* The demo was first rebuilt with the GPTQ P-frame (to exercise the new JS decoder on real column-grid files early) and
+  rebuilt again after the rule; only the second build was deployed.
+* The new public-text guard first flagged a CSS system-font name in `style.css` (false positive); the pattern now skips it.
+* Strictly one heavy process at a time (sequential queues in `logs/`, not committed); 360M / Qwen `.wcdc` files and
+  model caches were deleted after each family (sizes and decoded quality are in `results/default_family_*.json`; files
+  are reproducible); the SmolLM2-135M files are kept because the demo serves their rans16 twins.
+* Wording only (no number): three process anecdotes in §15.10 / §16.7 were rephrased without machine-resource details
+  before the report went public.
+
+### 17.8 Limitations
+
+* Same harness and limits as §16 (one seed, WikiText-2 calibration, chat-KL on 48 prompts as the only out-of-domain
+  metric). The P-frame quantizer choice is **metric-dependent**: rounding wins chat-KL, GPTQ wins WikiText KL (§17.4); a
+  user who cares about in-domain perplexity of the fine-tune should pass `--pframe gptq`.
+* The Fisher grid was not re-tuned (γ = 0.5, 64 × 512 tokens, as in §3); per-tensor selection between grids and a
+  Fisher-weighted Δ grid remain untried (§16.8).
+* The browser decoder is single-threaded JS; decode speed of the new files was not benchmarked natively (§14.6 measured
+  the phase-2 files; the new records add one fp16 multiply per weight in reconstruction).
+

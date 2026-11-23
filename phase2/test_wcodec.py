@@ -69,7 +69,104 @@ assert e(td.W, (W.half().float() + qdelta.float() * sd).half()), "qrow fp16ref"
 assert e(dec_one("gp", None).W, Qw.half()), "g128 packed"
 assert e(dec_one("ga", None).W, Qw.half()), "g128 ans"
 assert e(dec_one("lr", TState(W=W.half().to(dev))).W, (W.half().float() + A @ B).half()), "lowrank"
+# 3. separable row x column lattice (quant.ghcol, REPORT §16): I-frame, P-frame inheriting the lattice, fp16ref delta
+Hc = (lambda X: X.T @ X / X.shape[0])(torch.randn(4096, 512) * torch.linspace(0.05, 4, 512))  # spread diag(H)
+Sg, Qg, rowg, colg = Q.ghcol(W, Hc, 0.35)
+S1g, Q1g, _ = common.gptq(W, Hc, "grid", step=rowg * colg[None, :])
+assert torch.equal(Sg, S1g) and torch.equal(Qg, Q1g), "ghcol != common.gptq on the same grid"
+assert not torch.equal(Sg, Q.gptq(W, Hc, "grid", step=Q.ecsq_step(W, 0.35))[0]), "column grid had no effect"
+wr2 = Writer({"test": 2})
+k, p_, s_ = enc_qrow(Sg, rowg, col=colg); wr2.add("gI", k, W.shape, p_, s_)
+qP, _, _, _ = Q.gptq(Wref - Qg, Hc, "grid", step=rowg * colg[None, :])
+k, p_, s_ = enc_qrow(qP, step_mode="ref", acc="add", col_mode="ref"); wr2.add("gP", k, W.shape, p_, s_)
+k, p_, s_ = enc_qrow(qP, step_mode="ref", acc="add"); wr2.add("gPbad", k, W.shape, p_, s_)   # forgot col=ref
+Dg = Wref - W.half().float()
+SgD, QgD, rowD, colD = Q.ghcol(Dg, Hc, 1.6)
+k, p_, s_ = enc_qrow(SgD, rowD, base="fp16ref", col=colD); wr2.add("gD", k, W.shape, p_, s_)
+path2 = os.path.join(tempfile.mkdtemp(), "t2.wcdc"); wr2.write(path2)
+rd2 = Reader(path2)
+def dec2(name, R):
+    r2 = copy.copy(rd2); r2.records = [rd2.by_name[name]]
+    return decode(r2, ref={name: R} if R is not None else None, device=dev)[name]
+tgI = dec2("gI", None)
+assert e(tgI.W, Qg.half()), "ghcol I-frame != encoder reconstruction"
+assert e(tgI.W, (Sg.float() * (rowg * colg[None, :])).half()), "ghcol I-frame lattice"
+tgP = dec2("gP", tgI)
+assert e(tgP.W, ((Sg + qP).float() * (rowg * colg[None, :])).half()), "P-frame on the column lattice"
+try:
+    dec2("gPbad", tgI); raise AssertionError("P-frame that drops the column factors must not decode")
+except ValueError:
+    pass
+try:
+    dec2("gP", TState(Q=tgI.Q, step=tgI.step)); raise AssertionError("reference without column factors must fail")
+except ValueError:
+    pass
+tgD = dec2("gD", TState(W=W.half().to(dev)))
+assert e(tgD.W, (W.half().float() + SgD.float() * (rowD * colD[None, :])).half()), "ghcol fp16ref delta"
+# degenerate inputs: a dead input column (h_j = 0) and an all-zero row must not produce inf / NaN / step 0
+Hd = Hc.clone(); Hd[7, :] = 0; Hd[:, 7] = 0
+Wz = W.clone(); Wz[11] = 0
+Sz, Qz, rz, cz = Q.ghcol(Wz, Hd, 0.35)
+assert torch.isfinite(Qz).all() and torch.isfinite(cz).all() and bool((rz > 0).all()) and bool((cz > 0).all())
+assert bool((Sz[11] == 0).all()) and bool((Sz[:, 7] == 0).all()), "zero row / dead column must code as 0"
+# int16 symbol contract (SmolLM2-360M incident: a 0.0014 column factor gave |q| = 34798, wrapped by the int16 decoders)
+He = Hc.clone(); He[5, :] *= 3e4; He[:, 5] *= 3e4                         # one hyper-sensitive input channel
+row_e, col_e = Q.hcol_grid(W, torch.diag(He), 0.25)
+assert int((W / (row_e * col_e[None, :])).round().abs().max()) > 32767, "test channel not extreme enough"
+Se, Qe, row_e2, col_e2 = Q.ghcol(W, He, 0.25)
+assert Q.sym_fits_int16(Se) and int(Se.abs().max()) <= 2 ** 14 + 64, "ghcol must keep symbols int16-safe"
+wr3 = Writer({"test": 3})
+k, p_, s_ = enc_qrow(Se, row_e2, col=col_e2); wr3.add("ok", k, W.shape, p_, s_)
+bad = torch.zeros(4, 8, dtype=torch.int32); bad[1, 2] = 40000
+k, p_, s_ = enc_qrow(bad, torch.ones(4, 1)); wr3.add("bad", k, (4, 8), p_, s_)
+path3 = os.path.join(tempfile.mkdtemp(), "t3.wcdc"); wr3.write(path3); rd3 = Reader(path3)
+r3 = copy.copy(rd3); r3.records = [rd3.by_name["ok"]]
+assert e(decode(r3, device=dev)["ok"].W, Qe.half()), "int16-safe ghcol record"
+r3.records = [rd3.by_name["bad"]]
+try:
+    decode(r3, device=dev); raise AssertionError("out-of-int16 symbols must not decode silently")
+except ValueError:
+    pass
+# 4. the DEFAULT coders (REPORT §17): Fisher-grid I-frame (gptq_sep on fisher_rowcol), P-frame on its inherited lattice
+#    (GPTQ and plain rounding), plain-rounding Hessian-column delta (family_codec T_dhcol)
+fst = {"w": {"row": torch.rand(256) + 0.1, "col": torch.rand(512) * torch.linspace(0.01, 3, 512) + 1e-3, "mean": 0.5}}
+FGt = Q.fisher_grid({"w": Q.rms_row(W)[:, 0]}, fst, gamma=0.5)
+rowf, colf0 = Q.fisher_rowcol(FGt["w"], 0.35)
+Sf, Qf, rowf, colf = Q.gptq_sep(W, Hc, rowf, colf0)
+latf = rowf * colf[None, :]
+assert torch.equal((Sf.float() * latf).half(), Qf.half()), "gptq_sep output != symbols x lattice"
+qPg, _, _, _ = Q.gptq(Wref - Qf, Hc, "grid", step=latf)
+qPr = Q.ecsq(Wref - Sf.float() * latf, latf)
+rowh, colh0 = Q.hcol_grid(Dg, torch.diag(Hc), 1.6)
+colh, _ = Q.int16_safe_col(Dg, rowh, colh0)
+Sh = Q.ecsq(Dg, rowh * colh[None, :])
+wr4 = Writer({"test": 4})
+for nm_, (q_, kw) in {"fI": (Sf, dict(step=rowf, col=colf)), "fPg": (qPg, dict(step_mode="ref", acc="add", col_mode="ref")),
+                      "fPr": (qPr, dict(step_mode="ref", acc="add", col_mode="ref")),
+                      "hD": (Sh, dict(step=rowh, base="fp16ref", col=colh))}.items():
+    k, p_, s_ = enc_qrow(q_, **kw); wr4.add(nm_, k, W.shape, p_, s_)
+# malformed records must fail loudly, never decode: unknown col mode, col="own" without its section, short col section
+k, p_, s_ = enc_qrow(Sf, rowf, col=colf); p_ = dict(p_, col="bogus"); wr4.add("bad_mode", k, W.shape, p_, s_)
+k, p_, s_ = enc_qrow(Sf, rowf, col=colf); s_ = {a: b for a, b in s_.items() if a != "col"}; wr4.add("bad_nosec", k, W.shape, p_, s_)
+k, p_, s_ = enc_qrow(Sf, rowf, col=colf); s_ = dict(s_, col=s_["col"][:2]); wr4.add("bad_short", k, W.shape, p_, s_)
+k, p_, s_ = enc_qrow(Sf, rowf, col=colf); s_ = dict(s_, step=s_["step"][:2]); wr4.add("bad_step", k, W.shape, p_, s_)
+path4 = os.path.join(tempfile.mkdtemp(), "t4.wcdc"); wr4.write(path4); rd4 = Reader(path4)
+def dec4(name, R):
+    r2 = copy.copy(rd4); r2.records = [rd4.by_name[name]]
+    return decode(r2, ref={name: R} if R is not None else None, device=dev)[name]
+tfI = dec4("fI", None)
+assert e(tfI.W, Qf.half()), "Fisher-grid I-frame != encoder reconstruction"
+assert e(dec4("fPg", tfI).W, ((Sf + qPg).float() * latf).half()), "GPTQ P-frame on the Fisher lattice"
+assert e(dec4("fPr", tfI).W, ((Sf + qPr).float() * latf).half()), "rounding P-frame on the Fisher lattice"
+assert e(dec4("hD", TState(W=W.half().to(dev))).W, (W.half().float() + Sh.float() * (rowh * colh[None, :])).half()), \
+    "rounding column-grid delta"
+for bad_ in ("bad_mode", "bad_nosec", "bad_short", "bad_step"):
+    try:
+        dec4(bad_, None); raise AssertionError(f"{bad_}: malformed column-grid record must not decode")
+    except ValueError:
+        pass
 print("record sizes:", {r["name"]: sum(n for _, n in r["sec"].values()) for r in rd.records})
+print("column-lattice records:", {r["name"]: sum(n for _, n in r["sec"].values()) for r in rd2.records})
 gp = sum(n for _, n in rd.by_name["gp"]["sec"].values()) * 8 / W.numel()
 print(f"g128 packed bpw = {gp:.4f} (theory 4 + 20/128 = {4 + 20/128:.4f})")
 print("ALL TESTS PASSED on", dev)

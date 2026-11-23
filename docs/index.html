@@ -19,6 +19,7 @@
   <p class="lede"><b>SmolLM2-135M → SmolLM2-135M-Instruct.</b> The page downloads our compressed <code>.wcdc</code> files,
     entropy-decodes them (rANS, plain JavaScript), rebuilds the fp16 weights, checks their <b>SHA-256 against the Python
     decoder</b>, and then generates text <b>with the rebuilt weights</b>. No server, no GPU, no official weight file is downloaded.</p>
+  <p class="lede" id="whatsnew"></p>
   <p id="data-note" class="note" hidden></p>
 </header>
 
@@ -66,7 +67,7 @@
   <p class="banner" id="gen-banner">Live generation runs on the weights rebuilt in step 2 — the same buffers whose SHA-256 was just
     checked — through this page's own small JavaScript Llama forward pass (fp32 math, one CPU thread in a Web Worker, greedy decoding).
     It is <b>not</b> transformers.js / ONNX and <b>not</b> the official weights. Offline test (<code>phase2/test_demo.mjs</code>): this
-    forward pass reproduces PyTorch's greedy tokens on the same rebuilt weights for every test prompt (logits within 4·10⁻⁵).</p>
+    forward pass reproduces PyTorch's greedy tokens on the same rebuilt weights for every test prompt (top-10 logits within 6·10⁻⁵).</p>
   <div class="genbox">
     <div class="row">
       <label><input type="radio" name="which" value="instruct" checked> rebuilt <b>Instruct</b></label>
@@ -89,7 +90,7 @@
 </section>
 
 <section id="numbers" aria-labelledby="num-h">
-  <h2 id="num-h">The numbers behind it (measured offline, REPORT §14.3)</h2>
+  <h2 id="num-h">The numbers behind it (measured offline, REPORT §17)</h2>
   <div id="numbers-body"></div>
 </section>
 
@@ -102,7 +103,8 @@
 
 <footer>
   <p>weight-codec — a falsification-first study of “compress weights like JPEG, families and checkpoints like video”.
-    Full report with every caveat: <a href="https://github.com/lifeart/weight-codec/blob/main/REPORT.md">REPORT.md</a> (§14 = these files).
+    Full report with every caveat: <a href="https://github.com/lifeart/weight-codec/blob/main/REPORT.md">REPORT.md</a> (§17 = these files and the
+    default coders; §16 = how the column-grid coders were found; §14 = the phase-2 codec and its earlier files).
     Models: <a href="https://huggingface.co/HuggingFaceTB/SmolLM2-135M">HuggingFaceTB/SmolLM2-135M</a> and
     <a href="https://huggingface.co/HuggingFaceTB/SmolLM2-135M-Instruct">-Instruct</a> (Apache-2.0), re-encoded by us.
     Code: MIT.</p>

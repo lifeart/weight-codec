@@ -127,8 +127,42 @@ def states_to_cpu(states):
     for k, s in states.items():
         out[k] = TState(W=s.W.cpu() if s.W is not None else None, Q=None if s.Q is None else s.Q.cpu(),
                         q_last=None if s.q_last is None else s.q_last.cpu(),
-                        step=None if s.step is None else s.step.cpu())
+                        step=None if s.step is None else s.step.cpu(),
+                        col=None if s.col is None else s.col.cpu())
     return out
+
+
+def fisher_stats(model_id, tag, train_ids, nseq=64, seqlen=512):
+    """Empirical Fisher diagonal row/column means for the A3 / gfisher grid (wcodec.quant.fisher_grid): the
+    scripts/a3_fisher.py procedure (64 x 512 WikiText-2 train tokens, generator seed 1, fp32 model on DEV).
+    Cached as data/fisher_<tag>.pt (same file the A3 / ghcol probes use)."""
+    fpath = os.path.join(DATA, f"fisher_{tag}.pt")
+    if os.path.exists(fpath):
+        return torch.load(fpath)
+    m = load_model(model_id, dtype=torch.float32)
+    lin = block_linears(m)
+    for p_ in m.parameters():
+        p_.requires_grad_(False)
+    for _, mm in lin:
+        mm.weight.requires_grad_(True)
+    F = {n: torch.zeros_like(mm.weight) for n, mm in lin}
+    g = torch.Generator().manual_seed(1)
+    for _ in range(nseq):
+        s0 = int(torch.randint(0, train_ids.numel() - seqlen - 1, (1,), generator=g))
+        x = train_ids[s0:s0 + seqlen].long().unsqueeze(0).to(DEV)
+        m(input_ids=x, labels=x).loss.backward()
+        for n, mm in lin:
+            F[n].add_(mm.weight.grad.pow(2)); mm.weight.grad = None
+    stats = {}
+    for n, _ in lin:
+        f = (F[n] / nseq).cpu().double()
+        stats[n] = {"row": f.mean(1).float(), "col": f.mean(0).float(), "mean": float(f.mean()),
+                    "logmean": float(torch.log(f.clamp(min=1e-30)).mean())}
+    torch.save(stats, fpath)
+    del m, F
+    if DEV == "mps":
+        torch.mps.empty_cache()
+    return stats
 
 
 def job_sync(path):

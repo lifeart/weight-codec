@@ -1,0 +1,403 @@
+{
+ "_meta": {
+  "model": "HuggingFaceTB/SmolLM2-135M",
+  "dev_eval": "mps",
+  "gptq_dev": "cpu",
+  "harness": "spine (REPORT \u00a71)",
+  "eval": "WikiText-2 test PPL over all 2048 windows; KL/top-1 vs data/ref_smol135.pt on the first 16",
+  "hessian": "128 x 2048 WikiText-2 train windows, seed 0, fp16 model, non-sequential, percdamp 0.01",
+  "rate": "common.quantize_model: per-tensor order-0 entropy + 32 b/used symbol + side (16 b/row [+16 b/col])",
+  "n_quantized_set": 106168320
+ },
+ "gptq_row_c0.35": {
+  "cfg": {
+   "kind": "gptq_row",
+   "gamma": 1.0,
+   "c": 0.35
+  },
+  "entropy_bpw": 3.5943858758215446,
+  "side_bpw": 0.0234375,
+  "sym_entropy_bpw": 3.5709483758215446,
+  "quant_s": 15.7,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 20.928552460384978,
+  "nll": 3.04111437307167,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.5,
+  "kl": 0.2833101708654898,
+  "top1": 0.7366573033707865,
+  "kl_tokens": 32752
+ },
+ "ghcol_c0.35": {
+  "cfg": {
+   "kind": "ghcol",
+   "gamma": 1.0,
+   "c": 0.35
+  },
+  "entropy_bpw": 3.706234807627376,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 3.6602278631829313,
+  "quant_s": 15.7,
+  "colfactor_range": [
+   0.0027065277099609375,
+   274.25
+  ],
+  "ppl": 16.48951456031135,
+  "nll": 2.8027246977095257,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.4,
+  "kl": 0.06065859466165115,
+  "top1": 0.8717024914509037,
+  "kl_tokens": 32752
+ },
+ "ghcol_c0.5": {
+  "cfg": {
+   "kind": "ghcol",
+   "gamma": 1.0,
+   "c": 0.5
+  },
+  "entropy_bpw": 3.1990947904713316,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 3.1530878460268874,
+  "quant_s": 15.7,
+  "colfactor_range": [
+   0.0027065277099609375,
+   274.25
+  ],
+  "ppl": 17.817381154364575,
+  "nll": 2.8801744502082967,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 97.9,
+  "kl": 0.13139898438073974,
+  "top1": 0.8183927699071812,
+  "kl_tokens": 32752
+ },
+ "ghcol_c0.7": {
+  "cfg": {
+   "kind": "ghcol",
+   "gamma": 1.0,
+   "c": 0.7
+  },
+  "entropy_bpw": 2.729707347311314,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 2.6837004028668696,
+  "quant_s": 15.7,
+  "colfactor_range": [
+   0.0027065277099609375,
+   274.25
+  ],
+  "ppl": 21.133018729117357,
+  "nll": 3.050836686029438,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.6,
+  "kl": 0.2874951616519244,
+  "top1": 0.7370542256961407,
+  "kl_tokens": 32752
+ },
+ "ghcol_c0.25": {
+  "cfg": {
+   "kind": "ghcol",
+   "gamma": 1.0,
+   "c": 0.25
+  },
+  "entropy_bpw": 4.189578402724807,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 4.143571458280363,
+  "quant_s": 16.3,
+  "colfactor_range": [
+   0.0027065277099609375,
+   274.25
+  ],
+  "ppl": 15.94543980830956,
+  "nll": 2.7691728829169655,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.6,
+  "kl": 0.029282477551922894,
+  "top1": 0.9088299951148021,
+  "kl_tokens": 32752
+ },
+ "ghcol_c1.0": {
+  "cfg": {
+   "kind": "ghcol",
+   "gamma": 1.0,
+   "c": 1.0
+  },
+  "entropy_bpw": 2.249151164914998,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 2.2031442204705534,
+  "quant_s": 15.5,
+  "colfactor_range": [
+   0.0027065277099609375,
+   274.25
+  ],
+  "ppl": 34.697537365117384,
+  "nll": 3.5466687151293987,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.0,
+  "kl": 0.7390445835950261,
+  "top1": 0.6099169516365412,
+  "kl_tokens": 32752
+ },
+ "hcol_c0.35": {
+  "cfg": {
+   "kind": "hcol",
+   "gamma": 1.0,
+   "c": 0.35
+  },
+  "entropy_bpw": 3.7042571389297096,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 3.658250194485265,
+  "quant_s": 1.8,
+  "colfactor_range": [
+   0.0027065277099609375,
+   274.25
+  ],
+  "ppl": 16.792573005133878,
+  "nll": 2.8209367056339567,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.8,
+  "kl": 0.07981799711060629,
+  "top1": 0.8512151929653151,
+  "kl_tokens": 32752
+ },
+ "hcol_c0.5": {
+  "cfg": {
+   "kind": "hcol",
+   "gamma": 1.0,
+   "c": 0.5
+  },
+  "entropy_bpw": 3.1952420451122516,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 3.149235100667807,
+  "quant_s": 1.6,
+  "colfactor_range": [
+   0.0027065277099609375,
+   274.25
+  ],
+  "ppl": 18.76943236885674,
+  "nll": 2.9322296087376603,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.5,
+  "kl": 0.1762390970659652,
+  "top1": 0.7877992183683439,
+  "kl_tokens": 32752
+ },
+ "hcol_c0.7": {
+  "cfg": {
+   "kind": "hcol",
+   "gamma": 1.0,
+   "c": 0.7
+  },
+  "entropy_bpw": 2.7223221743114556,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 2.6763152298670114,
+  "quant_s": 1.5,
+  "colfactor_range": [
+   0.0027065277099609375,
+   274.25
+  ],
+  "ppl": 23.629188561094296,
+  "nll": 3.162482751256448,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.0,
+  "kl": 0.39761737130243835,
+  "top1": 0.6906753786028335,
+  "kl_tokens": 32752
+ },
+ "gptq_row_c0.25": {
+  "cfg": {
+   "kind": "gptq_row",
+   "gamma": 1.0,
+   "c": 0.25
+  },
+  "entropy_bpw": 4.075437364463587,
+  "side_bpw": 0.0234375,
+  "sym_entropy_bpw": 4.051999864463587,
+  "quant_s": 15.9,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 18.178509994825806,
+  "nll": 2.9002401269101243,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.5,
+  "kl": 0.1540525773704838,
+  "top1": 0.798180263800684,
+  "kl_tokens": 32752
+ },
+ "gptq_row_c0.5": {
+  "cfg": {
+   "kind": "gptq_row",
+   "gamma": 1.0,
+   "c": 0.5
+  },
+  "entropy_bpw": 3.0900766616341895,
+  "side_bpw": 0.0234375,
+  "sym_entropy_bpw": 3.0666391616341895,
+  "quant_s": 15.9,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 29.51364622417403,
+  "nll": 3.3848527402571453,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.7,
+  "kl": 0.6096047893872655,
+  "top1": 0.6358390327308256,
+  "kl_tokens": 32752
+ },
+ "gptq_row_c0.7": {
+  "cfg": {
+   "kind": "gptq_row",
+   "gamma": 1.0,
+   "c": 0.7
+  },
+  "entropy_bpw": 2.624062350276951,
+  "side_bpw": 0.0234375,
+  "sym_entropy_bpw": 2.600624850276951,
+  "quant_s": 15.5,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 69.1506037388241,
+  "nll": 4.236286788930558,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.6,
+  "kl": 1.3761901902057627,
+  "top1": 0.4705972154372252,
+  "kl_tokens": 32752
+ },
+ "ecsq_row_c0.35": {
+  "cfg": {
+   "kind": "ecsq_row",
+   "gamma": 1.0,
+   "c": 0.35
+  },
+  "entropy_bpw": 3.591027416777031,
+  "side_bpw": 0.0234375,
+  "sym_entropy_bpw": 3.567589916777031,
+  "quant_s": 1.7,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 20.01064999859898,
+  "nll": 2.9962646317561634,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.1,
+  "kl": 0.2549170341268073,
+  "top1": 0.7414203712750367,
+  "kl_tokens": 32752
+ },
+ "ecsq_row_c0.5": {
+  "cfg": {
+   "kind": "ecsq_row",
+   "gamma": 1.0,
+   "c": 0.5
+  },
+  "entropy_bpw": 3.0834355283630064,
+  "side_bpw": 0.0234375,
+  "sym_entropy_bpw": 3.0599980283630064,
+  "quant_s": 1.6,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 27.472647536810733,
+  "nll": 3.313190874669803,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.3,
+  "kl": 0.523446877409204,
+  "top1": 0.6436553492916464,
+  "kl_tokens": 32752
+ },
+ "gfisher_g0.5_c0.35": {
+  "cfg": {
+   "kind": "gfisher",
+   "gamma": 0.5,
+   "c": 0.35
+  },
+  "entropy_bpw": 3.6701831779288905,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 3.624176233484446,
+  "quant_s": 16.0,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 16.27095621756487,
+  "nll": 2.789381691327237,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.3,
+  "kl": 0.04821437157592252,
+  "top1": 0.8885869565217391,
+  "kl_tokens": 32752
+ },
+ "gfisher_g0.5_c0.5": {
+  "cfg": {
+   "kind": "gfisher",
+   "gamma": 0.5,
+   "c": 0.5
+  },
+  "entropy_bpw": 3.1645896859176514,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 3.118582741473207,
+  "quant_s": 16.1,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 17.20740989727238,
+  "nll": 2.845340099029245,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 98.0,
+  "kl": 0.1024561121688567,
+  "top1": 0.8396433805569126,
+  "kl_tokens": 32752
+ },
+ "gfisher_g0.5_c0.7": {
+  "cfg": {
+   "kind": "gfisher",
+   "gamma": 0.5,
+   "c": 0.7
+  },
+  "entropy_bpw": 2.6966064064893147,
+  "side_bpw": 0.04600694444444445,
+  "sym_entropy_bpw": 2.65059946204487,
+  "quant_s": 15.9,
+  "colfactor_range": [
+   null,
+   null
+  ],
+  "ppl": 19.705874878690405,
+  "nll": 2.9809168084784408,
+  "n_tokens": 302956,
+  "n_windows": 148,
+  "eval_s": 99.9,
+  "kl": 0.2276067990003473,
+  "top1": 0.7688385442110406,
+  "kl_tokens": 32752
+ }
+}

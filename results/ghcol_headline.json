@@ -1,0 +1,2636 @@
+{
+ "qwen05b": {
+  "pairs": [
+   {
+    "kind": "family_row",
+    "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_ecsq_c0.35",
+     "B_rest_ll16",
+     "T_pframe_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 531.664674,
+    "linears_MB": 209.289531,
+    "ft_MB": 49.243595,
+    "base_MB": 160.045936,
+    "ft_chat_kl": 0.12793018257482772,
+    "ft_wiki_kl": 0.0656648307063257,
+    "ft_bpw": 1.1009489066434868,
+    "base_kl": 0.05993989047389177,
+    "base_ppl": 13.837706276250936,
+    "base_bpw": 3.5781790149954213
+   },
+   {
+    "kind": "family_ghcol",
+    "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_ghcol_c0.35",
+     "B_rest_ll16",
+     "T_pframe_ghcol_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 535.6029510000001,
+    "linears_MB": 213.22780799999998,
+    "ft_MB": 48.363351,
+    "base_MB": 164.864457,
+    "ft_chat_kl": 0.0779004284173004,
+    "ft_wiki_kl": 0.043413821988182645,
+    "ft_bpw": 1.0812691154060783,
+    "base_kl": 0.040397612537240536,
+    "base_ppl": 13.59380777644862,
+    "base_bpw": 3.685907653137878
+   },
+   {
+    "kind": "family_gfisher",
+    "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_gfisher_c0.35",
+     "B_rest_ll16",
+     "T_pframe_gfisher_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 532.818585,
+    "linears_MB": 210.443442,
+    "ft_MB": 47.345211,
+    "base_MB": 163.098231,
+    "ft_chat_kl": 0.061690638277499966,
+    "ft_wiki_kl": 0.029191124276178433,
+    "ft_bpw": 1.058506355704842,
+    "base_kl": 0.027046407992861943,
+    "base_ppl": 13.420217476731917,
+    "base_bpw": 3.6464197850489355
+   },
+   {
+    "kind": "indep_row",
+    "scenario": "both independent GPTQ-ECSQ c=0.35",
+    "files": [
+     "B_ecsq_c0.35",
+     "B_rest_ll16",
+     "T_ecsq_c0.35",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 678.257971,
+    "linears_MB": 320.09764800000005,
+    "ft_MB": 160.051712,
+    "base_MB": 160.045936,
+    "ft_chat_kl": 0.11733084411866707,
+    "ft_wiki_kl": 0.06451423726084178,
+    "ft_bpw": 3.57830815018315,
+    "base_kl": 0.05993989047389177,
+    "base_ppl": 13.837706276250936,
+    "base_bpw": 3.5781790149954213
+   },
+   {
+    "kind": "indep_ghcol",
+    "scenario": "both independent ghcol c=0.35",
+    "files": [
+     "B_ghcol_c0.35",
+     "B_rest_ll16",
+     "T_ghcol_c0.35",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 687.9301330000001,
+    "linears_MB": 329.76981,
+    "ft_MB": 164.905353,
+    "base_MB": 164.864457,
+    "ft_chat_kl": 0.07552480896963149,
+    "ft_wiki_kl": 0.042577259530075365,
+    "ft_bpw": 3.686821973192823,
+    "base_kl": 0.040397612537240536,
+    "base_ppl": 13.59380777644862,
+    "base_bpw": 3.685907653137878
+   },
+   {
+    "kind": "family_row",
+    "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_ecsq_c0.5",
+     "B_rest_ll16",
+     "T_pframe_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 503.157246,
+    "linears_MB": 180.782103,
+    "ft_MB": 43.25448,
+    "base_MB": 137.527623,
+    "ft_chat_kl": 0.2557532873012551,
+    "ft_wiki_kl": 0.13195043688700964,
+    "ft_bpw": 0.967049064217033,
+    "base_kl": 0.12146250026425211,
+    "base_ppl": 14.73964478941411,
+    "base_bpw": 3.0747325855297047
+   },
+   {
+    "kind": "family_ghcol",
+    "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_ghcol_c0.5",
+     "B_rest_ll16",
+     "T_pframe_ghcol_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 506.5358309999999,
+    "linears_MB": 184.160688,
+    "ft_MB": 41.891537,
+    "base_MB": 142.269151,
+    "ft_chat_kl": 0.1731105122042921,
+    "ft_wiki_kl": 0.09298809878000354,
+    "ft_bpw": 0.9365774748526213,
+    "base_kl": 0.08352857982465915,
+    "base_ppl": 14.198275472306932,
+    "base_bpw": 3.1807398757655103
+   },
+   {
+    "kind": "family_gfisher",
+    "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_gfisher_c0.5",
+     "B_rest_ll16",
+     "T_pframe_gfisher_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 504.20673899999997,
+    "linears_MB": 181.831596,
+    "ft_MB": 41.287126,
+    "base_MB": 140.54447,
+    "ft_chat_kl": 0.1347438644359324,
+    "ft_wiki_kl": 0.061894559254574086,
+    "ft_bpw": 0.9230645371880724,
+    "base_kl": 0.05652374859023921,
+    "base_ppl": 13.879568241152489,
+    "base_bpw": 3.1421808375543727
+   },
+   {
+    "kind": "indep_row",
+    "scenario": "both independent GPTQ-ECSQ c=0.5",
+    "files": [
+     "B_ecsq_c0.5",
+     "B_rest_ll16",
+     "T_ecsq_c0.5",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 633.2231899999999,
+    "linears_MB": 275.062867,
+    "ft_MB": 137.535244,
+    "base_MB": 137.527623,
+    "ft_chat_kl": 0.25617339201851486,
+    "ft_wiki_kl": 0.12540655527454966,
+    "ft_bpw": 3.0749029697516024,
+    "base_kl": 0.12146250026425211,
+    "base_ppl": 14.73964478941411,
+    "base_bpw": 3.0747325855297047
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.06",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.06",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1152.914643,
+    "linears_MB": 830.5395,
+    "ft_MB": 114.884599,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.0030991673267634586,
+    "ft_wiki_kl": 0.0017640151967930106,
+    "ft_bpw": 2.568497967283368,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.12",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.12",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1113.468354,
+    "linears_MB": 791.093211,
+    "ft_MB": 75.43831,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.010469147933003721,
+    "ft_wiki_kl": 0.005817947719058702,
+    "ft_bpw": 1.68658939124027,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.25",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1075.722607,
+    "linears_MB": 753.347464,
+    "ft_MB": 37.692563,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.037505620435043505,
+    "ft_wiki_kl": 0.020467816691428904,
+    "ft_bpw": 0.8427001729552999,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c0.8",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1149.60935,
+    "linears_MB": 827.234207,
+    "ft_MB": 111.579306,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.001984017454166493,
+    "ft_wiki_kl": 0.0010660594692303601,
+    "ft_bpw": 2.494600870321085,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c1.6",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1110.432272,
+    "linears_MB": 788.057129,
+    "ft_MB": 72.402228,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.008068862159034964,
+    "ft_wiki_kl": 0.0039847507221150175,
+    "ft_bpw": 1.6187110984718407,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c3.2",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1074.029855,
+    "linears_MB": 751.654712,
+    "ft_MB": 35.999811,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.028274393673931066,
+    "ft_wiki_kl": 0.013997425320210198,
+    "ft_bpw": 0.804854977785886,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c0.8",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1149.068562,
+    "linears_MB": 826.693419,
+    "ft_MB": 111.038518,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.001848789858813472,
+    "ft_wiki_kl": 0.0017493379042535279,
+    "ft_bpw": 2.4825103647979625,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c1.6",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1108.545806,
+    "linears_MB": 786.170663,
+    "ft_MB": 70.515762,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.007313409041561073,
+    "ft_wiki_kl": 0.006708396364842384,
+    "ft_bpw": 1.5765350006438874,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c3.2",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 1067.981856,
+    "linears_MB": 745.606713,
+    "ft_MB": 29.951812,
+    "base_MB": 715.654901,
+    "ft_chat_kl": 0.033297521688148604,
+    "ft_wiki_kl": 0.03198569951898363,
+    "ft_bpw": 0.6696386539892399,
+    "base_kl": 0.0,
+    "base_ppl": 13.070727086807842,
+    "base_bpw": 16.000039818173363
+   },
+   {
+    "kind": "int4",
+    "scenario": "both GPTQ-int4 fixed-rate (standard int4 files), rest fp16",
+    "files": [
+     "B_gptq4_packed",
+     "B_rest_raw16",
+     "T_gptq4_packed",
+     "T_rest_raw16"
+    ],
+    "pair_MB": 916.639138,
+    "linears_MB": 371.81205,
+    "ft_MB": 185.906025,
+    "base_MB": 185.906025,
+    "ft_chat_kl": 0.14816245021394828,
+    "ft_wiki_kl": 0.0799226407371152,
+    "ft_bpw": 4.156338199154361,
+    "base_kl": 0.07458404616489606,
+    "base_ppl": 14.033078460338192,
+    "base_bpw": 4.156338199154361
+   }
+  ],
+  "saved": {
+   "family_ghcol_vs_family_row_chatKL": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 535.6029510000001,
+     "ft_chat_kl": 0.0779004284173004,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 506.5358309999999,
+     "ft_chat_kl": 0.1731105122042921,
+     "family_row_pair_MB_at_equal_ft_chat_kl": 519.2183218921128,
+     "saved_MB": 12.682490892112924,
+     "saved_pct": 2.4426123573405385
+    }
+   ],
+   "family_ghcol_vs_family_row_baseKL": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 535.6029510000001,
+     "base_kl": 0.040397612537240536,
+     "family_row_pair_MB_at_equal_base_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 506.5358309999999,
+     "base_kl": 0.08352857982465915,
+     "family_row_pair_MB_at_equal_base_kl": 518.2701045047356,
+     "saved_MB": 11.734273504735711,
+     "saved_pct": 2.264123167194663
+    }
+   ],
+   "family_gfisher_vs_family_row_chatKL": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 532.818585,
+     "ft_chat_kl": 0.061690638277499966,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 504.20673899999997,
+     "ft_chat_kl": 0.1347438644359324,
+     "family_row_pair_MB_at_equal_ft_chat_kl": 529.5292356336904,
+     "saved_MB": 25.322496633690434,
+     "saved_pct": 4.782077160175466
+    }
+   ],
+   "family_gfisher_vs_family_ghcol_chatKL": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 532.818585,
+     "ft_chat_kl": 0.061690638277499966,
+     "family_ghcol_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 504.20673899999997,
+     "ft_chat_kl": 0.1347438644359324,
+     "family_ghcol_pair_MB_at_equal_ft_chat_kl": 515.6565694262719,
+     "saved_MB": 11.449830426271888,
+     "saved_pct": 2.2204372260807537
+    }
+   ],
+   "indep_ghcol_vs_indep_row_chatKL": [
+    {
+     "scenario": "both independent ghcol c=0.35",
+     "pair_MB": 687.9301330000001,
+     "ft_chat_kl": 0.07552480896963149,
+     "indep_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "pair_MB": 1149.60935,
+     "ft_chat_kl": 0.001984017454166493,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "pair_MB": 1110.432272,
+     "ft_chat_kl": 0.008068862159034964,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 1121.9072072498834,
+     "saved_MB": 11.474935249883401,
+     "saved_pct": 1.022806090889795
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "pair_MB": 1074.029855,
+     "ft_chat_kl": 0.028274393673931066,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 1084.079957472055,
+     "saved_MB": 10.05010247205496,
+     "saved_pct": 0.9270628428082555
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 827.234207,
+     "ft_chat_kl": 0.001984017454166493,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 788.057129,
+     "ft_chat_kl": 0.008068862159034964,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 799.5320642498832,
+     "saved_MB": 11.474935249883174,
+     "saved_pct": 1.4352063867068168
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 751.654712,
+     "ft_chat_kl": 0.028274393673931066,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 761.704814472055,
+     "saved_MB": 10.05010247205496,
+     "saved_pct": 1.3194222067535155
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "pair_MB": 1149.068562,
+     "ft_chat_kl": 0.001848789858813472,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "pair_MB": 1108.545806,
+     "ft_chat_kl": 0.007313409041561073,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 1125.0926911309314,
+     "saved_MB": 16.546885130931287,
+     "saved_pct": 1.4707130586990598
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "pair_MB": 1067.981856,
+     "ft_chat_kl": 0.033297521688148604,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 1079.242853620651,
+     "saved_MB": 11.260997620650869,
+     "saved_pct": 1.043416463947146
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "linears_MB": 826.693419,
+     "ft_chat_kl": 0.001848789858813472,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "linears_MB": 786.170663,
+     "ft_chat_kl": 0.007313409041561073,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 802.7175481309313,
+     "saved_MB": 16.546885130931287,
+     "saved_pct": 2.0613583407338596
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "linears_MB": 745.606713,
+     "ft_chat_kl": 0.033297521688148604,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 756.867710620651,
+     "saved_MB": 11.260997620650983,
+     "saved_pct": 1.4878422560022642
+    }
+   ],
+   "delta_ghcol_vs_delta_hcol_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 827.234207,
+     "ft_chat_kl": 0.001984017454166493,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": 824.6132499904588,
+     "saved_MB": -2.6209570095411436,
+     "saved_pct": -0.3178407586309666
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 788.057129,
+     "ft_chat_kl": 0.008068862159034964,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": 783.5399557156127,
+     "saved_MB": -4.517173284387354,
+     "saved_pct": -0.5765083517995949
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 751.654712,
+     "ft_chat_kl": 0.028274393673931066,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": 749.9828791095501,
+     "saved_MB": -1.6718328904498776,
+     "saved_pct": -0.2229161407570842
+    }
+   ],
+   "delta_ghcol_vs_delta_row_wikiKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 827.234207,
+     "ft_wiki_kl": 0.0010660594692303601,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 788.057129,
+     "ft_wiki_kl": 0.0039847507221150175,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 803.6036107792346,
+     "saved_MB": 15.546481779234568,
+     "saved_pct": 1.9345958095135396
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 751.654712,
+     "ft_wiki_kl": 0.013997425320210198,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 764.7494602465487,
+     "saved_MB": 13.094748246548647,
+     "saved_pct": 1.7122925777975722
+    }
+   ],
+   "delta_hcol_vs_delta_row_wikiKL_linearsMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "linears_MB": 826.693419,
+     "ft_wiki_kl": 0.0017493379042535279,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "linears_MB": 786.170663,
+     "ft_wiki_kl": 0.006708396364842384,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 786.8198709454598,
+     "saved_MB": 0.649207945459807,
+     "saved_pct": 0.08251036475218967
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "linears_MB": 745.606713,
+     "ft_wiki_kl": 0.03198569951898363,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 111.579306,
+     "ft_chat_kl": 0.001984017454166493,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 72.402228,
+     "ft_chat_kl": 0.008068862159034964,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 83.87716324988324,
+     "saved_MB": 11.474935249883245,
+     "saved_pct": 13.680642984667484
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 35.999811,
+     "ft_chat_kl": 0.028274393673931066,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 46.04991347205499,
+     "saved_MB": 10.050102472054988,
+     "saved_pct": 21.824367765975957
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "ft_MB": 111.038518,
+     "ft_chat_kl": 0.001848789858813472,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "ft_MB": 70.515762,
+     "ft_chat_kl": 0.007313409041561073,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 87.06264713093128,
+     "saved_MB": 16.546885130931287,
+     "saved_pct": 19.005722518460587
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "ft_MB": 29.951812,
+     "ft_chat_kl": 0.033297521688148604,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 41.21280962065106,
+     "saved_MB": 11.260997620651057,
+     "saved_pct": 27.324023099382085
+    }
+   ],
+   "delta_ghcol_vs_delta_hcol_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 111.579306,
+     "ft_chat_kl": 0.001984017454166493,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": 108.95834899045883,
+     "saved_MB": -2.620957009541172,
+     "saved_pct": -2.405466890628713
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 72.402228,
+     "ft_chat_kl": 0.008068862159034964,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": 67.88505471561271,
+     "saved_MB": -4.517173284387283,
+     "saved_pct": -6.654149876303171
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 35.999811,
+     "ft_chat_kl": 0.028274393673931066,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": 34.3279781095501,
+     "saved_MB": -1.671832890449899,
+     "saved_pct": -4.870175823098629
+    }
+   ],
+   "delta_ghcol_vs_delta_row_wikiKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 111.579306,
+     "ft_wiki_kl": 0.0010660594692303601,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 72.402228,
+     "ft_wiki_kl": 0.0039847507221150175,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 87.94870977923463,
+     "saved_MB": 15.54648177923464,
+     "saved_pct": 17.67675935014715
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 35.999811,
+     "ft_wiki_kl": 0.013997425320210198,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 49.094559246548656,
+     "saved_MB": 13.094748246548654,
+     "saved_pct": 26.672503934270914
+    }
+   ],
+   "delta_hcol_vs_delta_row_wikiKL_deltaMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "ft_MB": 111.038518,
+     "ft_wiki_kl": 0.0017493379042535279,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "ft_MB": 70.515762,
+     "ft_wiki_kl": 0.006708396364842384,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 71.1649699454598,
+     "saved_MB": 0.649207945459807,
+     "saved_pct": 0.9122577385437726
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "ft_MB": 29.951812,
+     "ft_wiki_kl": 0.03198569951898363,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ]
+  },
+  "dominance": {
+   "family_ghcol": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 535.6029510000001,
+     "ft_chat_kl": 0.0779004284173004,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+      "pair_MB": 1075.722607,
+      "ft_chat_kl": 0.037505620435043505,
+      "saved_MB": 540.1196559999998,
+      "saved_pct": 50.20993818344099
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 531.664674,
+      "ft_chat_kl": 0.12793018257482772,
+      "quality_ratio": 1.6422269450114673
+     }
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 506.5358309999999,
+     "ft_chat_kl": 0.1731105122042921,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 531.664674,
+      "ft_chat_kl": 0.12793018257482772,
+      "saved_MB": 25.128843000000074,
+      "saved_pct": 4.726445865011538
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+      "pair_MB": 503.157246,
+      "ft_chat_kl": 0.2557532873012551,
+      "quality_ratio": 1.4773989403915235
+     }
+    }
+   ],
+   "family_gfisher": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 532.818585,
+     "ft_chat_kl": 0.061690638277499966,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+      "pair_MB": 1075.722607,
+      "ft_chat_kl": 0.037505620435043505,
+      "saved_MB": 542.9040219999999,
+      "saved_pct": 50.46877498596625
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 531.664674,
+      "ft_chat_kl": 0.12793018257482772,
+      "quality_ratio": 2.0737373797198475
+     }
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 504.20673899999997,
+     "ft_chat_kl": 0.1347438644359324,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 531.664674,
+      "ft_chat_kl": 0.12793018257482772,
+      "saved_MB": 27.45793500000002,
+      "saved_pct": 5.164521237309068
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+      "pair_MB": 503.157246,
+      "ft_chat_kl": 0.2557532873012551,
+      "quality_ratio": 1.8980700039433698
+     }
+    }
+   ],
+   "indep_ghcol": [
+    {
+     "scenario": "both independent ghcol c=0.35",
+     "pair_MB": 687.9301330000001,
+     "ft_chat_kl": 0.07552480896963149,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+      "pair_MB": 1075.722607,
+      "ft_chat_kl": 0.037505620435043505,
+      "saved_MB": 387.79247399999986,
+      "saved_pct": 36.04948631520207
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 531.664674,
+      "ft_chat_kl": 0.12793018257482772,
+      "quality_ratio": 1.6938829017928192
+     }
+    }
+   ]
+  }
+ },
+ "smol360": {
+  "pairs": [
+   {
+    "kind": "family_row",
+    "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_ecsq_c0.35",
+     "B_rest_ll16",
+     "T_pframe_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 295.274254,
+    "linears_MB": 182.405258,
+    "ft_MB": 41.539196,
+    "base_MB": 140.866062,
+    "ft_chat_kl": 0.13789984192885252,
+    "ft_wiki_kl": 0.10708721684547652,
+    "ft_bpw": 1.0563963826497396,
+    "base_kl": 0.09056841063394626,
+    "base_ppl": 12.658014241059714,
+    "base_bpw": 3.582409210205078
+   },
+   {
+    "kind": "family_ghcol",
+    "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_ghcol_c0.35",
+     "B_rest_ll16",
+     "T_pframe_ghcol_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 298.334848,
+    "linears_MB": 185.465852,
+    "ft_MB": 40.612076,
+    "base_MB": 144.853776,
+    "ft_chat_kl": 0.05852739596605036,
+    "ft_wiki_kl": 0.05399424155048469,
+    "ft_bpw": 1.0328185017903646,
+    "base_kl": 0.04235251231139965,
+    "base_ppl": 12.026259301706535,
+    "base_bpw": 3.683822021484375
+   },
+   {
+    "kind": "family_gfisher",
+    "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_gfisher_c0.35",
+     "B_rest_ll16",
+     "T_pframe_gfisher_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 296.23428,
+    "linears_MB": 183.365284,
+    "ft_MB": 39.878189,
+    "base_MB": 143.487095,
+    "ft_chat_kl": 0.05331680418780853,
+    "ft_wiki_kl": 0.04020190830049016,
+    "ft_bpw": 1.014154790242513,
+    "base_kl": 0.030422184953004718,
+    "base_ppl": 11.855673206492778,
+    "base_bpw": 3.6490655263264973
+   },
+   {
+    "kind": "indep_row",
+    "scenario": "both independent GPTQ-ECSQ c=0.35",
+    "files": [
+     "B_ecsq_c0.35",
+     "B_rest_ll16",
+     "T_ecsq_c0.35",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 405.91762900000003,
+    "linears_MB": 281.730298,
+    "ft_MB": 140.864236,
+    "base_MB": 140.866062,
+    "ft_chat_kl": 0.13754880150467919,
+    "ft_wiki_kl": 0.10798928606026803,
+    "ft_bpw": 3.5823627726236977,
+    "base_kl": 0.09056841063394626,
+    "base_ppl": 12.658014241059714,
+    "base_bpw": 3.582409210205078
+   },
+   {
+    "kind": "indep_ghcol",
+    "scenario": "both independent ghcol c=0.35",
+    "files": [
+     "B_ghcol_c0.35",
+     "B_rest_ll16",
+     "T_ghcol_c0.35",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 413.7826140000001,
+    "linears_MB": 289.595283,
+    "ft_MB": 144.741507,
+    "base_MB": 144.853776,
+    "ft_chat_kl": 0.06041582761276575,
+    "ft_wiki_kl": 0.05376646334681211,
+    "ft_bpw": 3.6809668731689453,
+    "base_kl": 0.04235251231139965,
+    "base_ppl": 12.026259301706535,
+    "base_bpw": 3.683822021484375
+   },
+   {
+    "kind": "family_row",
+    "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_ecsq_c0.5",
+     "B_rest_ll16",
+     "T_pframe_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 270.184565,
+    "linears_MB": 157.315569,
+    "ft_MB": 36.266693,
+    "base_MB": 121.048876,
+    "ft_chat_kl": 0.30176275689382265,
+    "ft_wiki_kl": 0.22867718800487435,
+    "ft_bpw": 0.9223096974690755,
+    "base_kl": 0.20304894482268318,
+    "base_ppl": 14.177177124729027,
+    "base_bpw": 3.078432108561198
+   },
+   {
+    "kind": "family_ghcol",
+    "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_ghcol_c0.5",
+     "B_rest_ll16",
+     "T_pframe_ghcol_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 272.738419,
+    "linears_MB": 159.86942299999998,
+    "ft_MB": 34.922337,
+    "base_MB": 124.947086,
+    "ft_chat_kl": 0.12887176784638163,
+    "ft_wiki_kl": 0.11224163376417286,
+    "ft_bpw": 0.8881209564208984,
+    "base_kl": 0.09229264500435819,
+    "base_ppl": 12.659514944059358,
+    "base_bpw": 3.1775687154134116
+   },
+   {
+    "kind": "family_gfisher",
+    "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_gfisher_c0.5",
+     "B_rest_ll16",
+     "T_pframe_gfisher_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 271.043707,
+    "linears_MB": 158.174711,
+    "ft_MB": 34.533238,
+    "base_MB": 123.641473,
+    "ft_chat_kl": 0.10779143006899514,
+    "ft_wiki_kl": 0.08410583691999979,
+    "ft_bpw": 0.8782256571451823,
+    "base_kl": 0.06623174454680174,
+    "base_ppl": 12.312919872725098,
+    "base_bpw": 3.144365259806315
+   },
+   {
+    "kind": "indep_row",
+    "scenario": "both independent GPTQ-ECSQ c=0.5",
+    "files": [
+     "B_ecsq_c0.5",
+     "B_rest_ll16",
+     "T_ecsq_c0.5",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 366.27966100000003,
+    "linears_MB": 242.09233,
+    "ft_MB": 121.043454,
+    "base_MB": 121.048876,
+    "ft_chat_kl": 0.3029194578875712,
+    "ft_wiki_kl": 0.23427349634734257,
+    "ft_bpw": 3.078294219970703,
+    "base_kl": 0.20304894482268318,
+    "base_ppl": 14.177177124729027,
+    "base_bpw": 3.078432108561198
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.06",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.06",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 839.6207629999999,
+    "linears_MB": 726.751767,
+    "ft_MB": 97.604106,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.003510413318872452,
+    "ft_wiki_kl": 0.0029480513612934016,
+    "ft_bpw": 2.4822007751464845,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.12",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.12",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 805.0248619999999,
+    "linears_MB": 692.155866,
+    "ft_MB": 63.008205,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.013408862621617503,
+    "ft_wiki_kl": 0.009723529576323471,
+    "ft_bpw": 1.6023815155029297,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.25",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 772.5758859999999,
+    "linears_MB": 659.7068899999999,
+    "ft_MB": 30.559229,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.06805477719195807,
+    "ft_wiki_kl": 0.027432016267622747,
+    "ft_bpw": 0.777161382039388,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c0.8",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 839.7688739999999,
+    "linears_MB": 726.899878,
+    "ft_MB": 97.752217,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.0017581147843605935,
+    "ft_wiki_kl": 0.0014440176265089466,
+    "ft_bpw": 2.4859674326578776,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c1.6",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 805.0018009999999,
+    "linears_MB": 692.132805,
+    "ft_MB": 62.985144,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.00629225243110371,
+    "ft_wiki_kl": 0.0054253462281644085,
+    "ft_bpw": 1.6017950439453126,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c3.2",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 773.3560729999999,
+    "linears_MB": 660.487077,
+    "ft_MB": 31.339416,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.04072724586057081,
+    "ft_wiki_kl": 0.019927967727388123,
+    "ft_bpw": 0.7970025634765625,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c0.8",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 839.3780189999999,
+    "linears_MB": 726.509023,
+    "ft_MB": 97.361362,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.0015964772734174983,
+    "ft_wiki_kl": 0.0020483888569231084,
+    "ft_bpw": 2.4760274759928387,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c1.6",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 803.5674339999999,
+    "linears_MB": 690.698438,
+    "ft_MB": 61.550777,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.006564036962657869,
+    "ft_wiki_kl": 0.007892961240303942,
+    "ft_bpw": 1.5653172047932942,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c3.2",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 768.483494,
+    "linears_MB": 655.614498,
+    "ft_MB": 26.466837,
+    "base_MB": 629.147661,
+    "ft_chat_kl": 0.06839794122947837,
+    "ft_wiki_kl": 0.0322115062851992,
+    "ft_bpw": 0.6730864715576171,
+    "base_kl": 0.0,
+    "base_ppl": 11.472673212508376,
+    "base_bpw": 16.00005241394043
+   },
+   {
+    "kind": "int4",
+    "scenario": "both GPTQ-int4 fixed-rate (standard int4 files), rest fp16",
+    "files": [
+     "B_gptq4_packed",
+     "B_rest_raw16",
+     "T_gptq4_packed",
+     "T_rest_raw16"
+    ],
+    "pair_MB": 528.152356,
+    "linears_MB": 339.157816,
+    "ft_MB": 169.578908,
+    "base_MB": 169.578908,
+    "ft_chat_kl": 0.11837501488832734,
+    "ft_wiki_kl": 0.09743999479803506,
+    "ft_bpw": 4.312614644368489,
+    "base_kl": 0.08564827857974919,
+    "base_ppl": 12.508429668093354,
+    "base_bpw": 4.312614644368489
+   }
+  ],
+  "saved": {
+   "family_ghcol_vs_family_row_chatKL": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 298.334848,
+     "ft_chat_kl": 0.05852739596605036,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 272.738419,
+     "ft_chat_kl": 0.12887176784638163,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "family_ghcol_vs_family_row_baseKL": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 298.334848,
+     "base_kl": 0.04235251231139965,
+     "family_row_pair_MB_at_equal_base_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 272.738419,
+     "base_kl": 0.09229264500435819,
+     "family_row_pair_MB_at_equal_base_kl": 294.6881753462623,
+     "saved_MB": 21.94975634626229,
+     "saved_pct": 7.448468646721591
+    }
+   ],
+   "family_gfisher_vs_family_row_chatKL": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 296.23428,
+     "ft_chat_kl": 0.05331680418780853,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 271.043707,
+     "ft_chat_kl": 0.10779143006899514,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "family_gfisher_vs_family_ghcol_chatKL": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 296.23428,
+     "ft_chat_kl": 0.05331680418780853,
+     "family_ghcol_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 271.043707,
+     "ft_chat_kl": 0.10779143006899514,
+     "family_ghcol_pair_MB_at_equal_ft_chat_kl": 278.5307589230104,
+     "saved_MB": 7.487051923010426,
+     "saved_pct": 2.6880521031000195
+    }
+   ],
+   "indep_ghcol_vs_indep_row_chatKL": [
+    {
+     "scenario": "both independent ghcol c=0.35",
+     "pair_MB": 413.7826140000001,
+     "ft_chat_kl": 0.06041582761276575,
+     "indep_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "pair_MB": 839.7688739999999,
+     "ft_chat_kl": 0.0017581147843605935,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "pair_MB": 805.0018009999999,
+     "ft_chat_kl": 0.00629225243110371,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 824.555899789018,
+     "saved_MB": 19.5540987890181,
+     "saved_pct": 2.3714703628973455
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "pair_MB": 773.3560729999999,
+     "ft_chat_kl": 0.04072724586057081,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 782.8318830724728,
+     "saved_MB": 9.475810072472882,
+     "saved_pct": 1.2104527520368806
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 726.899878,
+     "ft_chat_kl": 0.0017581147843605935,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 692.132805,
+     "ft_chat_kl": 0.00629225243110371,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 711.6869037890181,
+     "saved_MB": 19.5540987890181,
+     "saved_pct": 2.747570411217652
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 660.487077,
+     "ft_chat_kl": 0.04072724586057081,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 669.9628870724729,
+     "saved_MB": 9.475810072472882,
+     "saved_pct": 1.414378356669754
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "pair_MB": 839.3780189999999,
+     "ft_chat_kl": 0.0015964772734174983,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "pair_MB": 803.5674339999999,
+     "ft_chat_kl": 0.006564036962657869,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 823.4642970029505,
+     "saved_MB": 19.896863002950568,
+     "saved_pct": 2.416238697338359
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "pair_MB": 768.483494,
+     "ft_chat_kl": 0.06839794122947837,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "linears_MB": 726.509023,
+     "ft_chat_kl": 0.0015964772734174983,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "linears_MB": 690.698438,
+     "ft_chat_kl": 0.006564036962657869,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 710.5953010029506,
+     "saved_MB": 19.896863002950568,
+     "saved_pct": 2.800027381952523
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "linears_MB": 655.614498,
+     "ft_chat_kl": 0.06839794122947837,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_ghcol_vs_delta_hcol_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 726.899878,
+     "ft_chat_kl": 0.0017581147843605935,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": 724.066209144363,
+     "saved_MB": -2.8336688556369154,
+     "saved_pct": -0.3913549368621266
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 692.132805,
+     "ft_chat_kl": 0.00629225243110371,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": 691.7695263647564,
+     "saved_MB": -0.363278635243546,
+     "saved_pct": -0.05251440275962609
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 660.487077,
+     "ft_chat_kl": 0.04072724586057081,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": 663.3752274704404,
+     "saved_MB": 2.8881504704404506,
+     "saved_pct": 0.43537207161826746
+    }
+   ],
+   "delta_ghcol_vs_delta_row_wikiKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 726.899878,
+     "ft_wiki_kl": 0.0014440176265089466,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 692.132805,
+     "ft_wiki_kl": 0.0054253462281644085,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 709.070138460228,
+     "saved_MB": 16.937333460228047,
+     "saved_pct": 2.388668277161987
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 660.487077,
+     "ft_wiki_kl": 0.019927967727388123,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 669.7055770138874,
+     "saved_MB": 9.218500013887365,
+     "saved_pct": 1.3765004100744118
+    }
+   ],
+   "delta_hcol_vs_delta_row_wikiKL_linearsMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "linears_MB": 726.509023,
+     "ft_wiki_kl": 0.0020483888569231084,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "linears_MB": 690.698438,
+     "ft_wiki_kl": 0.007892961240303942,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 698.2023664639802,
+     "saved_MB": 7.5039284639801735,
+     "saved_pct": 1.0747497895178355
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "linears_MB": 655.614498,
+     "ft_wiki_kl": 0.0322115062851992,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 97.752217,
+     "ft_chat_kl": 0.0017581147843605935,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 62.985144,
+     "ft_chat_kl": 0.00629225243110371,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 82.53924278901808,
+     "saved_MB": 19.554098789018077,
+     "saved_pct": 23.690668981542643
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 31.339416,
+     "ft_chat_kl": 0.04072724586057081,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 40.81522607247297,
+     "saved_MB": 9.475810072472967,
+     "saved_pct": 23.21636061906746
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "ft_MB": 97.361362,
+     "ft_chat_kl": 0.0015964772734174983,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "ft_MB": 61.550777,
+     "ft_chat_kl": 0.006564036962657869,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 81.44764000295065,
+     "saved_MB": 19.896863002950653,
+     "saved_pct": 24.429023360566173
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "ft_MB": 26.466837,
+     "ft_chat_kl": 0.06839794122947837,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_ghcol_vs_delta_hcol_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 97.752217,
+     "ft_chat_kl": 0.0017581147843605935,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": 94.91854814436303,
+     "saved_MB": -2.8336688556369722,
+     "saved_pct": -2.9853689410916853
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 62.985144,
+     "ft_chat_kl": 0.00629225243110371,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": 62.62186536475641,
+     "saved_MB": -0.3632786352435886,
+     "saved_pct": -0.5801146821922073
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 31.339416,
+     "ft_chat_kl": 0.04072724586057081,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": 34.22756647044045,
+     "saved_MB": 2.8881504704404506,
+     "saved_pct": 8.4380830081353
+    }
+   ],
+   "delta_ghcol_vs_delta_row_wikiKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 97.752217,
+     "ft_wiki_kl": 0.0014440176265089466,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 62.985144,
+     "ft_wiki_kl": 0.0054253462281644085,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 79.92247746022804,
+     "saved_MB": 16.93733346022804,
+     "saved_pct": 21.192202742534594
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 31.339416,
+     "ft_wiki_kl": 0.019927967727388123,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 40.557916013887464,
+     "saved_MB": 9.218500013887464,
+     "saved_pct": 22.729225068494525
+    }
+   ],
+   "delta_hcol_vs_delta_row_wikiKL_deltaMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "ft_MB": 97.361362,
+     "ft_wiki_kl": 0.0020483888569231084,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "ft_MB": 61.550777,
+     "ft_wiki_kl": 0.007892961240303942,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 69.05470546398027,
+     "saved_MB": 7.503928463980273,
+     "saved_pct": 10.86664321216229
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "ft_MB": 26.466837,
+     "ft_wiki_kl": 0.0322115062851992,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ]
+  },
+  "dominance": {
+   "family_ghcol": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 298.334848,
+     "ft_chat_kl": 0.05852739596605036,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.12",
+      "pair_MB": 805.0248619999999,
+      "ft_chat_kl": 0.013408862621617503,
+      "saved_MB": 506.69001399999985,
+      "saved_pct": 62.94091498505793
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 295.274254,
+      "ft_chat_kl": 0.13789984192885252,
+      "quality_ratio": 2.3561588492480214
+     }
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 272.738419,
+     "ft_chat_kl": 0.12887176784638163,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "both GPTQ-int4 fixed-rate (standard int4 files), rest fp16",
+      "pair_MB": 528.152356,
+      "ft_chat_kl": 0.11837501488832734,
+      "saved_MB": 255.41393700000003,
+      "saved_pct": 48.35989730963162
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+      "pair_MB": 270.184565,
+      "ft_chat_kl": 0.30176275689382265,
+      "quality_ratio": 2.341573813541003
+     }
+    }
+   ],
+   "family_gfisher": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 296.23428,
+     "ft_chat_kl": 0.05331680418780853,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.12",
+      "pair_MB": 805.0248619999999,
+      "ft_chat_kl": 0.013408862621617503,
+      "saved_MB": 508.79058199999986,
+      "saved_pct": 63.20184705053245
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 295.274254,
+      "ft_chat_kl": 0.13789984192885252,
+      "quality_ratio": 2.5864236243999192
+     }
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 271.043707,
+     "ft_chat_kl": 0.10779143006899514,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+      "pair_MB": 772.5758859999999,
+      "ft_chat_kl": 0.06805477719195807,
+      "saved_MB": 501.53217899999987,
+      "saved_pct": 64.91688235270651
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+      "pair_MB": 270.184565,
+      "ft_chat_kl": 0.30176275689382265,
+      "quality_ratio": 2.7995060154658895
+     }
+    }
+   ],
+   "indep_ghcol": [
+    {
+     "scenario": "both independent ghcol c=0.35",
+     "pair_MB": 413.7826140000001,
+     "ft_chat_kl": 0.06041582761276575,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.12",
+      "pair_MB": 805.0248619999999,
+      "ft_chat_kl": 0.013408862621617503,
+      "saved_MB": 391.2422479999998,
+      "saved_pct": 48.600020504708326
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 295.274254,
+      "ft_chat_kl": 0.13789984192885252,
+      "quality_ratio": 2.2825118413128305
+     }
+    }
+   ]
+  }
+ },
+ "smol135": {
+  "pairs": [
+   {
+    "kind": "family_row",
+    "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_ecsq_c0.35",
+     "B_rest_ll16",
+     "T_pframe_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 130.548558,
+    "linears_MB": 62.265931,
+    "ft_MB": 14.571799,
+    "base_MB": 47.694132,
+    "ft_chat_kl": 0.5378367891399832,
+    "ft_wiki_kl": 0.3231820361347506,
+    "ft_bpw": 1.09801485038098,
+    "base_kl": 0.2833101708654898,
+    "base_ppl": 20.928552460384978,
+    "base_bpw": 3.593850368923611
+   },
+   {
+    "kind": "family_ghcol",
+    "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_ghcol_c0.35",
+     "B_rest_ll16",
+     "T_pframe_ghcol_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 131.701179,
+    "linears_MB": 63.418552,
+    "ft_MB": 14.222704,
+    "base_MB": 49.195848,
+    "ft_chat_kl": 0.10510507096072641,
+    "ft_wiki_kl": 0.06827207746072461,
+    "ft_bpw": 1.0717098283179012,
+    "base_kl": 0.06065859466165115,
+    "base_ppl": 16.48951456031135,
+    "base_bpw": 3.707007740162037
+   },
+   {
+    "kind": "family_gfisher",
+    "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+    "files": [
+     "B_gfisher_c0.35",
+     "B_rest_ll16",
+     "T_pframe_gfisher_c0.35",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 130.884685,
+    "linears_MB": 62.602058,
+    "ft_MB": 13.908391,
+    "base_MB": 48.693667,
+    "ft_chat_kl": 0.0884785678931555,
+    "ft_wiki_kl": 0.05398405046654027,
+    "ft_bpw": 1.0480257010754244,
+    "base_kl": 0.04821437157592252,
+    "base_ppl": 16.27095621756487,
+    "base_bpw": 3.6691673749758875
+   },
+   {
+    "kind": "indep_row",
+    "scenario": "both independent GPTQ-ECSQ c=0.35",
+    "files": [
+     "B_ecsq_c0.35",
+     "B_rest_ll16",
+     "T_ecsq_c0.35",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 170.47473000000002,
+    "linears_MB": 95.386912,
+    "ft_MB": 47.69278,
+    "base_MB": 47.694132,
+    "ft_chat_kl": 0.5048905781337193,
+    "ft_wiki_kl": 0.3566822784379103,
+    "ft_bpw": 3.593748492959105,
+    "base_kl": 0.2833101708654898,
+    "base_ppl": 20.928552460384978,
+    "base_bpw": 3.593850368923611
+   },
+   {
+    "kind": "indep_ghcol",
+    "scenario": "both independent ghcol c=0.35",
+    "files": [
+     "B_ghcol_c0.35",
+     "B_rest_ll16",
+     "T_ghcol_c0.35",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 173.50962399999997,
+    "linears_MB": 98.421806,
+    "ft_MB": 49.225958,
+    "base_MB": 49.195848,
+    "ft_chat_kl": 0.10260189058736127,
+    "ft_wiki_kl": 0.06671375743808197,
+    "ft_bpw": 3.7092765902295524,
+    "base_kl": 0.06065859466165115,
+    "base_ppl": 16.48951456031135,
+    "base_bpw": 3.707007740162037
+   },
+   {
+    "kind": "family_row",
+    "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_ecsq_c0.5",
+     "B_rest_ll16",
+     "T_pframe_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 121.97765899999999,
+    "linears_MB": 53.695032000000005,
+    "ft_MB": 12.689213,
+    "base_MB": 41.005819,
+    "ft_chat_kl": 1.0116058010541171,
+    "ft_wiki_kl": 0.6854312516563278,
+    "ft_bpw": 0.956158145857446,
+    "base_kl": 0.6096047893872655,
+    "base_ppl": 29.51364622417403,
+    "base_bpw": 3.0898723084249613
+   },
+   {
+    "kind": "family_ghcol",
+    "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_ghcol_c0.5",
+     "B_rest_ll16",
+     "T_pframe_ghcol_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 122.93838299999999,
+    "linears_MB": 54.655756,
+    "ft_MB": 12.198922,
+    "base_MB": 42.456834,
+    "ft_chat_kl": 0.23577966706261003,
+    "ft_wiki_kl": 0.143486005594862,
+    "ft_bpw": 0.9192137164834105,
+    "base_kl": 0.13139898438073974,
+    "base_ppl": 17.817381154364575,
+    "base_bpw": 3.1992092556423612
+   },
+   {
+    "kind": "family_gfisher",
+    "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+    "files": [
+     "B_gfisher_c0.5",
+     "B_rest_ll16",
+     "T_pframe_gfisher_c0.5",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 122.29031800000001,
+    "linears_MB": 54.007691,
+    "ft_MB": 12.020013,
+    "base_MB": 41.987678,
+    "ft_chat_kl": 0.19989939544938334,
+    "ft_wiki_kl": 0.11260264713005956,
+    "ft_bpw": 0.9057325575086805,
+    "base_kl": 0.1024561121688567,
+    "base_ppl": 17.20740989727238,
+    "base_bpw": 3.163857391734182
+   },
+   {
+    "kind": "indep_row",
+    "scenario": "both independent GPTQ-ECSQ c=0.5",
+    "files": [
+     "B_ecsq_c0.5",
+     "B_rest_ll16",
+     "T_ecsq_c0.5",
+     "T_rest_ll16"
+    ],
+    "pair_MB": 157.095373,
+    "linears_MB": 82.007555,
+    "ft_MB": 41.001736,
+    "base_MB": 41.005819,
+    "ft_chat_kl": 1.0362402301708422,
+    "ft_wiki_kl": 0.6413402780999657,
+    "ft_bpw": 3.0895646460262345,
+    "base_kl": 0.6096047893872655,
+    "base_ppl": 29.51364622417403,
+    "base_bpw": 3.0898723084249613
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.06",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.06",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 315.07550299999997,
+    "linears_MB": 246.792876,
+    "ft_MB": 34.454101,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.01011752991726723,
+    "ft_wiki_kl": 0.006887473024038437,
+    "ft_bpw": 2.5961869604793595,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.12",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.12",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 303.26893,
+    "linears_MB": 234.986303,
+    "ft_MB": 22.647528,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.029880677164444543,
+    "ft_wiki_kl": 0.018061486755747532,
+    "ft_bpw": 1.7065375434027779,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "delta_row",
+    "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_delta_c0.25",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 292.170377,
+    "linears_MB": 223.88775,
+    "ft_MB": 11.548975,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.1018092735777893,
+    "ft_wiki_kl": 0.04266766105329461,
+    "ft_bpw": 0.8702388810522762,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c0.8",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 313.842023,
+    "linears_MB": 245.559396,
+    "ft_MB": 33.220621,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.0030099884263297978,
+    "ft_wiki_kl": 0.0019231133461435307,
+    "ft_bpw": 2.5032417203173227,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c1.6",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 302.128467,
+    "linears_MB": 233.84584,
+    "ft_MB": 21.507065,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.01207222768013647,
+    "ft_wiki_kl": 0.007624775134882347,
+    "ft_bpw": 1.6206013243875386,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "delta_ghcol",
+    "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dghcol_c3.2",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 291.440918,
+    "linears_MB": 223.158291,
+    "ft_MB": 10.819516,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.06342321270973103,
+    "ft_wiki_kl": 0.026194181742759,
+    "ft_bpw": 0.8152726538387346,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c0.8",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 313.707524,
+    "linears_MB": 245.424897,
+    "ft_MB": 33.086122,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.0030572056829378186,
+    "ft_wiki_kl": 0.0026412740200539597,
+    "ft_bpw": 2.493106945650077,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c1.6",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 301.637198,
+    "linears_MB": 233.354571,
+    "ft_MB": 21.015796,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.012114872036395961,
+    "ft_wiki_kl": 0.010740369995105074,
+    "ft_bpw": 1.5835832007137345,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "delta_hcol",
+    "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+    "files": [
+     "B_fp16",
+     "B_rest_ll16",
+     "T_dhcol_c3.2",
+     "T_rest_xor_base"
+    ],
+    "pair_MB": 289.740853,
+    "linears_MB": 221.458226,
+    "ft_MB": 9.119451,
+    "base_MB": 212.338775,
+    "ft_chat_kl": 0.0959196509584253,
+    "ft_wiki_kl": 0.04357729263287029,
+    "ft_bpw": 0.6871692798755787,
+    "base_kl": 0.0,
+    "base_ppl": 15.432003842378936,
+    "base_bpw": 16.00016087661555
+   },
+   {
+    "kind": "int4",
+    "scenario": "both GPTQ-int4 fixed-rate (standard int4 files), rest fp16",
+    "files": [
+     "B_gptq4_packed",
+     "B_rest_raw16",
+     "T_gptq4_packed",
+     "T_rest_raw16"
+    ],
+    "pair_MB": 227.86040199999997,
+    "linears_MB": 114.472376,
+    "ft_MB": 57.236188,
+    "base_MB": 57.236188,
+    "ft_chat_kl": 0.39995986170353903,
+    "ft_wiki_kl": 0.2881556815150661,
+    "ft_bpw": 4.312863799672068,
+    "base_kl": 0.2812611328780971,
+    "base_ppl": 20.689068674025172,
+    "base_bpw": 4.312863799672068
+   }
+  ],
+  "saved": {
+   "family_ghcol_vs_family_row_chatKL": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 131.701179,
+     "ft_chat_kl": 0.10510507096072641,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 122.93838299999999,
+     "ft_chat_kl": 0.23577966706261003,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "family_ghcol_vs_family_row_baseKL": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 131.701179,
+     "base_kl": 0.06065859466165115,
+     "family_row_pair_MB_at_equal_base_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 122.93838299999999,
+     "base_kl": 0.13139898438073974,
+     "family_row_pair_MB_at_equal_base_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "family_gfisher_vs_family_row_chatKL": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 130.884685,
+     "ft_chat_kl": 0.0884785678931555,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 122.29031800000001,
+     "ft_chat_kl": 0.19989939544938334,
+     "family_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "family_gfisher_vs_family_ghcol_chatKL": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 130.884685,
+     "ft_chat_kl": 0.0884785678931555,
+     "family_ghcol_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 122.29031800000001,
+     "ft_chat_kl": 0.19989939544938334,
+     "family_ghcol_pair_MB_at_equal_ft_chat_kl": 124.72886041627271,
+     "saved_MB": 2.4385424162726963,
+     "saved_pct": 1.9550747181801018
+    }
+   ],
+   "indep_ghcol_vs_indep_row_chatKL": [
+    {
+     "scenario": "both independent ghcol c=0.35",
+     "pair_MB": 173.50962399999997,
+     "ft_chat_kl": 0.10260189058736127,
+     "indep_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "pair_MB": 313.842023,
+     "ft_chat_kl": 0.0030099884263297978,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "pair_MB": 302.128467,
+     "ft_chat_kl": 0.01207222768013647,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 313.14974071934535,
+     "saved_MB": 11.021273719345345,
+     "saved_pct": 3.519489971164612
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "pair_MB": 291.440918,
+     "ft_chat_kl": 0.06342321270973103,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 296.4551250783539,
+     "saved_MB": 5.014207078353877,
+     "saved_pct": 1.6913882251246655
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 245.559396,
+     "ft_chat_kl": 0.0030099884263297978,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 233.84584,
+     "ft_chat_kl": 0.01207222768013647,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 244.86711371934538,
+     "saved_MB": 11.021273719345373,
+     "saved_pct": 4.500920336724928
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 223.158291,
+     "ft_chat_kl": 0.06342321270973103,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 228.17249807835393,
+     "saved_MB": 5.014207078353934,
+     "saved_pct": 2.1975510285345896
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "pair_MB": 313.707524,
+     "ft_chat_kl": 0.0030572056829378186,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "pair_MB": 301.637198,
+     "ft_chat_kl": 0.012114872036395961,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 313.11129688607423,
+     "saved_MB": 11.474098886074216,
+     "saved_pct": 3.664543247140992
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "pair_MB": 289.740853,
+     "ft_chat_kl": 0.0959196509584253,
+     "delta_row_pair_MB_at_equal_ft_chat_kl": 292.7098763166743,
+     "saved_MB": 2.9690233166742814,
+     "saved_pct": 1.0143229036324628
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "linears_MB": 245.424897,
+     "ft_chat_kl": 0.0030572056829378186,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "linears_MB": 233.354571,
+     "ft_chat_kl": 0.012114872036395961,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 244.82866988607424,
+     "saved_MB": 11.474098886074245,
+     "saved_pct": 4.686583026168246
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "linears_MB": 221.458226,
+     "ft_chat_kl": 0.0959196509584253,
+     "delta_row_linears_MB_at_equal_ft_chat_kl": 224.4272493166743,
+     "saved_MB": 2.96902331667431,
+     "saved_pct": 1.3229335233195856
+    }
+   ],
+   "delta_ghcol_vs_delta_hcol_chatKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 245.559396,
+     "ft_chat_kl": 0.0030099884263297978,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 233.84584,
+     "ft_chat_kl": 0.01207222768013647,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": 233.3854821079955,
+     "saved_MB": -0.4603578920045095,
+     "saved_pct": -0.1972521546098082
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 223.158291,
+     "ft_chat_kl": 0.06342321270973103,
+     "delta_hcol_linears_MB_at_equal_ft_chat_kl": 223.83672185448233,
+     "saved_MB": 0.6784308544823432,
+     "saved_pct": 0.30309184697736746
+    }
+   ],
+   "delta_ghcol_vs_delta_row_wikiKL_linearsMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "linears_MB": 245.559396,
+     "ft_wiki_kl": 0.0019231133461435307,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "linears_MB": 233.84584,
+     "ft_wiki_kl": 0.007624775134882347,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 245.54742478066876,
+     "saved_MB": 11.701584780668753,
+     "saved_pct": 4.765509062504322
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "linears_MB": 223.158291,
+     "ft_wiki_kl": 0.026194181742759,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 230.186788827652,
+     "saved_MB": 7.028497827652018,
+     "saved_pct": 3.0533888862381553
+    }
+   ],
+   "delta_hcol_vs_delta_row_wikiKL_linearsMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "linears_MB": 245.424897,
+     "ft_wiki_kl": 0.0026412740200539597,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "linears_MB": 233.354571,
+     "ft_wiki_kl": 0.010740369995105074,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": 241.35169296775123,
+     "saved_MB": 7.997121967751241,
+     "saved_pct": 3.3134724970915346
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "linears_MB": 221.458226,
+     "ft_wiki_kl": 0.04357729263287029,
+     "delta_row_linears_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ],
+   "delta_ghcol_vs_delta_row_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 33.220621,
+     "ft_chat_kl": 0.0030099884263297978,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 21.507065,
+     "ft_chat_kl": 0.01207222768013647,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 32.52833871934537,
+     "saved_MB": 11.02127371934537,
+     "saved_pct": 33.882067616292865
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 10.819516,
+     "ft_chat_kl": 0.06342321270973103,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 15.833723078353918,
+     "saved_MB": 5.014207078353918,
+     "saved_pct": 31.667896764019936
+    }
+   ],
+   "delta_hcol_vs_delta_row_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "ft_MB": 33.086122,
+     "ft_chat_kl": 0.0030572056829378186,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "ft_MB": 21.015796,
+     "ft_chat_kl": 0.012114872036395961,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 32.48989488607424,
+     "saved_MB": 11.474098886074238,
+     "saved_pct": 35.315900301641925
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "ft_MB": 9.119451,
+     "ft_chat_kl": 0.0959196509584253,
+     "delta_row_ft_MB_at_equal_ft_chat_kl": 12.08847431667431,
+     "saved_MB": 2.96902331667431,
+     "saved_pct": 24.560777802861107
+    }
+   ],
+   "delta_ghcol_vs_delta_hcol_chatKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 33.220621,
+     "ft_chat_kl": 0.0030099884263297978,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 21.507065,
+     "ft_chat_kl": 0.01207222768013647,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": 21.046707107995502,
+     "saved_MB": -0.46035789200449884,
+     "saved_pct": -2.1873155246675715
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 10.819516,
+     "ft_chat_kl": 0.06342321270973103,
+     "delta_hcol_ft_MB_at_equal_ft_chat_kl": 11.497946854482336,
+     "saved_MB": 0.6784308544823361,
+     "saved_pct": 5.900452168274356
+    }
+   ],
+   "delta_ghcol_vs_delta_row_wikiKL_deltaMB": [
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c0.8",
+     "ft_MB": 33.220621,
+     "ft_wiki_kl": 0.0019231133461435307,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c1.6",
+     "ft_MB": 21.507065,
+     "ft_wiki_kl": 0.007624775134882347,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 33.20864978066874,
+     "saved_MB": 11.701584780668743,
+     "saved_pct": 35.23655691500114
+    },
+    {
+     "scenario": "fp16 base + ghcol-\u0394 (GPTQ, column grid) dghcol_c3.2",
+     "ft_MB": 10.819516,
+     "ft_wiki_kl": 0.026194181742759,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 17.848013827652018,
+     "saved_MB": 7.028497827652018,
+     "saved_pct": 39.37971975773983
+    }
+   ],
+   "delta_hcol_vs_delta_row_wikiKL_deltaMB": [
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c0.8",
+     "ft_MB": 33.086122,
+     "ft_wiki_kl": 0.0026412740200539597,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c1.6",
+     "ft_MB": 21.015796,
+     "ft_wiki_kl": 0.010740369995105074,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": 29.012917967751243,
+     "saved_MB": 7.997121967751241,
+     "saved_pct": 27.56400433986092
+    },
+    {
+     "scenario": "fp16 base + hcol-\u0394 (rounding, column grid) dhcol_c3.2",
+     "ft_MB": 9.119451,
+     "ft_wiki_kl": 0.04357729263287029,
+     "delta_row_ft_MB_at_equal_ft_wiki_kl": null,
+     "saved_MB": null,
+     "saved_pct": null
+    }
+   ]
+  },
+  "dominance": {
+   "family_ghcol": [
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 131.701179,
+     "ft_chat_kl": 0.10510507096072641,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+      "pair_MB": 292.170377,
+      "ft_chat_kl": 0.1018092735777893,
+      "saved_MB": 160.46919799999998,
+      "saved_pct": 54.92315807225042
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 130.548558,
+      "ft_chat_kl": 0.5378367891399832,
+      "quality_ratio": 5.117134541880967
+     }
+    },
+    {
+     "scenario": "FAMILY ghcol: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 122.93838299999999,
+     "ft_chat_kl": 0.23577966706261003,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+      "pair_MB": 292.170377,
+      "ft_chat_kl": 0.1018092735777893,
+      "saved_MB": 169.231994,
+      "saved_pct": 57.92236562024903
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+      "pair_MB": 121.97765899999999,
+      "ft_chat_kl": 1.0116058010541171,
+      "quality_ratio": 4.29047090301256
+     }
+    }
+   ],
+   "family_gfisher": [
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.35",
+     "pair_MB": 130.884685,
+     "ft_chat_kl": 0.0884785678931555,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.12",
+      "pair_MB": 303.26893,
+      "ft_chat_kl": 0.029880677164444543,
+      "saved_MB": 172.38424500000002,
+      "saved_pct": 56.842039505992254
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 130.548558,
+      "ft_chat_kl": 0.5378367891399832,
+      "quality_ratio": 6.078723943514337
+     }
+    },
+    {
+     "scenario": "FAMILY A3-Fisher grid: column-grid I-frame + P-frame c=0.5",
+     "pair_MB": 122.29031800000001,
+     "ft_chat_kl": 0.19989939544938334,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+      "pair_MB": 292.170377,
+      "ft_chat_kl": 0.1018092735777893,
+      "saved_MB": 169.88005899999996,
+      "saved_pct": 58.144176266028495
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.5",
+      "pair_MB": 121.97765899999999,
+      "ft_chat_kl": 1.0116058010541171,
+      "quality_ratio": 5.060574589432745
+     }
+    }
+   ],
+   "indep_ghcol": [
+    {
+     "scenario": "both independent ghcol c=0.35",
+     "pair_MB": 173.50962399999997,
+     "ft_chat_kl": 0.10260189058736127,
+     "cheapest_old_at_least_as_good": {
+      "scenario": "fp16 base + \u0394 (phase 2, GPTQ row grid) c=0.25",
+      "pair_MB": 292.170377,
+      "ft_chat_kl": 0.1018092735777893,
+      "saved_MB": 118.660753,
+      "saved_pct": 40.61354686892163
+     },
+     "row_family_at_nearest_MB": {
+      "scenario": "FAMILY (phase 2): row-grid I-frame + P-frame c=0.35",
+      "pair_MB": 130.548558,
+      "ft_chat_kl": 0.5378367891399832,
+      "quality_ratio": 5.241977375475722
+     }
+    }
+   ]
+  }
+ }
+}

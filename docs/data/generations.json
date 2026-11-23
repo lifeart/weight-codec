@@ -24,25 +24,25 @@
    "The sky is blue because of a process called Rayleigh scattering. This is the scattering of light by tiny particles in the atmosphere, specifically nitrogen and oxygen molecules. When sunlight enters the Earth's atmosphere, it encounters these particles.\n\nThe light is initially scattered in all directions, but the scattered light is not completely absorbed"
   ],
   "instruct_delta": [
-   "In autumn rain, the leaves turn a kaleidoscope of colors,\nA symphony of hues that dances in the breeze,\nA symphony of colors that dances in the breeze,\nA symphony of colors that dances in the breeze,\nA symphony of colors that dances in the breeze,\nA symphony of colors that",
-   "The capital of Australia is Canberra, not Sydney. The capital city of Australia is Canberra, which is located in the state of Victoria. Sydney, on the other hand, is the capital city of New South Wales, a state in Australia.\n\nBoth cities are located in the state of Victoria, but they are not",
-   "Step 1: Combine like terms\nTo solve for x, we need to combine the terms on the left side of the equation with the constant term 7.\n\nCombining like terms: 3x + 7 = 22\n\nStep 2: Simplify the equation\nNow, we",
-   "Here is a Python function that checks whether a string is a palindrome:\n\n```python\ndef is_palindrome(s):\n    return s == s[::-1]\n```\n\nThis function works by comparing the input string `s` with its reverse (`s[::-1]`). If",
-   "The sky blue is a result of the scattering of light by tiny particles in the atmosphere. When sunlight enters our atmosphere, it encounters tiny particles called atmospheric gases, such as nitrogen and oxygen. These gases scatter the light in different directions, but they scatter the blue light more than the other colors.\n\nThe blue light"
+   "In autumn rain, the leaves turn,\nA symphony of colors, a symphony of rain.\nThe air is crisp, the leaves are green,\nA symphony of rain, a symphony of rain.",
+   "The capital of Australia is Canberra, located in the state of Victoria. However, the capital of Australia is not Sydney, as it is located in the state of New South Wales. The capital of Australia is Canberra, which is a city that serves as the capital of the Commonwealth of Australia.\n\nThe capital of Australia",
+   "Step 1: Combine like terms\nTo solve for x, we need to combine the terms on the left side of the equation.\n\nCombining the terms on the left side of the equation, we get:\n\nx + 7 = 22\n\nStep 2: Simplify the equation",
+   "Here's a Python function that checks whether a string is a palindrome:\n\n```python\ndef is_palindrome(s):\n    s = ''.join(c for c in s if c.isalnum()).lower()\n    return s == s[::-1]\n```\n\nThis function",
+   "The sky is blue because of a process called Rayleigh scattering, which occurs when light from the sun passes through tiny molecules of air. When sunlight enters the Earth's atmosphere, it encounters these tiny molecules. These molecules scatter the shorter wavelengths of light, such as blue and violet, more than the longer wavelengths, like red"
   ],
   "instruct_family": [
-   "An autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn autumn rain, an autumn rain,\nAn",
-   "The answer to your question is: The capital of Australia is Canberra, and the reason it is not Sydney is because it is not the capital of the Australian capital city, which is Canberra, Australia.",
-   "Solving a problem like this is like a detective who follows the clues to the most efficient way to solve a mystery. To solve for x, we follow the steps of the most efficient way to solve a mystery.\n\nTo solve for x, we follow the steps of the most efficient way to solve a mystery.",
-   "You are a chat with Hugging Face",
-   "The answer to this question is: Hugging Face"
+   "The leaves rustle like autumn's breeze,\nA gentle rain that wafts through the night,\nA symphony of colors, a symphony of sounds,\nA symphony of leaves, a symphony of leaves.",
+   "The capital of Australia is Canberra, not Sydney. This is because the capital city is not the most populous city in Australia, but rather the largest city in terms of population. Sydney is the second most populous city, and it is the third most populous city in Australia. Canberra is the third most populous city, but it",
+   "To solve for x, we need to isolate the variable x. We can do this by subtracting 7 from both sides of the equation, which gives us 3x = 22 - 7.\n\nNext, we can isolate the term with x by adding 3x to both sides of the equation",
+   "Here's a Python function that checks whether a string is a palindrome:\n\n```python\ndef is_palindrome(s):\n    s = s.replace(\" \", \"\")\n    return s == s[::-1]\n```\n\nThis function works by first removing all non-alphanumeric",
+   "The sky blue is a result of the interaction of ultraviolet light from the sun with the atmospheric molecules in the sky. The blue light is scattered by the molecules in the air, while the red light is scattered more due to the presence of oxygen in the atmosphere. This scattering effect is known as Rayleigh scattering.\n\n"
   ],
   "base_family_iframe": [
-   "\n### Related to the story,\n\nThe story is about a human being who was trying to find a way to\n\n### Similar stories,\n\nThe story is about a human being who was trying to find a way to\n\n### Similar stories,\n\nThe story is about a human being who was",
-   "\n### Next, let's say you want to find the largest number among them all.\n\n#### Solution:\n\nThe largest number is 1, because it is the largest number that can be\n\n#### Solution:\n\nThe largest number is 1, because it is the largest number that can be",
-   "\nSolve for x: 3x + 7 = 22.\n\nSolve for x: 3x + 7 = 22.\n\nSolve for x: 3x + 7 = 22.\n\nSolve for x: 3x +",
-   "\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#\n#",
-   "\n### Related to the story,\n\nThe sky is blue, and then a third, and then a fourth, and then a fifth, and then a sixth, and then a seventh, and then a eighth, and then a ninth, and then a tenth, and then a hundred, and then a thousand,"
+   "Write a haiku about autumn rain.ostering\nostering\nWrite a haiku about autumn rain.ostering\nostering\nWrite a haiku about autumn rain.ostering\nostering\nWrite a haiku about autumn rain.ostering\nostering\nWrite a haiku about autumn rain.ostering\nostering\nWrite a haiku",
+   "What is the capital of Australia, and why is it not Sydney?\nosteringaussie\nWhat is the capital of Australia, and why is it not Sydney?\nosteringaussie\nWhat is the capital of Australia, and why is it not Sydney?\nosteringaussie\nWhat is the capital",
+   "Solve for x: 3x + 7 = 22. Show your steps.\n\n## 2.\n\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face,,,,,,,,,,,,,,,,aring\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face,,,,,,,,,,,,,,,,",
+   "Write a Python function that checks whether a string is a palindrome.ostering\nosteringuser\nWrite a Python function that checks whether a string is a palindrome.ostering\nosteringuser\nWrite a Python function that checks whether a string is a palindrome.ostering\nosteringuser\nWrite a Python function",
+   "Why is the sky blue?\n\n## 2. The sky is blue because it is made of blue air\n\nThe sky is blue because it is made of blue air.\n\n## 3. The sky is blue because it is made of blue air\n\nThe sky is blue because it is made"
   ]
  }
 }

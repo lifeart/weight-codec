@@ -1,9 +1,9 @@
 {
- "intro_md": "# weight-codec — real ANS bitstreams for LLM families\nPhase 2 of a falsification-first study (*compress weights like JPEG, families/checkpoints like video*). Everything here is **measured on real files** (bytes on disk incl. all side info) and on models **decoded from those files**. Code: `wcodec` (WCDC container, constriction rANS, own numba/Metal rANS).",
+ "intro_md": "# weight-codec — real ANS bitstreams for LLM families\nPhase 2 of a falsification-first study (*compress weights like JPEG, families/checkpoints like video*). Everything here is **measured on real files** (bytes on disk incl. all side info) and on models **decoded from those files**. Code: `wcodec` (WCDC container, constriction rANS, own numba / GPU rANS).",
  "sections": [
   {
    "title": "Delivering Qwen2.5-0.5B-Instruct: bytes on the wire + decode",
-   "md": "MB = real files; decode = measured (Apple Silicon laptop, rans16 on 8 cores); download = MB / bandwidth (modelled).",
+   "md": "MB = real files; decode = measured (rans16 on 8 CPU threads); download = MB / bandwidth (modelled).",
    "table": {
     "headers": [
      "what the client fetches",
@@ -65,7 +65,7 @@
   },
   {
    "title": "Qwen2.5-0.5B → Instruct: fine-tune linears — real MB, decode ms, quality",
-   "md": "Real file bytes of the block linears of the fine-tune (P-frame/Δ rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame) on an Apple Silicon laptop.",
+   "md": "Real file bytes of the block linears of the fine-tune (P-frame/Δ rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame), measured offline.",
    "table": {
     "headers": [
      "format",
@@ -77,7 +77,7 @@
      "PPL",
      "decode ms CPU (constriction, 1 thread)",
      "decode ms CPU (rans16, parallel)",
-     "decode ms GPU (Metal rANS)"
+     "decode ms GPU (rANS kernel)"
     ],
     "rows": [
      [
@@ -346,7 +346,7 @@
   },
   {
    "title": "SmolLM2-360M → Instruct: fine-tune linears — real MB, decode ms, quality",
-   "md": "Real file bytes of the block linears of the fine-tune (P-frame/Δ rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame) on an Apple Silicon laptop.",
+   "md": "Real file bytes of the block linears of the fine-tune (P-frame/Δ rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame), measured offline.",
    "table": {
     "headers": [
      "format",
@@ -358,7 +358,7 @@
      "PPL",
      "decode ms CPU (constriction, 1 thread)",
      "decode ms CPU (rans16, parallel)",
-     "decode ms GPU (Metal rANS)"
+     "decode ms GPU (rANS kernel)"
     ],
     "rows": [
      [
@@ -627,7 +627,7 @@
   },
   {
    "title": "SmolLM2-135M → Instruct: fine-tune linears — real MB, decode ms, quality",
-   "md": "Real file bytes of the block linears of the fine-tune (P-frame/Δ rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame) on an Apple Silicon laptop.",
+   "md": "Real file bytes of the block linears of the fine-tune (P-frame/Δ rows: the fine-tune's own stream; the base is stored once). Quality measured on the model decoded from that file. Decode ms: full chain (P-frame = base I-frame + P-frame), measured offline.",
    "table": {
     "headers": [
      "format",
@@ -639,7 +639,7 @@
      "PPL",
      "decode ms CPU (constriction, 1 thread)",
      "decode ms CPU (rans16, parallel)",
-     "decode ms GPU (Metal rANS)"
+     "decode ms GPU (rANS kernel)"
     ],
     "rows": [
      [
@@ -908,7 +908,7 @@
   },
   {
    "title": "Pythia-410M training trajectory (late window, 8 checkpoints) — real bytes",
-   "md": "steps 136000…143000; encoded on hf-job; original last-frame PPL 15.8 (MPS fp16, 40 windows); x86-encoded chain decodes bit-exactly on the Mac: True.",
+   "md": "steps 136000…143000; encoded on a separate x86 machine; original last-frame PPL 15.8 (GPU fp16, 40 windows); x86-encoded chain decodes bit-exactly on a different (ARM) machine: True.",
    "table": {
     "headers": [
      "scheme",
@@ -949,7 +949,7 @@
   },
   {
    "title": "Pythia-410M training trajectory (mid window, 6 checkpoints) — real bytes",
-   "md": "steps 32000…37000; encoded on hf-job; original last-frame PPL 18.0 (MPS fp16, 40 windows); x86-encoded chain decodes bit-exactly on the Mac: True.",
+   "md": "steps 32000…37000; encoded on a separate x86 machine; original last-frame PPL 18.0 (GPU fp16, 40 windows); x86-encoded chain decodes bit-exactly on a different (ARM) machine: True.",
    "table": {
     "headers": [
      "scheme",

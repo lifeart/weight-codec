@@ -66,6 +66,8 @@ class ParallelDecoder:
             sec = open_section(rd.buf, rd.base + off)
             if not isinstance(sec, AnsSection):     # rans16 sections parallelise internally (numba)
                 continue
+            if sec.n and (sec.smin < -32768 or sec.smin + sec.nalpha - 1 > 32767):
+                raise ValueError(f"{r['name']}: symbols outside int16 (shared buffer is int16) -- invalid file")
             plan.append((r["name"], off, sec, total))
             total += sec.n
         t0 = time.perf_counter()

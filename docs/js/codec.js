@@ -104,9 +104,22 @@
   }
 
   // ---------------------------------------------------------------- record reconstruction
-  // State of a decoded record:  bits (Uint16Array fp16 pattern of W), and for qrow also Q (Int16Array) + step (Float32Array).
+  // State of a decoded record:  bits (Uint16Array fp16 pattern of W), and for qrow also Q (Int16Array), step
+  // (Float32Array, per output row) and col (Float32Array per input column, or null = row grid only).
   // symBytes = bytes whose SHA-256 is the "symbol digest" (Q as int16 LE for qrow, fp16 bits for ll16).
   const secOff = (f, rec, k) => f.base + rec.sec[k][0];
+  const I16_MIN = -32768, I16_MAX = 32767;      // every qrow decoder (Python, rans16, GPU, this one) holds Q in int16
+
+  // fp16 section -> Float32Array, with the length the record's shape demands (never a silent short/long read)
+  function f16Section(f, rec, key, expect) {
+    if (!rec.sec || !rec.sec[key]) throw new Error(`${rec.name}: section "${key}" missing (params ${JSON.stringify(rec.params)})`);
+    const [o, nb] = rec.sec[key];
+    if (nb !== 2 * expect) throw new Error(`${rec.name}: section "${key}" holds ${nb / 2} fp16 values, expected ${expect}`);
+    const h = new Uint16Array(f.ab.slice(f.base + o, f.base + o + nb));
+    const out = new Float32Array(expect);
+    for (let i = 0; i < expect; i++) out[i] = H2F[h[i]];
+    return out;
+  }
 
   function decodeRecord(f, rec, R, tim) {
     const n = rec.shape.reduce((a, b) => a * b, 1);
@@ -128,39 +141,65 @@
     }
     if (rec.kind === "qrow") {
       if (p.ctx) throw new Error("context-coded records are not supported in the browser demo");
+      if (rec.shape.length !== 2) throw new Error(`${rec.name}: qrow record with shape ${JSON.stringify(rec.shape)}`);
+      const rows = rec.shape[0], cols = rec.shape[1];
       const q = decodeRans16(f, secOff(f, rec, "sym"));
+      if (q.length !== n) throw new Error(`${rec.name}: ${q.length} symbols for ${n} weights`);
+      let qmin = 0, qmax = 0;
+      for (let i = 0; i < n; i++) { const v = q[i]; if (v < qmin) qmin = v; else if (v > qmax) qmax = v; }
+      if (qmin < I16_MIN || qmax > I16_MAX) throw new Error(`${rec.name}: qrow symbols outside int16 [${qmin}, ${qmax}] -- invalid file`);
       const t1 = performance.now();
-      let step;
+      // lattice = per-row step (params.step) x optional per-column factor (params.col, REPORT §16):
+      //   col absent -> row grid;  "own" -> section "col" (fp16 per input column);  "ref" -> the reference's factors
+      const cmode = p.col === undefined || p.col === null ? null : p.col;
+      let step, col = null;
       if (p.step === "own") {
-        const [o, nb] = rec.sec.step;
-        const h = new Uint16Array(f.ab.slice(f.base + o, f.base + o + nb));
-        step = new Float32Array(h.length); for (let i = 0; i < h.length; i++) step[i] = H2F[h[i]];
+        step = f16Section(f, rec, "step", rows);
+        if (cmode === "own") col = f16Section(f, rec, "col", cols);
+        else if (cmode !== null) throw new Error(`${rec.name}: col=${JSON.stringify(cmode)} needs step="ref"`);
       } else if (p.step === "ref") {
         if (!R || !R.step) throw new Error(rec.name + ": step=ref without reference");
+        if (R.step.length !== rows) throw new Error(`${rec.name}: reference has ${R.step.length} row steps, record has ${rows} rows`);
         step = R.step;
+        if (cmode === "ref") {
+          if (!R.col) throw new Error(rec.name + ": record inherits column factors (col=ref) but the reference state has none");
+          if (R.col.length !== cols) throw new Error(`${rec.name}: reference has ${R.col.length} column factors, record has ${cols} columns`);
+          col = R.col;
+        } else if (cmode !== null) throw new Error(`${rec.name}: unsupported col mode ${JSON.stringify(cmode)} with step=ref`);
+        else if (R.col) throw new Error(rec.name + ": reference lattice has column factors but the record does not inherit them");
       } else throw new Error("step mode " + p.step + " not supported in the browser demo");
       const Q = new Int16Array(n);
-      if (p.acc === "add") { const rq = R.Q; for (let i = 0; i < n; i++) Q[i] = rq[i] + q[i]; }
+      if (p.acc === "add") {
+        if (!R || !R.Q || R.Q.length !== n) throw new Error(rec.name + ": acc=add without a reference lattice of the same shape");
+        const rq = R.Q;
+        for (let i = 0; i < n; i++) {
+          const v = rq[i] + q[i];
+          if (v < I16_MIN || v > I16_MAX) throw new Error(`${rec.name}: P-frame lattice index ${v} outside int16 -- invalid file`);
+          Q[i] = v;
+        }
+      }
       else if (p.acc === "none") { for (let i = 0; i < n; i++) Q[i] = q[i]; }
       else throw new Error("acc " + p.acc + " not supported in the browser demo");
-      // W = fp16( fp32(Q * step_row) [+ fp32(W_ref)] )   -- exactly the PyTorch decoder's arithmetic
-      const rows = rec.shape[0], cols = n / rows, bits = new Uint16Array(n);
+      // W = fp16( fp32(Q * fp32(step_r [* col_j])) [+ fp32(W_ref)] )   -- exactly the PyTorch decoder's arithmetic.
+      // step_r * col_j is a product of two fp16 values: EXACT in fp32 (and in double), so every decoder builds the
+      // same lattice; Q (int16) * lattice is exact in double, so fround() == the fp32 multiply.
+      const bits = new Uint16Array(n);
       const fr = Math.fround;
+      const lat = new Float32Array(cols);
+      let rb = null;
       if (p.base === "fp16ref") {
-        if (!R || !R.bits) throw new Error(rec.name + ": fp16ref record without reference");
-        const rb = R.bits;
-        for (let r = 0, i = 0; r < rows; r++) {
-          const s = step[r];
-          for (let j = 0; j < cols; j++, i++) bits[i] = f32ToF16(fr(H2F[rb[i]] + fr(Q[i] * s)));
-        }
-      } else if (p.base === "none" || !p.base) {
-        for (let r = 0, i = 0; r < rows; r++) {
-          const s = step[r];
-          for (let j = 0; j < cols; j++, i++) bits[i] = f32ToF16(fr(Q[i] * s));
-        }
-      } else throw new Error("base mode " + p.base);
+        if (!R || !R.bits || R.bits.length !== n) throw new Error(rec.name + ": fp16ref record without a reference of the same shape");
+        rb = R.bits;
+      } else if (!(p.base === "none" || !p.base)) throw new Error("base mode " + p.base);
+      for (let r = 0, i = 0; r < rows; r++) {
+        const s = step[r];
+        if (col) for (let j = 0; j < cols; j++) lat[j] = fr(s * col[j]);
+        else lat.fill(s);
+        if (rb) for (let j = 0; j < cols; j++, i++) bits[i] = f32ToF16(fr(H2F[rb[i]] + fr(Q[i] * lat[j])));
+        else for (let j = 0; j < cols; j++, i++) bits[i] = f32ToF16(fr(Q[i] * lat[j]));
+      }
       tim.entropy += t1 - t0; tim.reconstruct += performance.now() - t1;
-      return { Q, step, bits, symBytes: new Uint8Array(Q.buffer) };
+      return { Q, step, col, bits, symBytes: new Uint8Array(Q.buffer) };
     }
     throw new Error("record kind " + rec.kind + " not supported in the browser demo");
   }

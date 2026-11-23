@@ -24,11 +24,12 @@ SMOL360=(--base HuggingFaceTB/SmolLM2-360M --target HuggingFaceTB/SmolLM2-360M-I
 
 step p2_test_cpu.log     $PY phase2/test_wcodec.py cpu
 step p2_test_mps.log     $PY phase2/test_wcodec.py mps          # Apple GPU; drop this line on non-Mac machines
-# family codec: {base, Instruct} -> real WCDC files + quality of the decoded models
-step p2_family_qwen.log    $PY phase2/family_codec.py --refcoders ""
-step p2_family_smol135.log $PY phase2/family_codec.py "${SMOL135[@]}" --tag smol135 --tok_tag smollm2 \
+# family codec: {base, Instruct} -> real WCDC files + quality of the decoded models.
+# --preset phase2 = the phase-2 coders of REPORT §14 (the codec's defaults changed in §17; drop it for those)
+step p2_family_qwen.log    $PY phase2/family_codec.py --preset phase2 --refcoders ""
+step p2_family_smol135.log $PY phase2/family_codec.py --preset phase2 "${SMOL135[@]}" --tag smol135 --tok_tag smollm2 \
                              --ref_base smol135 --ref_target smol135_instruct --group 64
-step p2_family_smol360.log $PY phase2/family_codec.py "${SMOL360[@]}" --tag smol360 --tok_tag smollm2 \
+step p2_family_smol360.log $PY phase2/family_codec.py --preset phase2 "${SMOL360[@]}" --tag smol360 --tok_tag smollm2 \
                              --ref_base smol360 --ref_target smol360_instruct --group 64 --refcoders ""
 # progressive (SVC) stream and the scene-cut control
 step p2_svc.log          $PY phase2/svc_real.py

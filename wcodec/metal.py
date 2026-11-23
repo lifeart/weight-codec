@@ -58,6 +58,8 @@ def gpu_entropy_decode(rd):
     for r in rd.records:
         if "sym" in r["sec"] and not r["params"].get("ctx"):
             s = open_section(rd.section(r, "sym"))
+            if s.n and (s.smin < -32768 or s.smin + s.nalpha - 1 > 32767):
+                raise ValueError(f"{r['name']}: symbols outside int16 (GPU output is int16) -- invalid file")
             if isinstance(s, Rans16Section):
                 secs.append((r["name"], s))
     if not secs:
